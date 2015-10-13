@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" href="css/davos.css" media="screen" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+
+    <header>
+
+        <div id="main-nav">
+
+            <div id="logo">
+                <div id="logo-text" class="center">davos</div>
+            </div>
+
+            <div id="navigation">
+                <ul>
+                    <li><i class="material-icons">home</i><a href="index.html" class="waves-effect waves-teal">Home</a></li>
+                    <li><i class="material-icons">web</i><a href="index.html" class="waves-effect waves-teal">File Manager</a></li>
+                    <li class="active"><i class="material-icons">schedule</i><a href="scheduling.html" class="waves-effect waves-teal">Scheduling</a></li>
+                    <li><i class="material-icons">settings</i><a class="waves-effect waves-teal">App Settings</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        <div class="section teal lighten-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col s12 m9">
+                        <h1 class="header light center-on-small-only">Scheduling</h1>
+                        <h4 class="light teal-text text-lighten-5 center-on-small-only">Create and configure automated downloads</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div id="scheduling">
+
+                    <div class="section">
+                        <p class="caption">A schedule allows you to create automated processes that poll a given FTP server based on a pre-defined interval. Schedules are especially useful when you need to download files on a regular basis from any given server. They are highly configurable, with the ability to filter down the kinds of files the schedule pulls down, as well
+                        as <strong>completion hooks</strong> which allow you to define what happens when a file has successfully finished downloading.</p>
+                    </div>
+
+                    <div class="section">
+                        <h4 class="light">Current Schedules</h4>
+
+                        <div class="collection">
+                            <a href="scheduling-edit.html" class="collection-item schedule">OVH<span class="badge info idle"></span></a>
+                            <a href="#!" class="collection-item schedule">Something else<span class="badge info in-progress"></span></a>
+                        </div>
+                    </div>
+
+                    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+                        <a class="btn-floating btn-large teal waves-effect waves-teal">
+                            <i class="large material-icons">add</i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+
+    </footer>
+
+    <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+
+    <script type="text/javascript">
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" href="css/davos.css" media="screen" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+
+    <header>
+
+        <div id="main-nav">
+
+            <div id="logo">
+                <div id="logo-text" class="center">davos</div>
+            </div>
+
+            <div id="navigation">
+                <ul>
+                    <li><i class="material-icons">home</i><a href="index.html" class="waves-effect waves-teal">Home</a></li>
+                    <li><i class="material-icons">web</i><a href="index.html" class="waves-effect waves-teal">File Manager</a></li>
+                    <li class="active"><i class="material-icons">schedule</i><a href="scheduling.html" class="waves-effect waves-teal">Scheduling</a></li>
+                    <li><i class="material-icons">settings</i><a class="waves-effect waves-teal">App Settings</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        <div class="section teal lighten-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col s12 m9">
+                        <h1 class="header light center-on-small-only">Edit</h1>
+                        <h4 class="light teal-text text-lighten-5 center-on-small-only">Configure your schedule</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+
+            <form class="col s12">
+
+                <div class="row">
+                    <div class="section">
+                        <h4 class="light">OVH</h4>
+                        <p class="caption light">Click on the list items below to edit the schedule</p>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">settings_applications</i>General</div>
+                            <div class="collapsible-body">
+
+                                <div class="row">
+
+                                    <div class="input-field col s4">
+                                        <input id="schedule_name" placeholder="Please choose a name for this schedule" value="OVH" type="text" class="validate">
+                                        <label for="schedule_name">Schedule name</label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="switch">
+                                        Start Automatically
+                                        <label>
+
+                                            <input id="start-automatically" type="checkbox">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <label>Schedule interval</label>
+                                    <select class="browser-default">
+                                        <option value="" disabled selected>Please select...</option>
+                                        <option value="1">Every 15 minutes</option>
+                                        <option value="2">Every 30 minutes</option>
+                                        <option value="3">Once an hour</option>
+                                        <option value="4">Once a day</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">business</i>Server</div>
+                            <div class="collapsible-body">
+                                <div class="row">
+
+                                    <div class="input-field col s4">
+                                        <i class="material-icons prefix">business</i>
+                                        <input id="server_name" type="text">
+                                        <label for="server_name">Server Name (or IP address)</label>
+                                    </div>
+                                    <div class="input-field col s2">
+                                        <i class="material-icons prefix">settings_input_svideo</i>
+                                        <input id="server_port" type="number">
+                                        <label for="server_port">Port</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s4">
+                                        <i class="material-icons prefix">perm_identity</i>
+                                        <input id="username" type="text">
+                                        <label for="username">Username</label>
+                                    </div>
+                                    <div class="input-field col s4">
+                                        <i class="material-icons prefix">vpn_key</i>
+                                        <input id="password" type="password">
+                                        <label for="password">Password</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">sort_by_alpha</i>Filters</div>
+                            <div class="collapsible-body">
+                                <p>Lorem ipsum dolor sit amet.</p>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+
+                <div class="row">
+                    <button class="btn waves-effect waves-light" type="submit" name="action">Save changes</button>
+                </div>
+                
+                <div class="row">
+                    <div class="section">
+                        <h5 class="light">Schedule Options</h5>
+                        <button class="btn waves-effect waves-light green lighten-2" disabled type="submit" name="action">Start</button>
+                        <button class="btn waves-effect waves-light orange lighten-2" type="submit" name="action">Restart</button>
+                        <button class="btn waves-effect waves-light red lighten-2" type="submit" name="action">Stop</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+    <footer>
+
+    </footer>
+
+    <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+
+    <script type="text/javascript">
+
+
+    </script>
+</body>
+
+</html>
