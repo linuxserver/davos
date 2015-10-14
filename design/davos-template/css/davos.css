@@ -103,3 +103,8 @@ a.collection-item.schedule {
 .collapsible-header {
     position: relative;
 }
+
+.subtext {
+    font-size: 12px;
+    padding: 10px !important;
+}

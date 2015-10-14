@@ -57,48 +57,79 @@
 
                     <ul class="collapsible" data-collapsible="expandable">
                         <li>
-                            <div class="collapsible-header"><i class="material-icons">settings_applications</i>General</div>
+                            <div class="collapsible-header active"><i class="material-icons">settings_applications</i>General</div>
                             <div class="collapsible-body">
 
-                                <div class="row">
+                                <div class="row valign-wrapper">
 
                                     <div class="input-field col s4">
                                         <input id="schedule_name" placeholder="Please choose a name for this schedule" value="OVH" type="text" class="validate">
                                         <label for="schedule_name">Schedule name</label>
                                     </div>
+                                    <div class="col s8">
+                                        <p class="subtext">
+                                            Give this schedule a meaningful name so you know what its purpose is.
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="switch">
-                                        Start Automatically
+                                <div class="row valign-wrapper">
+                                    <div class="switch col s4 ">
                                         <label>
-
-                                            <input id="start-automatically" type="checkbox">
+                                            <input id="start-automatically" type="checkbox" checked>
                                             <span class="lever"></span>
                                         </label>
+                                        Start Automatically
+                                    </div>
+                                    <div class="col s8">
+                                        <p class="subtext">
+                                            Select this if you want this schedule to automatically start when davos starts. This is a useful option if davos needs to restart and you don't want to have to manually kick off this process.
+                                        </p>
                                     </div>
                                 </div>
 
                                 <div class="row">
 
-                                    <label>Schedule interval</label>
-                                    <select class="browser-default">
-                                        <option value="" disabled selected>Please select...</option>
-                                        <option value="1">Every 15 minutes</option>
-                                        <option value="2">Every 30 minutes</option>
-                                        <option value="3">Once an hour</option>
-                                        <option value="4">Once a day</option>
-                                    </select>
-
+                                    <div class="input-field col s4">
+                                        <select class="browser-default">
+                                            <option value="" disabled selected>Please select...</option>
+                                            <option value="1">Every 15 minutes</option>
+                                            <option value="2">Every 30 minutes</option>
+                                            <option value="3">Once an hour</option>
+                                            <option value="3">Twice a day</option>
+                                            <option value="4">Once a day</option>
+                                        </select>
+                                    </div>
+                                    <div class="col s8">
+                                        <p class="subtext">
+                                            The interval that defines how often this schedule will poll the server to check for new files.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </li>
                         <li>
-                            <div class="collapsible-header"><i class="material-icons">business</i>Server</div>
+                            <div class="collapsible-header active"><i class="material-icons">business</i>Server</div>
                             <div class="collapsible-body">
+                                <div class="row valign-wrapper">
+                                    <div class="switch col s2">
+                                        <input name="protocol_type" type="radio" id="protocol_ftp" />
+                                        <label for="protocol_ftp">FTP</label>
+                                    </div>
+                                    <div class="switch col s2">
+                                        <input name="protocol_type" type="radio" id="protocol_ftps" />
+                                        <label for="protocol_ftps">FTPS</label>
+                                    </div>
+                                    <div class="switch col s2">
+                                        <input name="protocol_type" type="radio" id="protocol_sftp" checked />
+                                        <label for="protocol_sftp">SFTP</label>
+                                    </div>
+                                    <div class="switch col s6"></div>
+                                </div>
+
                                 <div class="row">
 
-                                    <div class="input-field col s4">
+                                    <div class="input-field col s6">
                                         <i class="material-icons prefix">business</i>
                                         <input id="server_name" type="text">
                                         <label for="server_name">Server Name (or IP address)</label>
@@ -110,23 +141,102 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="input-field col s4">
+                                    <div class="input-field col s6">
                                         <i class="material-icons prefix">perm_identity</i>
                                         <input id="username" type="text">
                                         <label for="username">Username</label>
                                     </div>
-                                    <div class="input-field col s4">
+                                    <div class="input-field col s6">
                                         <i class="material-icons prefix">vpn_key</i>
                                         <input id="password" type="password">
                                         <label for="password">Password</label>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="input-field col s6">
+                                        <i class="material-icons prefix">track_changes</i>
+                                        <input id="remote-path" type="text">
+                                        <label for="remote-path">Remote folder to scan</label>
+                                    </div>
+                                    <div class="input-field col s6">
+                                        <i class="material-icons prefix">play_for_work</i>
+                                        <input id="local-path" type="text">
+                                        <label for="local-path">Local destination folder</label>
+                                    </div>
+                                </div>
+
                             </div>
                         </li>
                         <li>
-                            <div class="collapsible-header"><i class="material-icons">sort_by_alpha</i>Filters</div>
+                            <div class="collapsible-header active"><i class="material-icons">swap_vert</i>File Transfers</div>
                             <div class="collapsible-body">
-                                <p>Lorem ipsum dolor sit amet.</p>
+                                <div class="row valign-wrapper">
+                                    <div class="switch col s2">
+                                        <input name="scan_type" type="radio" id="scan_files_only" checked />
+                                        <label for="scan_files_only">Files only</label>
+                                    </div>
+                                    <div class="col s10">
+                                        <p class="subtext">
+                                            Only download files in the remote folder. Ignore sub-folders.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row valign-wrapper">
+                                    <div class="switch col s2">
+                                        <input name="scan_type" type="radio" id="scan_recursive" />
+                                        <label for="scan_recursive">Recursive</label>
+                                    </div>
+                                    <div class="col s10">
+                                        <p class="subtext">
+                                            Look inside any sub-folders in the remote folder. If any files are found, download them.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row valign-wrapper">
+                                    <div class="switch col s2">
+                                        <input name="scan_type" type="radio" id="scan_directories" />
+                                        <label for="scan_directories">Include folders</label>
+                                    </div>
+                                    <div class="col s10">
+                                        <p class="subtext">
+                                            Download files and sub-folders (including entire sub-folder contents).
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header active"><i class="material-icons">sort_by_alpha</i>Filters</div>
+                            <div class="collapsible-body">
+                                <div class="row">
+                                    <form class="col s12">
+                                        <div class="col s12">
+                                            <p class="subtext">
+                                                If you do not want davos to pull down all recent files from the server during the next scheduled run, please define a filter (or more). A filter works by telling davos that a file must adhere to a particular naming structure (file name or extension) before it decides to download it. For example, if you only want the schedule to download <i>.doc</i> files, you should enter a filter of <strong>*.doc</strong>. You may use a question mark (<strong>?</strong>) to denote a single wildcard character, or an asterisk (<strong>*</strong>) to denote any number of wildcard characters.
+                                            </p>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <textarea id="filter-keywords" class="materialize-textarea"></textarea>
+                                                <label for="filter-keywords">Filter keywords (one per line)</label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header active"><i class="material-icons">code</i>Post-download Actions</div>
+                            <div class="collapsible-body">
+                                <div class="row">
+                                    <div class="col s12">
+                                        <p class="subtext">
+                                            Add actions for davos to perform after each file has been successfully downloaded.
+                                        </p>
+
+                                    </div>
+                                </div>
                             </div>
                         </li>
                     </ul>
@@ -136,11 +246,11 @@
                 <div class="row">
                     <button class="btn waves-effect waves-light" type="submit" name="action">Save changes</button>
                 </div>
-                
+
                 <div class="row">
                     <div class="section">
                         <h5 class="light">Schedule Options</h5>
-                        <button class="btn waves-effect waves-light green lighten-2" disabled type="submit" name="action">Start</button>
+                        <button class="btn waves-effect waves-light green lighten-2" type="submit" name="action">Start</button>
                         <button class="btn waves-effect waves-light orange lighten-2" type="submit" name="action">Restart</button>
                         <button class="btn waves-effect waves-light red lighten-2" type="submit" name="action">Stop</button>
                     </div>
