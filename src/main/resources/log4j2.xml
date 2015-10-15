@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	
+	<Properties>
+		<Property name="LOG_EXCEPTION_CONVERSION_WORD">%rEx</Property>
+		<Property name="LOG_LEVEL_PATTERN">%highlight{%-5p}</Property>
+		<Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} - ${LOG_LEVEL_PATTERN} - [%c{1}] - %msg%n</Property>
+	</Properties>
+	
+	<Appenders>
+	
+		<Console name="Console" target="SYSTEM_OUT" follow="true">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+		</Console>
+	
+		<RollingFile name="File" fileName="davos.log" filePattern="logs/$${date:yyyy-MM}/app-%d{yyyy-MM-dd-HH}-%i.log">
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+		</RollingFile>
+		
+	</Appenders>
+	
+	<Loggers>
+	
+		<Logger name="io.linuxserver" level="debug" />
+		<Logger name="org.thymeleaf" level="warn" />
+		
+		<Root level="info">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="File" />
+		</Root>
+		
+	</Loggers>
+	
+</Configuration>
