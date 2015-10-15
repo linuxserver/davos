@@ -31,7 +31,6 @@ overridedb.*
 *.ipr
 *.iws
 .idea
-*.jar
 .DS_Store
 .factorypath
 davos.log
