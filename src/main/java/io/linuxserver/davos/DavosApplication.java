@@ -1,4 +1,4 @@
-package io.linuxserver;
+package io.linuxserver.davos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

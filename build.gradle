@@ -42,14 +42,20 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-mail'
 	compile 'org.springframework.boot:spring-boot-starter-log4j2'
 	
+	compile 'com.jcraft:jsch:0.1.50'
+    compile 'joda-time:joda-time:2.3'
+    compile 'commons-net:commons-net:3.3'
+	
     runtime 'com.h2database:h2'
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'org.assertj:assertj-core:3.2.0'
+    testCompile 'org.mockito:mockito-all:1.9.5'
     testCompile 'junit:junit:4.11'
 }
 
 eclipse {
+
     classpath {
          containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
          containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'

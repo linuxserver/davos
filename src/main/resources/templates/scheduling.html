@@ -55,8 +55,7 @@
                         <h4 class="light">Current Schedules</h4>
 
                         <div class="collection">
-                            <a th:href="@{/scheduling/edit}" class="collection-item schedule">OVH<span class="badge info idle"></span></a>
-                            <a href="#!" class="collection-item schedule">Something else<span class="badge info in-progress"></span></a>
+                        	<a th:each="schedule : ${schedules}" th:href="@{/scheduling/edit/} + ${schedule.id}" class="collection-item schedule" th:text="${schedule.name}"></a>
                         </div>
                     </div>
 
