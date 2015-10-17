@@ -37,9 +37,9 @@ public class ConnectWorkflowStep extends WorkflowStep {
 
         } catch (FTPException e) {
 
-            LOGGER.warn("Unable to create connection to {} on port {}. Falling back. Will try again next time.",
+            LOGGER.error("Unable to create connection to {} on port {}. Falling back. Will try again next time.",
                     schedule.getConfig().getHostName(), schedule.getConfig().getPort());
-            LOGGER.warn("Error was: {}", e.getMessage());
+            LOGGER.error("Error was: {}", e.getMessage());
             LOGGER.debug("Stacktrace", e);
         }
     }

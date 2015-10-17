@@ -16,7 +16,6 @@ public class ScheduleWorkflow {
     private Connection connection;
     
     public ScheduleWorkflow(ScheduleConfiguration config) {
-        
         this.config = config;
     }
     
