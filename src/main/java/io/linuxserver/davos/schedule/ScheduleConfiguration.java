@@ -6,6 +6,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 import io.linuxserver.davos.schedule.workflow.actions.PostDownloadAction;
+import io.linuxserver.davos.transfer.ftp.FileTransferType;
 import io.linuxserver.davos.transfer.ftp.TransferProtocol;
 import io.linuxserver.davos.transfer.ftp.client.UserCredentials;
 
@@ -21,9 +22,10 @@ public class ScheduleConfiguration {
     private List<String> filters = new ArrayList<String>();
     private List<PostDownloadAction> actions = new ArrayList<PostDownloadAction>();
     private DateTime lastRun = DateTime.now();
+    private FileTransferType transferType;
 
     public ScheduleConfiguration(final String scheduleName, final TransferProtocol protocol, final String hostname,
-            final int port, final UserCredentials credentials, final String remoteFilePath, final String localFilePath) {
+            final int port, final UserCredentials credentials, final String remoteFilePath, final String localFilePath, FileTransferType transferType) {
 
         this.scheduleName = scheduleName;
         this.connectionType = protocol;
@@ -32,6 +34,7 @@ public class ScheduleConfiguration {
         this.credentials = credentials;
         this.localFilePath = localFilePath;
         this.remoteFilePath = remoteFilePath;
+        this.transferType = transferType;
     }
 
     public TransferProtocol getConnectionType() {
@@ -84,5 +87,9 @@ public class ScheduleConfiguration {
 
     public void setLastRun(DateTime lastRun) {
         this.lastRun = lastRun;
+    }
+
+    public FileTransferType getTransferType() {
+        return transferType;
     }
 }

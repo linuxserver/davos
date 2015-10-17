@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import io.linuxserver.davos.schedule.ScheduleConfiguration;
+import io.linuxserver.davos.transfer.ftp.FileTransferType;
 import io.linuxserver.davos.transfer.ftp.TransferProtocol;
 import io.linuxserver.davos.transfer.ftp.client.Client;
 import io.linuxserver.davos.transfer.ftp.client.ClientFactory;
@@ -32,7 +33,7 @@ public class ConnectWorkflowStepTest {
 
     @Mock
     private Client mockClient;
-    
+
     @Mock
     private WorkflowStep mockNextStep;
 
@@ -48,7 +49,7 @@ public class ConnectWorkflowStepTest {
     public void runStepShouldCreateNewClient() {
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "");
+                "", "", FileTransferType.FILES_ONLY);
 
         workflowStep.runStep(new ScheduleWorkflow(config));
 
@@ -59,7 +60,7 @@ public class ConnectWorkflowStepTest {
     public void runStepShouldSetClientIntoWorkflow() {
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "");
+                "", "", FileTransferType.FILES_ONLY);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         workflowStep.runStep(schedule);
@@ -71,7 +72,7 @@ public class ConnectWorkflowStepTest {
     public void runStepShouldConnectToNewlyCreatedClient() {
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "");
+                "", "", FileTransferType.FILES_ONLY);
 
         workflowStep.runStep(new ScheduleWorkflow(config));
 
@@ -86,7 +87,7 @@ public class ConnectWorkflowStepTest {
         UserCredentials credentials = new UserCredentials(hostIP, hostIP);
 
         ScheduleConfiguration config = new ScheduleConfiguration("scheduleName", TransferProtocol.SFTP, hostIP, port, credentials,
-                "remotePath", "localPath");
+                "remotePath", "localPath", FileTransferType.FILES_ONLY);
 
         workflowStep.runStep(new ScheduleWorkflow(config));
 
@@ -103,22 +104,22 @@ public class ConnectWorkflowStepTest {
 
         Connection mockConnection = mock(Connection.class);
         when(mockClient.connect()).thenReturn(mockConnection);
-        
+
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "");
+                "", "", FileTransferType.FILES_ONLY);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         workflowStep.runStep(schedule);
 
         assertThat(schedule.getConnection()).isEqualTo(mockConnection);
     }
-    
+
     @Test
     public void runStepShouldCallOnNextStepWhenComplete() {
-        
+
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "");
-        
+                "", "", FileTransferType.FILES_ONLY);
+
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         workflowStep.runStep(schedule);
 
@@ -127,15 +128,15 @@ public class ConnectWorkflowStepTest {
         inOrder.verify(mockClient).connect();
         inOrder.verify(mockNextStep).runStep(schedule);
     }
-    
+
     @Test
     public void ifClientCannotConnectThenDoNotCallNextStep() {
-        
+
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "");
-        
+                "", "", FileTransferType.FILES_ONLY);
+
         when(mockClient.connect()).thenThrow(new ClientConnectionException());
-        
+
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         workflowStep.runStep(schedule);
 
@@ -143,6 +144,6 @@ public class ConnectWorkflowStepTest {
 
         inOrder.verify(mockClient).connect();
         inOrder.verify(mockNextStep, never()).runStep(schedule);
-        
+
     }
 }

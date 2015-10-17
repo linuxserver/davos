@@ -11,5 +11,10 @@ public abstract class TransferStrategy {
         this.connection = connection;
     }
 
-    public abstract void transfer(FTPFile fileToTransfer, String destination);
+    public abstract void transferFile(FTPFile fileToTransfer, String destination);
+    
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
 }

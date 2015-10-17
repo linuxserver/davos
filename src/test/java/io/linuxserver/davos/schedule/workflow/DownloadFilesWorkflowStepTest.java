@@ -1,0 +1,126 @@
+package io.linuxserver.davos.schedule.workflow;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
+
+import java.util.ArrayList;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+
+import io.linuxserver.davos.schedule.ScheduleConfiguration;
+import io.linuxserver.davos.schedule.workflow.transfer.TransferStrategy;
+import io.linuxserver.davos.schedule.workflow.transfer.TransferStrategyFactory;
+import io.linuxserver.davos.transfer.ftp.FTPFile;
+import io.linuxserver.davos.transfer.ftp.FileTransferType;
+import io.linuxserver.davos.transfer.ftp.TransferProtocol;
+import io.linuxserver.davos.transfer.ftp.client.UserCredentials;
+import io.linuxserver.davos.transfer.ftp.connection.Connection;
+import io.linuxserver.davos.transfer.ftp.exception.DownloadFailedException;
+
+public class DownloadFilesWorkflowStepTest {
+
+    @InjectMocks
+    private DownloadFilesWorkflowStep workflowStep = new DownloadFilesWorkflowStep();
+
+    @Mock
+    private WorkflowStep mockNextStep;
+
+    @Mock
+    private Connection mockConnection;
+
+    @Mock
+    private TransferStrategyFactory mockTransferStrategyFactory;
+
+    private TransferStrategy mockTransferStrategy;
+
+    @Before
+    public void setUp() {
+
+        initMocks(this);
+
+        mockTransferStrategy = mock(TransferStrategy.class);
+        
+        when(mockTransferStrategyFactory.getStrategy(any(FileTransferType.class), eq(mockConnection)))
+                .thenReturn(mockTransferStrategy);
+    }
+
+    @Test
+    public void shouldCallStrategyFactoryToGetCorrectStrategyAndPassFileThrough() {
+
+        ArrayList<FTPFile> filesToDownload = new ArrayList<FTPFile>();
+
+        FTPFile file = new FTPFile("", 0, "", 0, false);
+        FTPFile file2 = new FTPFile("", 0, "", 0, false);
+
+        filesToDownload.add(file);
+        filesToDownload.add(file2);
+
+        workflowStep.setFilesToDownload(filesToDownload);
+
+        ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
+                "", "local/", FileTransferType.FILES_ONLY);
+
+        ScheduleWorkflow schedule = new ScheduleWorkflow(config);
+        schedule.setConnection(mockConnection);
+        workflowStep.runStep(schedule);
+
+        verify(mockTransferStrategyFactory).getStrategy(FileTransferType.FILES_ONLY, mockConnection);
+        
+        verify(mockTransferStrategy).transferFile(file, "local/");
+        verify(mockTransferStrategy).transferFile(file2, "local/");
+    }
+    
+    @Test
+    public void shouldCallOnNextStepWhenFinished() {
+        
+        ArrayList<FTPFile> filesToDownload = new ArrayList<FTPFile>();
+        FTPFile file = new FTPFile("", 0, "", 0, false);
+        filesToDownload.add(file);
+
+        workflowStep.setFilesToDownload(filesToDownload);
+        
+        ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
+                "", "local/", FileTransferType.FILES_ONLY);
+
+        ScheduleWorkflow schedule = new ScheduleWorkflow(config);
+        schedule.setConnection(mockConnection);
+        workflowStep.runStep(schedule);
+        
+        InOrder inOrder = Mockito.inOrder(mockTransferStrategy, mockNextStep);
+        
+        inOrder.verify(mockTransferStrategy).transferFile(file, "local/");
+        inOrder.verify(mockNextStep).runStep(schedule);
+    }
+    
+    @Test
+    public void ifStrategyTranferFailsThenShouldStillCallNextStep() {
+        
+        ArrayList<FTPFile> filesToDownload = new ArrayList<FTPFile>();
+        FTPFile file = new FTPFile("", 0, "", 0, false);
+        filesToDownload.add(file);
+
+        workflowStep.setFilesToDownload(filesToDownload);
+        
+        ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
+                "", "local/", FileTransferType.FILES_ONLY);
+
+        ScheduleWorkflow schedule = new ScheduleWorkflow(config);
+        schedule.setConnection(mockConnection);
+
+        doThrow(new DownloadFailedException()).when(mockTransferStrategy).transferFile(file, "local/");
+        
+        workflowStep.runStep(schedule);
+        
+        verify(mockNextStep).runStep(schedule);
+    }
+}

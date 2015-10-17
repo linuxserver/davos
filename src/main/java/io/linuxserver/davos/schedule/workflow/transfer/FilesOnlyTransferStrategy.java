@@ -10,7 +10,7 @@ public class FilesOnlyTransferStrategy extends TransferStrategy {
     }
 
     @Override
-    public void transfer(FTPFile fileToTransfer, String destination) {
+    public void transferFile(FTPFile fileToTransfer, String destination) {
         // TODO Auto-generated method stub
     }
 }

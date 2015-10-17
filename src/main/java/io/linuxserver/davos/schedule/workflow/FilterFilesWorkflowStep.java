@@ -58,6 +58,8 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
     }
 
     private Predicate<? super FTPFile> after(DateTime lastRun) {
+        
+        LOGGER.debug("Filtering initial set of files by lastRun. Last run was {}", lastRun);
         return f -> f.getLastModified().isAfter(lastRun);
     }
 
