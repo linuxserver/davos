@@ -1,5 +1,6 @@
 package io.linuxserver.davos.schedule.workflow.transfer;
 
+import io.linuxserver.davos.transfer.ftp.FTPFile;
 import io.linuxserver.davos.transfer.ftp.connection.Connection;
 
 public class FilesOnlyTransferStrategy extends TransferStrategy {
@@ -9,7 +10,7 @@ public class FilesOnlyTransferStrategy extends TransferStrategy {
     }
 
     @Override
-    public void transfer(String from, String to) {
+    public void transfer(FTPFile fileToTransfer, String destination) {
         // TODO Auto-generated method stub
     }
 }

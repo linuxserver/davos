@@ -1,5 +1,6 @@
 package io.linuxserver.davos.schedule.workflow.transfer;
 
+import io.linuxserver.davos.transfer.ftp.FTPFile;
 import io.linuxserver.davos.transfer.ftp.connection.Connection;
 
 public abstract class TransferStrategy {
@@ -10,5 +11,5 @@ public abstract class TransferStrategy {
         this.connection = connection;
     }
 
-    public abstract void transfer(String from, String to);
+    public abstract void transfer(FTPFile fileToTransfer, String destination);
 }
