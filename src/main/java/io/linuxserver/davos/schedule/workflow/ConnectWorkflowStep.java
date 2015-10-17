@@ -28,9 +28,11 @@ public class ConnectWorkflowStep extends WorkflowStep {
 
         try {
 
+            LOGGER.info("Connecting to host {} on port {}", schedule.getConfig().getHostName(), schedule.getConfig().getPort());
             schedule.setConnection(client.connect());
             schedule.setClient(client);
 
+            LOGGER.info("Connection success. Moving onto next step");
             nextStep.runStep(schedule);
 
         } catch (FTPException e) {
