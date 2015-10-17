@@ -27,8 +27,11 @@ public class FilterFilesWorkflowStepTest {
     @InjectMocks
     private FilterFilesWorkflowStep workflowStep = new FilterFilesWorkflowStep();
 
-    @Mock
+    @Mock(name = "nextStep")
     private DownloadFilesWorkflowStep mockNextStep;
+    
+    @Mock(name = "backoutStep")
+    private DisconnectWorkflowStep mockBackupStep;
 
     @Mock
     private Connection mockConnection;
@@ -207,7 +210,7 @@ public class FilterFilesWorkflowStepTest {
     }
 
     @Test
-    public void ifListingFilesIsUnsuccessfulThenDoNotCallNextStep() {
+    public void ifListingFilesIsUnsuccessfulThenDoNotCallNextStepAndCallBackupStepInstead() {
 
         ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
                 FileTransferType.FILES_ONLY);
@@ -220,5 +223,6 @@ public class FilterFilesWorkflowStepTest {
         workflowStep.runStep(schedule);
 
         verify(mockNextStep, never()).runStep(schedule);
+        verify(mockBackupStep).runStep(schedule);
     }
 }

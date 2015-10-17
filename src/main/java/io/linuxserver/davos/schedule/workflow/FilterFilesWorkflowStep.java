@@ -19,7 +19,9 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
     private static final Logger LOGGER = LoggerFactory.getLogger(FilterFilesWorkflowStep.class);
 
     public FilterFilesWorkflowStep() {
+        
         this.nextStep = new DownloadFilesWorkflowStep();
+        this.backoutStep = new DisconnectWorkflowStep();
     }
 
     @Override
@@ -54,6 +56,9 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
 
             LOGGER.error("Unable to filter files. Error message was: {}", e.getMessage());
             LOGGER.debug("Stacktrace", e);
+            
+            LOGGER.info("Backing out of this run.");
+            backoutStep.runStep(schedule);
         }
     }
 

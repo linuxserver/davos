@@ -32,9 +32,12 @@ public class DownloadFilesWorkflowStepTest {
     @InjectMocks
     private DownloadFilesWorkflowStep workflowStep = new DownloadFilesWorkflowStep();
 
-    @Mock
+    @Mock(name = "nextStep")
     private WorkflowStep mockNextStep;
 
+    @Mock(name = "backoutStep")
+    private WorkflowStep mockBackoutStep;
+    
     @Mock
     private Connection mockConnection;
 

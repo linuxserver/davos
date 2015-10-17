@@ -34,9 +34,12 @@ public class ConnectWorkflowStepTest {
     @Mock
     private Client mockClient;
 
-    @Mock
+    @Mock(name = "nextStep")
     private WorkflowStep mockNextStep;
-
+    
+    @Mock(name = "backoutStep")
+    private WorkflowStep mockBackoutStep;
+    
     @Before
     public void setUp() {
 
