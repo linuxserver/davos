@@ -52,11 +52,11 @@ public class PushbulletNotifyAction implements PostDownloadAction {
     }
 
     class PushbulletRequest {
-        
+
         public String type;
         public String title;
         public String body;
-        
+
         @Override
         public String toString() {
             return "PushbulletRequest [type=" + type + ", title=" + title + ", body=" + body + "]";

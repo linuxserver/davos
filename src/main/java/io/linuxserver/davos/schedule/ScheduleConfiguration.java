@@ -3,6 +3,7 @@ package io.linuxserver.davos.schedule;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.linuxserver.davos.schedule.workflow.actions.PostDownloadAction;
 import io.linuxserver.davos.transfer.ftp.TransferProtocol;
 import io.linuxserver.davos.transfer.ftp.client.UserCredentials;
 
@@ -16,6 +17,7 @@ public class ScheduleConfiguration {
     private String localFilePath;
     private String scheduleName;
     private List<String> filters = new ArrayList<String>();
+    private List<PostDownloadAction> actions = new ArrayList<PostDownloadAction>();
 
     public ScheduleConfiguration(final String scheduleName, final TransferProtocol protocol, final String hostname,
             final int port, final UserCredentials credentials, final String remoteFilePath, final String localFilePath) {
@@ -61,5 +63,13 @@ public class ScheduleConfiguration {
 
     public String getScheduleName() {
         return scheduleName;
+    }
+
+    public List<PostDownloadAction> getActions() {
+        return actions;
+    }
+
+    public void setActions(List<PostDownloadAction> actions) {
+        this.actions = actions;
     }
 }

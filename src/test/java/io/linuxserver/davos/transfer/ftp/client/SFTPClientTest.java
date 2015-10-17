@@ -1,12 +1,12 @@
 package io.linuxserver.davos.transfer.ftp.client;
 
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.Mockito.any;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import org.junit.Before;
@@ -28,6 +28,7 @@ import com.jcraft.jsch.Session;
 import io.linuxserver.davos.transfer.ftp.connection.Connection;
 import io.linuxserver.davos.transfer.ftp.connection.ConnectionFactory;
 import io.linuxserver.davos.transfer.ftp.connection.SFTPConnection;
+import io.linuxserver.davos.transfer.ftp.exception.ClientDisconnectException;
 
 public class SFTPClientTest {
 
@@ -59,7 +60,7 @@ public class SFTPClientTest {
         SFTPClient.setPort(999);
         SFTPClient.setCredentials(userCredentials);
 
-        when(mockConnectionFactory.createSftpConnection(any(Channel.class))).thenReturn(new SFTPConnection(new ChannelSftp()));
+        when(mockConnectionFactory.createSFTPConnection(any(Channel.class))).thenReturn(new SFTPConnection(new ChannelSftp()));
     }
 
     @Test
@@ -141,7 +142,7 @@ public class SFTPClientTest {
     @Test
     public void disconnectMethodShouldThrowExceptionWhenNotInitiallyConnected() {
 
-        expectedException.expect(RuntimeException.class);
+        expectedException.expect(ClientDisconnectException.class);
         expectedException.expectMessage(is(equalTo("The underlying connection was never initially made.")));
 
         SFTPClient.disconnect();

@@ -1,6 +1,4 @@
-package io.linuxserver.davos.schedule.workflow.steps;
-
-import io.linuxserver.davos.schedule.workflow.ScheduleWorkflow;
+package io.linuxserver.davos.schedule.workflow;
 
 public class FilterFilesWorkflowStep extends WorkflowStep {
 
@@ -9,6 +7,6 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
     }
     
     @Override
-    public void runSchedule(ScheduleWorkflow schedule) {
+    public void runStep(ScheduleWorkflow schedule) {
     }
 }
