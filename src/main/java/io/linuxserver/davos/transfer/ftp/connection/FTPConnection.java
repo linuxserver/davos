@@ -17,7 +17,7 @@ public class FTPConnection implements Connection {
     }
 
     @Override
-    public void download(String remoteFilePath, String localFilePath) {
+    public void download(FTPFile remoteFilePath, String localFilePath) {
         // TODO Auto-generated method stub
 
     }

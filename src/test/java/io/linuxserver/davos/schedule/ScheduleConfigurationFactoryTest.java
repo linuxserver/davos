@@ -31,7 +31,7 @@ public class ScheduleConfigurationFactoryTest {
         model.startAutomatically = true;
         model.transferType = FileTransferType.FILES_ONLY;
         model.username = "username";
-        model.lastRun = new DateTime(2015, 1, 1, 0, 0);
+        model.lastRun = new DateTime(2015, 1, 1, 0, 0).toDate();
         
         ScheduleConfiguration config = ScheduleConfigurationFactory.createConfig(model);
         
@@ -44,7 +44,7 @@ public class ScheduleConfigurationFactoryTest {
         assertThat(config.getRemoteFilePath()).isEqualTo(model.remoteFilePath);
         assertThat(config.getTransferType()).isEqualTo(model.transferType);
         assertThat(config.getCredentials().getUsername()).isEqualTo(model.username);
-        assertThat(config.getLastRun()).isEqualTo(model.lastRun);
+        assertThat(config.getLastRun().toDate()).isEqualTo(model.lastRun);
     }
     
     @Test
@@ -82,11 +82,12 @@ public class ScheduleConfigurationFactoryTest {
     public void shouldAddAllActionsIfAny() {
         
         ScheduleConfigurationModel model = new ScheduleConfigurationModel();
+        model.localFilePath = "a/local/path/";
         model.actions = new ArrayList<ActionModel>();
         
         ActionModel action1 = new ActionModel();
         action1.actionType = "move";
-        action1.f1 = "current/";
+        action1.f1 = "a/local/path/";
         action1.f2 = "new/";
         
         ActionModel action2 = new ActionModel();

@@ -52,7 +52,7 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
             LOGGER.info("Updating lastRun to {}", DateTime.now());
             schedule.getConfig().setLastRun(DateTime.now());
             
-            LOGGER.info("Successfully filtered files. Moving onto next step");
+            LOGGER.info("Filtered files. Moving onto next step");
             nextStep.runStep(schedule);
 
         } catch (FTPException e) {

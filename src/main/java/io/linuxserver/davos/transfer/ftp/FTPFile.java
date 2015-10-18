@@ -27,7 +27,7 @@ public class FTPFile {
         return size;
     }
 
-    public String getAbsolutePath() {
+    public String getPath() {
         return absolutePath;
     }
 

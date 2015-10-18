@@ -48,6 +48,7 @@ dependencies {
 	compile 'org.apache.commons:commons-lang3:3.4'
 	
     runtime 'com.h2database:h2'
+    runtime 'joda-time:joda-time-hibernate:1.4'
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'org.assertj:assertj-core:3.2.0'

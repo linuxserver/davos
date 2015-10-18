@@ -1,5 +1,7 @@
 package io.linuxserver.davos.schedule;
 
+import org.joda.time.DateTime;
+
 import io.linuxserver.davos.persistence.model.ActionModel;
 import io.linuxserver.davos.persistence.model.FilterModel;
 import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
@@ -16,7 +18,7 @@ public class ScheduleConfigurationFactory {
                 model.transferType);
 
         if (null != model.lastRun)
-            config.setLastRun(model.lastRun);
+            config.setLastRun(new DateTime(model.lastRun));
 
         if (null != model.filters)
             addFilters(model, config);
@@ -32,7 +34,7 @@ public class ScheduleConfigurationFactory {
         for (ActionModel action : model.actions) {
 
             if ("move".equals(action.actionType))
-                config.getActions().add(new MoveFileAction(action.f1, action.f2));
+                config.getActions().add(new MoveFileAction(config.getLocalFilePath(), action.f1));
 
             if ("pushbullet".equals(action.actionType))
                 config.getActions().add(new PushbulletNotifyAction(action.f1));

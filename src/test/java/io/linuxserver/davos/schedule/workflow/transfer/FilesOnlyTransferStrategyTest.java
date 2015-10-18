@@ -1,5 +1,6 @@
 package io.linuxserver.davos.schedule.workflow.transfer;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -34,7 +35,7 @@ public class FilesOnlyTransferStrategyTest {
         
         strategy.transferFile(file, "destination");
         
-        verify(mockConnection).download("remotePath/file1", "destination/");
+        verify(mockConnection).download(file, "destination/");
     }
     
     @Test
@@ -44,6 +45,6 @@ public class FilesOnlyTransferStrategyTest {
         
         strategy.transferFile(file, "destination");
         
-        verify(mockConnection, never()).download(anyString(), anyString());
+        verify(mockConnection, never()).download(any(FTPFile.class), anyString());
     }
 }

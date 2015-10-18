@@ -12,6 +12,10 @@ public class FileUtils {
     public void moveFileToDirectory(String oldPath, String newPath) throws IOException {
         org.apache.commons.io.FileUtils.moveToDirectory(getFile(oldPath), getFile(newPath), true);
     }
+    
+    public void createLocalDirectory(String directoryPath) {
+        new File(directoryPath).mkdirs();
+    }
 
     public static String ensureTrailingSlash(String path) {
 

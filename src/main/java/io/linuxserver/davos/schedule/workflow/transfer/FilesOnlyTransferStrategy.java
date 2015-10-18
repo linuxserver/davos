@@ -19,13 +19,13 @@ public class FilesOnlyTransferStrategy extends TransferStrategy {
     public void transferFile(FTPFile fileToTransfer, String destination) {
 
         String filename = fileToTransfer.getName();
-        String cleanFilePath = FileUtils.ensureTrailingSlash(fileToTransfer.getAbsolutePath());
+        String cleanFilePath = FileUtils.ensureTrailingSlash(fileToTransfer.getPath());
         String cleanDestination = FileUtils.ensureTrailingSlash(destination);
 
         if (!fileToTransfer.isDirectory()) {
          
             LOGGER.info("Downloading {} to {}", cleanFilePath + filename, cleanDestination);
-            connection.download(cleanFilePath + filename, cleanDestination);
+            connection.download(fileToTransfer, cleanDestination);
             LOGGER.info("Successfully downloaded file.");
             
             LOGGER.info("Running post download actions on {}", filename);

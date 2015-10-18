@@ -13,6 +13,6 @@ public interface ScheduleConfigurationDAO {
     ScheduleConfigurationModel getConfig(Long id);
 
     ScheduleConfigurationModel updateConfig(ScheduleConfigurationModel model);
-
+    
     void updateLastRun(Long configId, DateTime lastRun);
 }

@@ -32,7 +32,7 @@ public class FilesAndFoldersTranferStrategyTest {
         
         strategy.transferFile(file, "destination");
         
-        verify(mockConnection).download("remotePath/file1", "destination/");
+        verify(mockConnection).download(file, "destination/");
     }
     
     @Test
@@ -42,6 +42,6 @@ public class FilesAndFoldersTranferStrategyTest {
         
         strategy.transferFile(file, "destination");
         
-        verify(mockConnection).download("remotePath/file1", "destination/");
+        verify(mockConnection).download(file, "destination/");
     }
 }

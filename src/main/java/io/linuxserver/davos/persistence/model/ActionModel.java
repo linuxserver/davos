@@ -2,7 +2,6 @@ package io.linuxserver.davos.persistence.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -11,7 +10,11 @@ import javax.persistence.ManyToOne;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ActionModel {
 
     @Id
@@ -27,14 +30,8 @@ public class ActionModel {
     @Column
     public String f2;
     
-    @Column
-    public String f3;
-    
-    @Column
-    public String f4;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @ManyToOne
+    @JoinColumn(name = "schedule_id")
     public ScheduleConfigurationModel schedule;
     
     @Override

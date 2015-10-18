@@ -1,5 +1,7 @@
 package io.linuxserver.davos.persistence.model;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -12,12 +14,15 @@ import javax.persistence.OneToMany;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.joda.time.DateTime;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import io.linuxserver.davos.transfer.ftp.FileTransferType;
 import io.linuxserver.davos.transfer.ftp.TransferProtocol;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ScheduleConfigurationModel {
 
     @Id
@@ -55,16 +60,16 @@ public class ScheduleConfigurationModel {
     public String localFilePath;
 
     @Column
-    public DateTime lastRun;
+    public Date lastRun;
 
     @Column
     public FileTransferType transferType;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "schedule", cascade = CascadeType.ALL)
-    public List<FilterModel> filters;
+    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "schedule", cascade = CascadeType.ALL)
+    public List<FilterModel> filters = new ArrayList<FilterModel>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "schedule", cascade = CascadeType.ALL)
-    public List<ActionModel> actions;
+    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "schedule", cascade = CascadeType.ALL)
+    public List<ActionModel> actions = new ArrayList<ActionModel>();
 
     @Override
     public String toString() {
