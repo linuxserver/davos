@@ -26,7 +26,7 @@
 		<Logger name="io.linuxserver" level="debug" />
 		<Logger name="org.thymeleaf" level="warn" />
 
-		<Root level="debug">
+		<Root level="info">
 			<AppenderRef ref="Console" />
 			<!--  <AppenderRef ref="File" /> -->
 		</Root>

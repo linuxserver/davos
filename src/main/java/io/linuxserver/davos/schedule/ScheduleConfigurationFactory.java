@@ -11,9 +11,9 @@ public class ScheduleConfigurationFactory {
 
     public static ScheduleConfiguration createConfig(ScheduleConfigurationModel model) {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(0L, model.name, model.connectionType, model.hostName,
-                model.port, new UserCredentials(model.username, model.password), model.remoteFilePath,
-                model.localFilePath, model.transferType);
+        ScheduleConfiguration config = new ScheduleConfiguration(model.name, model.connectionType, model.hostName, model.port,
+                new UserCredentials(model.username, model.password), model.remoteFilePath, model.localFilePath,
+                model.transferType);
 
         if (null != model.lastRun)
             config.setLastRun(model.lastRun);

@@ -50,7 +50,7 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
             }
 
             LOGGER.info("Updating lastRun to {}", DateTime.now());
-            schedule.getConfigurationDAO().updateLastRun(schedule.getConfig().getId(), DateTime.now());
+            schedule.getConfig().setLastRun(DateTime.now());
             
             LOGGER.info("Successfully filtered files. Moving onto next step");
             nextStep.runStep(schedule);
