@@ -72,8 +72,8 @@ public class DownloadFilesWorkflowStepTest {
 
         workflowStep.setFilesToDownload(filesToDownload);
 
-        ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "local/", FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, "", TransferProtocol.SFTP, "", 0,
+                new UserCredentials("", ""), "", "local/", FileTransferType.FILES_ONLY);
         
         ArrayList<PostDownloadAction> actions = new ArrayList<PostDownloadAction>();
         actions.add(new MoveFileAction("", ""));
@@ -100,8 +100,8 @@ public class DownloadFilesWorkflowStepTest {
 
         workflowStep.setFilesToDownload(filesToDownload);
         
-        ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "local/", FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, "", TransferProtocol.SFTP, "", 0,
+                new UserCredentials("", ""), "", "local/", FileTransferType.FILES_ONLY);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.setConnection(mockConnection);
@@ -122,8 +122,8 @@ public class DownloadFilesWorkflowStepTest {
 
         workflowStep.setFilesToDownload(filesToDownload);
         
-        ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "local/", FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, "", TransferProtocol.SFTP, "", 0,
+                new UserCredentials("", ""), "", "local/", FileTransferType.FILES_ONLY);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.setConnection(mockConnection);

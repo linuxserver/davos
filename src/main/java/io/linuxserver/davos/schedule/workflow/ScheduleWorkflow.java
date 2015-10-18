@@ -3,6 +3,7 @@ package io.linuxserver.davos.schedule.workflow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.linuxserver.davos.persistence.dao.ScheduleConfigurationDAO;
 import io.linuxserver.davos.schedule.ScheduleConfiguration;
 import io.linuxserver.davos.transfer.ftp.client.Client;
 import io.linuxserver.davos.transfer.ftp.connection.Connection;
@@ -11,7 +12,9 @@ public class ScheduleWorkflow {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleWorkflow.class);
     
+    private ScheduleConfigurationDAO configurationDAO;
     private ScheduleConfiguration config;
+    
     private Client client;
     private Connection connection;
     
@@ -44,5 +47,13 @@ public class ScheduleWorkflow {
 
     protected void setClient(Client client) {
         this.client = client;
+    }
+
+    public ScheduleConfigurationDAO getConfigurationDAO() {
+        return configurationDAO;
+    }
+
+    public void setConfigurationDAO(ScheduleConfigurationDAO configurationDAO) {
+        this.configurationDAO = configurationDAO;
     }
 }

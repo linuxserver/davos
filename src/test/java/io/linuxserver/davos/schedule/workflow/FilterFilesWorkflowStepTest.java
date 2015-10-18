@@ -1,5 +1,7 @@
 package io.linuxserver.davos.schedule.workflow;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import io.linuxserver.davos.persistence.dao.ScheduleConfigurationDAO;
 import io.linuxserver.davos.schedule.ScheduleConfiguration;
 import io.linuxserver.davos.transfer.ftp.FTPFile;
 import io.linuxserver.davos.transfer.ftp.FileTransferType;
@@ -32,6 +35,9 @@ public class FilterFilesWorkflowStepTest {
     
     @Mock(name = "backoutStep")
     private DisconnectWorkflowStep mockBackupStep;
+    
+    @Mock
+    private ScheduleConfigurationDAO mockConfigDAO;
 
     @Mock
     private Connection mockConnection;
@@ -44,11 +50,12 @@ public class FilterFilesWorkflowStepTest {
     @Test
     public void workflowStepShouldListFilesInTheRemoteDirectory() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
-                FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, null, null, null, 0, null, "remote/",
+                "local/", FileTransferType.FILES_ONLY);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.setConnection(mockConnection);
+        schedule.setConfigurationDAO(mockConfigDAO);
 
         workflowStep.runStep(schedule);
 
@@ -58,8 +65,8 @@ public class FilterFilesWorkflowStepTest {
     @Test
     public void workflowStepShouldFilterOutAnyFilesThatAreNotInTheGivenConfigList() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
-                FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, null, null, null, 0, null, "remote/",
+                "local/", FileTransferType.FILES_ONLY);
         config.setFilters(Arrays.asList("file1", "file2", "file4"));
         config.setLastRun(DateTime.now().minusDays(1));
 
@@ -81,6 +88,7 @@ public class FilterFilesWorkflowStepTest {
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.setConnection(mockConnection);
+        schedule.setConfigurationDAO(mockConfigDAO);
 
         workflowStep.runStep(schedule);
 
@@ -90,8 +98,8 @@ public class FilterFilesWorkflowStepTest {
     @Test
     public void workflowStepShouldFilterOutAnyFilesThatAreNotInTheGivenConfigListAndWereModifiedBeforeLastRun() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
-                FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, null, null, null, 0, null, "remote/",
+                "local/", FileTransferType.FILES_ONLY);
         config.setFilters(Arrays.asList("file1", "file2", "file4"));
         config.setLastRun(DateTime.now().minusDays(1));
 
@@ -113,6 +121,7 @@ public class FilterFilesWorkflowStepTest {
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.setConnection(mockConnection);
+        schedule.setConfigurationDAO(mockConfigDAO);
 
         workflowStep.runStep(schedule);
 
@@ -122,8 +131,8 @@ public class FilterFilesWorkflowStepTest {
     @Test
     public void workflowStepShouldFilterOutAnyFilesThatDoNotMatchTheWildcards() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
-                FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, null, null, null, 0, null, "remote/",
+                "local/", FileTransferType.FILES_ONLY);
         config.setFilters(Arrays.asList("file1?and?Stuff", "file2*something", "file4*", "file5"));
         config.setLastRun(DateTime.now().minusDays(1));
 
@@ -145,7 +154,8 @@ public class FilterFilesWorkflowStepTest {
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.setConnection(mockConnection);
-
+        schedule.setConfigurationDAO(mockConfigDAO);
+        
         workflowStep.runStep(schedule);
 
         verify(mockNextStep).setFilesToDownload(Arrays.asList(file2, file4));
@@ -154,8 +164,8 @@ public class FilterFilesWorkflowStepTest {
     @Test
     public void workflowStepShouldCallNextStepRunMethodOnceSettingFilters() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
-                FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, null, null, null, 0, null, "remote/",
+                "local/", FileTransferType.FILES_ONLY);
         config.setFilters(Arrays.asList("file1", "file2", "file4"));
         config.setLastRun(DateTime.now().minusDays(1));
 
@@ -169,20 +179,22 @@ public class FilterFilesWorkflowStepTest {
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.setConnection(mockConnection);
+        schedule.setConfigurationDAO(mockConfigDAO);
 
         workflowStep.runStep(schedule);
 
-        InOrder inOrder = Mockito.inOrder(mockNextStep);
+        InOrder inOrder = Mockito.inOrder(mockNextStep, mockConfigDAO);
 
         inOrder.verify(mockNextStep).setFilesToDownload(Arrays.asList(file1));
+        inOrder.verify(mockConfigDAO).updateLastRun(eq(0L), any(DateTime.class));
         inOrder.verify(mockNextStep).runStep(schedule);
     }
 
     @Test
     public void ifFilterListIsInitiallyEmptyThenAssumeThatAllFilesAfterLastRunShouldBeDownloaded() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
-                FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, null, null, null, 0, null, "remote/",
+                "local/", FileTransferType.FILES_ONLY);
         config.setLastRun(DateTime.now().minusDays(1));
 
         ArrayList<FTPFile> files = new ArrayList<FTPFile>();
@@ -203,6 +215,7 @@ public class FilterFilesWorkflowStepTest {
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.setConnection(mockConnection);
+        schedule.setConfigurationDAO(mockConfigDAO);
 
         workflowStep.runStep(schedule);
 
@@ -212,16 +225,18 @@ public class FilterFilesWorkflowStepTest {
     @Test
     public void ifListingFilesIsUnsuccessfulThenDoNotCallNextStepAndCallBackupStepInstead() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
-                FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, null, null, null, 0, null, "remote/",
+                "local/", FileTransferType.FILES_ONLY);
 
         when(mockConnection.listFiles("remote/")).thenThrow(new FileListingException());
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.setConnection(mockConnection);
+        schedule.setConfigurationDAO(mockConfigDAO);
 
         workflowStep.runStep(schedule);
 
+        verify(mockConfigDAO, never()).updateLastRun(any(Long.class), any(DateTime.class));
         verify(mockNextStep, never()).runStep(schedule);
         verify(mockBackupStep).runStep(schedule);
     }

@@ -21,12 +21,14 @@ public class ScheduleConfiguration {
     private String scheduleName;
     private List<String> filters = new ArrayList<String>();
     private List<PostDownloadAction> actions = new ArrayList<PostDownloadAction>();
-    private DateTime lastRun = DateTime.now();
+    private DateTime lastRun = new DateTime(0);
     private FileTransferType transferType;
+    private Long id;
 
-    public ScheduleConfiguration(final String scheduleName, final TransferProtocol protocol, final String hostname,
-            final int port, final UserCredentials credentials, final String remoteFilePath, final String localFilePath, FileTransferType transferType) {
+    public ScheduleConfiguration(Long id, final String scheduleName, final TransferProtocol protocol,
+            final String hostname, final int port, final UserCredentials credentials, final String remoteFilePath, final String localFilePath, FileTransferType transferType) {
 
+        this.id = id;
         this.scheduleName = scheduleName;
         this.connectionType = protocol;
         this.hostname = hostname;
@@ -91,5 +93,9 @@ public class ScheduleConfiguration {
 
     public FileTransferType getTransferType() {
         return transferType;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

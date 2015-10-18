@@ -12,14 +12,26 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Entity
-public class FilterModel {
+public class ActionModel {
 
     @Id
     @GeneratedValue
     public Long id;
     
     @Column
-    public String value;
+    public String actionType;
+    
+    @Column
+    public String f1;
+    
+    @Column
+    public String f2;
+    
+    @Column
+    public String f3;
+    
+    @Column
+    public String f4;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn

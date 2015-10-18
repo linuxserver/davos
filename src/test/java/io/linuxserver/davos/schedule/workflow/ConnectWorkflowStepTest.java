@@ -51,8 +51,8 @@ public class ConnectWorkflowStepTest {
     @Test
     public void runStepShouldCreateNewClient() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "", FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, "", TransferProtocol.SFTP, "", 0,
+                new UserCredentials("", ""), "", "", FileTransferType.FILES_ONLY);
 
         workflowStep.runStep(new ScheduleWorkflow(config));
 
@@ -62,8 +62,8 @@ public class ConnectWorkflowStepTest {
     @Test
     public void runStepShouldSetClientIntoWorkflow() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "", FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, "", TransferProtocol.SFTP, "", 0,
+                new UserCredentials("", ""), "", "", FileTransferType.FILES_ONLY);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         workflowStep.runStep(schedule);
@@ -74,8 +74,8 @@ public class ConnectWorkflowStepTest {
     @Test
     public void runStepShouldConnectToNewlyCreatedClient() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "", FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, "", TransferProtocol.SFTP, "", 0,
+                new UserCredentials("", ""), "", "", FileTransferType.FILES_ONLY);
 
         workflowStep.runStep(new ScheduleWorkflow(config));
 
@@ -89,8 +89,8 @@ public class ConnectWorkflowStepTest {
         int port = 1337;
         UserCredentials credentials = new UserCredentials(hostIP, hostIP);
 
-        ScheduleConfiguration config = new ScheduleConfiguration("scheduleName", TransferProtocol.SFTP, hostIP, port, credentials,
-                "remotePath", "localPath", FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, "scheduleName", TransferProtocol.SFTP, hostIP, port,
+                credentials, "remotePath", "localPath", FileTransferType.FILES_ONLY);
 
         workflowStep.runStep(new ScheduleWorkflow(config));
 
@@ -108,8 +108,8 @@ public class ConnectWorkflowStepTest {
         Connection mockConnection = mock(Connection.class);
         when(mockClient.connect()).thenReturn(mockConnection);
 
-        ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "", FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, "", TransferProtocol.SFTP, "", 0,
+                new UserCredentials("", ""), "", "", FileTransferType.FILES_ONLY);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         workflowStep.runStep(schedule);
@@ -120,8 +120,8 @@ public class ConnectWorkflowStepTest {
     @Test
     public void runStepShouldCallOnNextStepWhenComplete() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "", FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, "", TransferProtocol.SFTP, "", 0,
+                new UserCredentials("", ""), "", "", FileTransferType.FILES_ONLY);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         workflowStep.runStep(schedule);
@@ -135,8 +135,8 @@ public class ConnectWorkflowStepTest {
     @Test
     public void ifClientCannotConnectThenDoNotCallNextStep() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "", FileTransferType.FILES_ONLY);
+        ScheduleConfiguration config = new ScheduleConfiguration(0L, "", TransferProtocol.SFTP, "", 0,
+                new UserCredentials("", ""), "", "", FileTransferType.FILES_ONLY);
 
         when(mockClient.connect()).thenThrow(new ClientConnectionException());
 

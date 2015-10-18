@@ -49,6 +49,9 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
                 ((DownloadFilesWorkflowStep) nextStep).setFilesToDownload(filteredFiles);
             }
 
+            LOGGER.info("Updating lastRun to {}", DateTime.now());
+            schedule.getConfigurationDAO().updateLastRun(schedule.getConfig().getId(), DateTime.now());
+            
             LOGGER.info("Successfully filtered files. Moving onto next step");
             nextStep.runStep(schedule);
 

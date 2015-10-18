@@ -39,13 +39,13 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.boot:spring-boot-starter-jdbc'
-    compile 'org.springframework.boot:spring-boot-starter-mail'
 	compile 'org.springframework.boot:spring-boot-starter-log4j2'
 	
 	compile 'com.jcraft:jsch:0.1.50'
     compile 'joda-time:joda-time:2.3'
     compile 'commons-net:commons-net:3.3'
 	compile 'commons-io:commons-io:2.4'
+	compile 'org.apache.commons:commons-lang3:3.4'
 	
     runtime 'com.h2database:h2'
 
