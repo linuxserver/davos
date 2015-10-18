@@ -45,6 +45,11 @@ public class PushbulletNotifyAction implements PostDownloadAction {
             LOGGER.error("Unable to complete notification to Pushbullet. Given error: {}", e.getMessage());
         }
     }
+    
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     class PushbulletResponse {

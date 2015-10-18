@@ -18,6 +18,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import io.linuxserver.davos.schedule.ScheduleConfiguration;
+import io.linuxserver.davos.schedule.workflow.actions.MoveFileAction;
+import io.linuxserver.davos.schedule.workflow.actions.PostDownloadAction;
 import io.linuxserver.davos.schedule.workflow.transfer.TransferStrategy;
 import io.linuxserver.davos.schedule.workflow.transfer.TransferStrategyFactory;
 import io.linuxserver.davos.transfer.ftp.FTPFile;
@@ -72,6 +74,11 @@ public class DownloadFilesWorkflowStepTest {
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
                 "", "local/", FileTransferType.FILES_ONLY);
+        
+        ArrayList<PostDownloadAction> actions = new ArrayList<PostDownloadAction>();
+        actions.add(new MoveFileAction("", ""));
+        
+        config.setActions(actions);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.setConnection(mockConnection);
@@ -79,6 +86,7 @@ public class DownloadFilesWorkflowStepTest {
 
         verify(mockTransferStrategyFactory).getStrategy(FileTransferType.FILES_ONLY, mockConnection);
         
+        verify(mockTransferStrategy).setPostDownloadActions(actions);
         verify(mockTransferStrategy).transferFile(file, "local/");
         verify(mockTransferStrategy).transferFile(file2, "local/");
     }

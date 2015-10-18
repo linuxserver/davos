@@ -38,7 +38,7 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
 
             if (filters.isEmpty()) {
 
-                LOGGER.debug("Filter list was empty. Adding all found files to list");
+                LOGGER.info("Filter list was empty. Adding all found files to list");
                 ((DownloadFilesWorkflowStep) nextStep).setFilesToDownload(filesToFilter);
                 
             } else {

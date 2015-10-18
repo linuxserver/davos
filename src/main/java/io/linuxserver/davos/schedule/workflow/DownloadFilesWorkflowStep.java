@@ -30,6 +30,8 @@ public class DownloadFilesWorkflowStep extends WorkflowStep {
 
         TransferStrategy strategyToUse = transferStrategyFactory.getStrategy(config.getTransferType(), schedule.getConnection());
         LOGGER.debug("Strategy chosen for downloads is {}, selected {}", config.getTransferType(), strategyToUse);
+        strategyToUse.setPostDownloadActions(schedule.getConfig().getActions());
+        LOGGER.debug("PostDownloadActions {} have been set against chosen strategy", schedule.getConfig().getActions());
 
         try {
 

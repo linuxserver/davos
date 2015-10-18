@@ -36,4 +36,9 @@ public class MoveFileAction implements PostDownloadAction {
             LOGGER.debug("Full stack trace on error", e);
         }
     }
+    
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
 }
