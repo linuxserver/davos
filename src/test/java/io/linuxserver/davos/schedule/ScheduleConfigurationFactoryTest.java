@@ -29,7 +29,7 @@ public class ScheduleConfigurationFactoryTest {
         model.port = 8;
         model.remoteFilePath = "thing/";
         model.startAutomatically = true;
-        model.transferType = FileTransferType.FILES_ONLY;
+        model.transferType = FileTransferType.FILE;
         model.username = "username";
         model.lastRun = new DateTime(2015, 1, 1, 0, 0).toDate();
         

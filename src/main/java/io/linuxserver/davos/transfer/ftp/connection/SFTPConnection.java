@@ -3,6 +3,7 @@ package io.linuxserver.davos.transfer.ftp.connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -42,14 +43,14 @@ public class SFTPConnection implements Connection {
     public void download(FTPFile file, String localFilePath) {
 
         String path = FileUtils.ensureTrailingSlash(file.getPath()) + file.getName();
+        String cleanLocalPath = FileUtils.ensureTrailingSlash(localFilePath);
 
         try {
 
             if (file.isDirectory())
-                downloadDirectoryAndContents(file, localFilePath, path);
-
+                downloadDirectoryAndContents(file, cleanLocalPath, path);
             else
-                channel.get(path, FileUtils.ensureTrailingSlash(localFilePath));
+                channel.get(path, cleanLocalPath);
 
         } catch (SftpException e) {
             throw new DownloadFailedException("Unable to download file " + path, e);
@@ -87,25 +88,36 @@ public class SFTPConnection implements Connection {
         }
     }
 
-    private void downloadDirectoryAndContents(FTPFile file, String localFilePath, String path) throws SftpException {
+    private void downloadDirectoryAndContents(FTPFile file, String localDownloadFolder, String path) throws SftpException {
 
-        LOGGER.debug("Item is a directory. Employing single-level directory search for files");
-        List<FTPFile> subItems = listFiles(path);
-        List<FTPFile> filesOnly = subItems.stream().filter(f -> !f.isDirectory()).collect(Collectors.toList());
-        LOGGER.debug("Found {} file(s) in directory. Will attempt to download", filesOnly.size());
+        LOGGER.info("Item {} is a directory. Will now check sub-items", file.getName());
+        List<FTPFile> subItems = listFiles(path).stream().filter(removeCurrentAndParentDirs()).collect(Collectors.toList());
 
-        for (FTPFile subItem : filesOnly) {
+        String fullLocalDownloadPath = FileUtils.ensureTrailingSlash(localDownloadFolder + file.getName());
+
+        LOGGER.debug("Creating new local directory {}", fullLocalDownloadPath);
+        fileUtils.createLocalDirectory(fullLocalDownloadPath);
+
+        for (FTPFile subItem : subItems) {
 
             String subItemPath = FileUtils.ensureTrailingSlash(subItem.getPath()) + subItem.getName();
-            String localDirectory = FileUtils.ensureTrailingSlash(file.getName());
-            String fullLocalDownloadPath = FileUtils.ensureTrailingSlash(localFilePath) + localDirectory;
 
-            LOGGER.debug("Creating new local directory {}", fullLocalDownloadPath);
-            fileUtils.createLocalDirectory(fullLocalDownloadPath);
+            if (subItem.isDirectory()) {
 
-            LOGGER.debug("Downloading {} to {}", subItemPath, fullLocalDownloadPath);
-            channel.get(subItemPath, fullLocalDownloadPath);
+                String subLocalFilePath = FileUtils.ensureTrailingSlash(fullLocalDownloadPath);
+                downloadDirectoryAndContents(subItem, subLocalFilePath, FileUtils.ensureTrailingSlash(subItemPath));
+            }
+
+            else {
+
+                LOGGER.info("Downloading {} to {}", subItemPath, fullLocalDownloadPath);
+                channel.get(subItemPath, fullLocalDownloadPath);
+            }
         }
+    }
+
+    private Predicate<? super FTPFile> removeCurrentAndParentDirs() {
+        return file -> !file.getName().equals(".") && !file.getName().equals("..");
     }
 
     private FTPFile toFtpFile(LsEntry lsEntry, String filePath) throws SftpException {

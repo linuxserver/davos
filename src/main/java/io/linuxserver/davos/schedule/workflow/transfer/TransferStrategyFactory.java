@@ -7,7 +7,7 @@ public class TransferStrategyFactory {
 
     public TransferStrategy getStrategy(FileTransferType type, Connection connection) {
 
-        if (FileTransferType.FILES_ONLY.equals(type))
+        if (FileTransferType.FILE.equals(type))
             return new FilesOnlyTransferStrategy(connection);
 
         return new FilesAndFoldersTranferStrategy(connection);

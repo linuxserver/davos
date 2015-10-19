@@ -11,10 +11,10 @@ public class TransferStrategyFactoryTest {
     @Test
     public void shouldReturnCorrectStrategies() {
 
-        assertThat(new TransferStrategyFactory().getStrategy(FileTransferType.FILES_ONLY, null))
+        assertThat(new TransferStrategyFactory().getStrategy(FileTransferType.FILE, null))
                 .isInstanceOf(FilesOnlyTransferStrategy.class);
 
-        assertThat(new TransferStrategyFactory().getStrategy(FileTransferType.INCLUDE_FOLDERS, null))
+        assertThat(new TransferStrategyFactory().getStrategy(FileTransferType.RECURSIVE, null))
                 .isInstanceOf(FilesAndFoldersTranferStrategy.class);
     }
 }

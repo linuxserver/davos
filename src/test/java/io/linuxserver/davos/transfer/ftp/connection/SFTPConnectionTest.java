@@ -17,8 +17,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
@@ -37,15 +39,15 @@ public class SFTPConnectionTest {
 
     @Mock
     private FileUtils mockFileUtils;
-    
+
     private ChannelSftp mockChannel;
-    
+
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     @Before
     public void setUp() throws SftpException {
-        
+
         mockChannel = mock(ChannelSftp.class);
 
         Vector<LsEntry> lsEntries = createEntries();
@@ -84,7 +86,7 @@ public class SFTPConnectionTest {
 
         sftpConnection.listFiles();
     }
-    
+
     @Test
     public void lsEntriesReturnedFromChannelShouldBeParsedIntoFtpFileAndReturnedInList() {
 
@@ -115,32 +117,32 @@ public class SFTPConnectionTest {
         assertThat(files.get(1).getLastModified().toString("dd/MM/yyyy HH:mm:ss")).isEqualTo("12/03/2014 19:22:41");
         assertThat(files.get(2).getLastModified().toString("dd/MM/yyyy HH:mm:ss")).isEqualTo("08/02/2014 17:09:24");
     }
-    
+
     @Test
     public void printingWorkingDirectoryShouldCallOnUnderlyingClientMethodToGetCurrentDirectory() throws SftpException {
-        
+
         sftpConnection.currentDirectory();
-        
+
         verify(mockChannel).pwd();
     }
-    
+
     @Test
     public void printingWorkingDirectoryShouldReturnExactlyWhatTheUnderlyingClientReturns() {
-        
+
         assertThat(sftpConnection.currentDirectory()).isEqualTo("a/directory");
     }
-    
+
     @Test
-    public void ifClientThrowsExceptionWhenTryingToGetWorkingDirectoryThenCatchExceptionAndRethrow() throws SftpException  {
-        
+    public void ifClientThrowsExceptionWhenTryingToGetWorkingDirectoryThenCatchExceptionAndRethrow() throws SftpException {
+
         expectedException.expect(FileListingException.class);
         expectedException.expectMessage(is(equalTo("Unable to print the working directory")));
-        
+
         when(mockChannel.pwd()).thenThrow(new SftpException(0, ""));
-        
+
         sftpConnection.currentDirectory();
     }
-    
+
     @Test
     public void downloadMethodShouldCallChannelGetMethodWithFtpFileNameAndDirectory() throws SftpException {
 
@@ -160,18 +162,67 @@ public class SFTPConnectionTest {
 
         sftpConnection.download(new FTPFile("file.txt", 0, "path/to", 0, false), "some/directory");
     }
-    
+
     @Test
     public void downloadShouldRecursivelyCheckFileIfFolderThenLsThatAndGetOnlyFiles() throws SftpException {
-        
+
+        initRecursiveListings();
+
         FTPFile directory = new FTPFile("folder", 0, "path/to", 0, true);
+
         sftpConnection.download(directory, "some/directory");
         
-        verify(mockChannel).ls("path/to/folder/");
         verify(mockFileUtils).createLocalDirectory("some/directory/folder/");
-        verify(mockChannel).get("path/to/folder/File 2", "some/directory/folder/");
+        verify(mockChannel).ls("path/to/folder/");
+
+        verify(mockFileUtils).createLocalDirectory("some/directory/folder/directory1/");
+        verify(mockChannel).ls("path/to/folder/directory1/");
+
+        verify(mockFileUtils).createLocalDirectory("some/directory/folder/directory1/directory2/");
+        verify(mockChannel).ls("path/to/folder/directory1/directory2/");
+
+        InOrder inOrder = Mockito.inOrder(mockChannel);
+
+        inOrder.verify(mockChannel).get("path/to/folder/file1.txt", "some/directory/folder/");
+        inOrder.verify(mockChannel).get("path/to/folder/file2.txt", "some/directory/folder/");
+        inOrder.verify(mockChannel).get("path/to/folder/directory1/file3.txt", "some/directory/folder/directory1/");
+        inOrder.verify(mockChannel).get("path/to/folder/directory1/directory2/file5.txt", "some/directory/folder/directory1/directory2/");
+        inOrder.verify(mockChannel).get("path/to/folder/directory1/directory2/file6.txt", "some/directory/folder/directory1/directory2/");
+        inOrder.verify(mockChannel).get("path/to/folder/directory1/file4.txt", "some/directory/folder/directory1/");
     }
-    
+
+    private void initRecursiveListings() throws SftpException {
+
+        Vector<LsEntry> entries = new Vector<LsEntry>();
+
+        entries.add(createSingleEntry(".", 123l, 1394525265, true));
+        entries.add(createSingleEntry("..", 123l, 1394525265, true));
+        entries.add(createSingleEntry("file1.txt", 123l, 1394525265, false));
+        entries.add(createSingleEntry("file2.txt", 456l, 1394652161, false));
+        entries.add(createSingleEntry("directory1", 789l, 1391879364, true));
+
+        when(mockChannel.ls("path/to/folder/")).thenReturn(entries);
+
+        Vector<LsEntry> subEntries = new Vector<LsEntry>();
+
+        subEntries.add(createSingleEntry(".", 123l, 1394525265, true));
+        subEntries.add(createSingleEntry("..", 123l, 1394525265, true));
+        subEntries.add(createSingleEntry("file3.txt", 789l, 1394525265, false));
+        subEntries.add(createSingleEntry("directory2", 789l, 1394525265, true));
+        subEntries.add(createSingleEntry("file4.txt", 789l, 1394525265, false));
+
+        when(mockChannel.ls("path/to/folder/directory1/")).thenReturn(subEntries);
+
+        Vector<LsEntry> subSubEntries = new Vector<LsEntry>();
+
+        subSubEntries.add(createSingleEntry(".", 123l, 1394525265, true));
+        subSubEntries.add(createSingleEntry("..", 123l, 1394525265, true));
+        subSubEntries.add(createSingleEntry("file5.txt", 789l, 1394525265, false));
+        subSubEntries.add(createSingleEntry("file6.txt", 789l, 1394525265, false));
+
+        when(mockChannel.ls("path/to/folder/directory1/directory2/")).thenReturn(subSubEntries);
+    }
+
     private Vector<LsEntry> createEntries() {
 
         Vector<LsEntry> vector = new Vector<LsEntry>();
