@@ -38,7 +38,7 @@ public class DownloadFilesWorkflowStep extends WorkflowStep {
             for (FTPFile file : filesToDownload)
                 strategyToUse.transferFile(file, config.getLocalFilePath());
 
-            LOGGER.info("Successfully downloaded all files. Moving onto next step");
+            LOGGER.info("Download step complete. Moving onto next step");
 
         } catch (FTPException e) {
 
