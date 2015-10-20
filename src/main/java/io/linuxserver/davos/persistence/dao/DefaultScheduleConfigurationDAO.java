@@ -9,8 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import io.linuxserver.davos.persistence.model.ActionModel;
-import io.linuxserver.davos.persistence.model.FilterModel;
 import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
 import io.linuxserver.davos.persistence.repository.ScheduleConfigurationRepository;
 
@@ -34,13 +32,6 @@ public class DefaultScheduleConfigurationDAO implements ScheduleConfigurationDAO
 
     @Override
     public ScheduleConfigurationModel updateConfig(ScheduleConfigurationModel model) {
-        
-        for (ActionModel action : model.actions)
-            action.schedule = model;
-        
-        for (FilterModel filter : model.filters)
-            filter.schedule = model;
-        
         return configRepository.save(model);
     }
 

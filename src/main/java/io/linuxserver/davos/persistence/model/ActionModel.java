@@ -30,6 +30,12 @@ public class ActionModel {
     @Column
     public String f2;
     
+    @Column
+    public String f3;
+    
+    @Column
+    public String f4;
+    
     @ManyToOne
     @JoinColumn(name = "schedule_id")
     public ScheduleConfigurationModel schedule;
