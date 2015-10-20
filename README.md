@@ -13,6 +13,3 @@ What does davos intend on doing?
 ---
 There are two main features *davos* has in mind: simple manual file transfers, and automated scheduled transfers. The manual transfer screen will act just like any de-facto client application, in that you'll have a local and remote view when connected. The schedule screen will allow you to set up a connection that connects at intervals to a given host in order to periodically download files based on a given configurable filter list.
 
-Will it be secure?
----
-Yes, *davos* will run via HTTPS and will require user authentication whenever you wish to access the application. The current view is to use standard user/pass authentication which will need to be manually set up when *davos* is first run. Naturally, giving an application access to your server's filesystem is a bit daunting, which is why the application will be running under a predefined user, with particular access to a set directory purely for transfers. This will be fully detailed once design has been completed.
