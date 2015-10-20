@@ -48,7 +48,7 @@
 
                 <div class="row">
                     <div class="section">
-                        <h4 class="light">OVH</h4>
+                        <h4 class="light" th:text="${schedule.name}"></h4>
                         <p class="caption light">Click on the list items below to edit the schedule</p>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                                 <div class="row valign-wrapper">
 
                                     <div class="input-field col s4">
-                                        <input id="schedule_name" placeholder="Please choose a name for this schedule" value="OVH" type="text" class="validate" />
+                                        <input id="schedule_name" placeholder="Please choose a name for this schedule" th:attr="value=${schedule.name}" type="text" class="validate" />
                                         <label for="schedule_name">Schedule name</label>
                                     </div>
                                     <div class="col s8">
@@ -76,7 +76,7 @@
                                 <div class="row valign-wrapper">
                                     <div class="switch col s4 ">
                                         <label>
-                                            <input id="start-automatically" type="checkbox" checked="checked" />
+                                            <input id="start-automatically" type="checkbox" th:checked="${schedule.startAutomatically}" />
                                             <span class="lever"></span>
                                         </label>
                                         Start Automatically
@@ -93,11 +93,12 @@
                                     <div class="input-field col s4">
                                         <select class="browser-default">
                                             <option value="" disabled="disabled" selected="selected">Please select...</option>
-                                            <option value="1">Every 15 minutes</option>
-                                            <option value="2">Every 30 minutes</option>
-                                            <option value="3">Once an hour</option>
-                                            <option value="3">Twice a day</option>
-                                            <option value="4">Once a day</option>
+                                            <option th:selected="${schedule.interval == 15}" value="15">Every 15 minutes</option>
+                                            <option th:selected="${schedule.interval == 30}" value="30">Every 30 minutes</option>
+                                            <option th:selected="${schedule.interval == 60}" value="60">Every hour</option>
+                                            <option th:selected="${schedule.interval == 120}" value="120">Every 2 hours</option>
+                                            <option th:selected="${schedule.interval == 720}" value="720">Twice a day</option>
+                                            <option th:selected="${schedule.interval == 1440}" value="1440">Once a day</option>
                                         </select>
                                     </div>
                                     <div class="col s8">
@@ -113,15 +114,15 @@
                             <div class="collapsible-body">
                                 <div class="row valign-wrapper">
                                     <div class="switch col s2">
-                                        <input name="protocol_type" type="radio" id="protocol_ftp" />
+                                        <input name="protocol_type" type="radio" id="protocol_ftp" th:checked="${schedule.connectionType == 'FTP'}" />
                                         <label for="protocol_ftp">FTP</label>
                                     </div>
                                     <div class="switch col s2">
-                                        <input name="protocol_type" type="radio" id="protocol_ftps" />
+                                        <input name="protocol_type" type="radio" id="protocol_ftps" th:checked="${schedule.connectionType == 'FTPS'}" />
                                         <label for="protocol_ftps">FTPS</label>
                                     </div>
                                     <div class="switch col s2">
-                                        <input name="protocol_type" type="radio" id="protocol_sftp" checked="checked" />
+                                        <input name="protocol_type" type="radio" id="protocol_sftp" th:checked="${schedule.connectionType == 'SFTP'}" />
                                         <label for="protocol_sftp">SFTP</label>
                                     </div>
                                     <div class="switch col s6"></div>
@@ -131,36 +132,36 @@
 
                                     <div class="input-field col s6">
                                         <i class="material-icons prefix">business</i>
-                                        <input id="server_name" type="text" />
+                                        <input id="server_name" type="text" th:attr="value=${schedule.hostName}" />
                                         <label for="server_name">Server Name (or IP address)</label>
                                     </div>
                                     <div class="input-field col s2">
                                         <i class="material-icons prefix">settings_input_svideo</i>
-                                        <input id="server_port" type="number" />
+                                        <input id="server_port" type="number" th:attr="value=${schedule.port}" />
                                         <label for="server_port">Port</label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-field col s6">
                                         <i class="material-icons prefix">perm_identity</i>
-                                        <input id="username" type="text" />
+                                        <input id="username" type="text" th:attr="value=${schedule.username}" />
                                         <label for="username">Username</label>
                                     </div>
                                     <div class="input-field col s6">
                                         <i class="material-icons prefix">vpn_key</i>
-                                        <input id="password" type="password" />
+                                        <input id="password" type="password" th:attr="value=${schedule.password}" />
                                         <label for="password">Password</label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-field col s6">
                                         <i class="material-icons prefix">track_changes</i>
-                                        <input id="remote-path" type="text" />
+                                        <input id="remote-path" type="text" th:attr="value=${schedule.remoteFilePath}" />
                                         <label for="remote-path">Remote folder to scan</label>
                                     </div>
                                     <div class="input-field col s6">
                                         <i class="material-icons prefix">play_for_work</i>
-                                        <input id="local-path" type="text" />
+                                        <input id="local-path" type="text" th:attr="value=${schedule.localFilePath}" />
                                         <label for="local-path">Local destination folder</label>
                                     </div>
                                 </div>
@@ -172,7 +173,7 @@
                             <div class="collapsible-body">
                                 <div class="row valign-wrapper">
                                     <div class="switch col s2">
-                                        <input name="scan_type" type="radio" id="scan_files_only" checked="checked" />
+                                        <input name="scan_type" type="radio" id="scan_files_only" th:checked="${schedule.transferType == 'FILE'}" />
                                         <label for="scan_files_only">Files only</label>
                                     </div>
                                     <div class="col s10">
@@ -183,7 +184,7 @@
                                 </div>
                                 <div class="row valign-wrapper">
                                     <div class="switch col s2">
-                                        <input name="scan_type" type="radio" id="scan_recursive" />
+                                        <input name="scan_type" type="radio" id="scan_recursive" th:checked="${schedule.transferType == 'RECURSIVE'}" />
                                         <label for="scan_recursive">Recursive</label>
                                     </div>
                                     <div class="col s10">
@@ -191,18 +192,7 @@
                                             Look inside any sub-folders in the remote folder. If any files are found, download them.
                                         </p>
                                     </div>
-                                </div>
-                                <div class="row valign-wrapper">
-                                    <div class="switch col s2">
-                                        <input name="scan_type" type="radio" id="scan_directories" />
-                                        <label for="scan_directories">Include folders</label>
-                                    </div>
-                                    <div class="col s10">
-                                        <p class="subtext">
-                                            Download files and sub-folders (including entire sub-folder contents).
-                                        </p>
-                                    </div>
-                                </div>
+                                </div>                                
                             </div>
                         </li>
                         <li>
