@@ -55,12 +55,12 @@
                         <h4 class="light">Current Schedules</h4>
 
                         <div class="collection">
-                        	<a th:each="schedule : ${schedules}" th:href="@{/scheduling/edit/} + ${schedule.id}" class="collection-item schedule" th:text="${schedule.name}"></a>
+                        	<a th:each="schedule : ${schedules}" th:href="@{/scheduling/} + ${schedule.id}" class="collection-item schedule" th:text="${schedule.name}"></a>
                         </div>
                     </div>
 
                     <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-                        <a class="btn-floating btn-large teal waves-effect waves-teal">
+                        <a th:href="@{/scheduling/new}" class="btn-floating btn-large teal waves-effect waves-teal">
                             <i class="large material-icons">add</i>
                         </a>
                     </div>

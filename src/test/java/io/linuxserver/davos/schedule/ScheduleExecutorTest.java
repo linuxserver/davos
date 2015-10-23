@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import io.linuxserver.davos.exception.ScheduleAlreadyRunningException;
 import io.linuxserver.davos.persistence.dao.ScheduleConfigurationDAO;
 import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
 
@@ -62,11 +63,24 @@ public class ScheduleExecutorTest {
 
         ScheduleConfigurationModel config = new ScheduleConfigurationModel();
         config.interval = 86;
-        
+
         when(mockConfigurationDAO.getConfig(1337L)).thenReturn(config);
-        
+
         scheduleExecutor.startSchedule(1337L);
 
         verify(mockExecutorService).scheduleAtFixedRate(any(RunnableSchedule.class), eq(0l), eq(86l), eq(TimeUnit.MINUTES));
+    }
+
+    @Test(expected = ScheduleAlreadyRunningException.class)
+    public void startScheduleShouldNotRunScheduleIfAlreadyRunning() {
+
+        ScheduleConfigurationModel config = new ScheduleConfigurationModel();
+        config.interval = 86;
+        config.id = 1337L;
+
+        when(mockConfigurationDAO.getConfig(1337L)).thenReturn(config);
+
+        scheduleExecutor.startSchedule(1337L);
+        scheduleExecutor.startSchedule(1337L);
     }
 }

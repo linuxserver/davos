@@ -1,7 +1,7 @@
 #main-nav {
     position: fixed;
     height: 100%;
-    width: 200px;
+    width: 250px;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
 }
 #logo {
@@ -58,7 +58,7 @@ html {
     bottom: 0;
 }
 main {
-    padding-left: 200px;
+    padding-left: 250px;
 }
 h1.header {
     color: #fff;
@@ -107,4 +107,8 @@ a.collection-item.schedule {
 .subtext {
     font-size: 12px;
     padding: 10px !important;
+}
+
+.chip {
+    margin-bottom: 10px;
 }
