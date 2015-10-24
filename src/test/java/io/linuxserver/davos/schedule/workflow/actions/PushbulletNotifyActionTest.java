@@ -17,11 +17,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import io.linuxserver.davos.schedule.workflow.actions.PushbulletNotifyAction.PushbulletRequest;
-import io.linuxserver.davos.schedule.workflow.actions.PushbulletNotifyAction.PushbulletResponse;
 
 public class PushbulletNotifyActionTest {
 
@@ -41,7 +41,7 @@ public class PushbulletNotifyActionTest {
 
         initMocks(this);
     }
-
+    
     @Test
     public void executeShouldSendCorrectData() {
 
@@ -51,7 +51,7 @@ public class PushbulletNotifyActionTest {
         pushbulletNotifyAction.execute(execution);
 
         verify(mockRestTemplate).exchange(eq("https://api.pushbullet.com/v2/pushes"), eq(HttpMethod.POST), entityCaptor.capture(),
-                eq(PushbulletResponse.class));
+                eq(Object.class));
 
         PushbulletRequest request = entityCaptor.getValue().getBody();
 
@@ -69,7 +69,7 @@ public class PushbulletNotifyActionTest {
         pushbulletNotifyAction.execute(execution);
 
         verify(mockRestTemplate).exchange(eq("https://api.pushbullet.com/v2/pushes"), eq(HttpMethod.POST), entityCaptor.capture(),
-                eq(PushbulletResponse.class));
+                eq(Object.class));
 
         HttpHeaders headers = entityCaptor.getValue().getHeaders();
         
@@ -81,7 +81,16 @@ public class PushbulletNotifyActionTest {
     public void ifRestTemplateFailsThenDoNothing() {
         
         when(mockRestTemplate.exchange(eq("https://api.pushbullet.com/v2/pushes"), eq(HttpMethod.POST), any(HttpEntity.class),
-                eq(PushbulletResponse.class))).thenThrow(new RestClientException(""));
+                eq(Object.class))).thenThrow(new RestClientException(""));
+        
+        pushbulletNotifyAction.execute(new PostDownloadExecution());
+    }
+    
+    @Test
+    public void ifRestTemplateFailsBecauseMessageIsUnreadbleThenDoNothing() {
+        
+        when(mockRestTemplate.exchange(eq("https://api.pushbullet.com/v2/pushes"), eq(HttpMethod.POST), any(HttpEntity.class),
+                eq(Object.class))).thenThrow(new HttpMessageConversionException(""));
         
         pushbulletNotifyAction.execute(new PostDownloadExecution());
     }

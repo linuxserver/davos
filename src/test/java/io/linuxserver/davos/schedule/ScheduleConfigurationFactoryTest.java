@@ -10,6 +10,7 @@ import org.junit.Test;
 import io.linuxserver.davos.persistence.model.ActionModel;
 import io.linuxserver.davos.persistence.model.FilterModel;
 import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.schedule.workflow.actions.HttpAPICallAction;
 import io.linuxserver.davos.schedule.workflow.actions.MoveFileAction;
 import io.linuxserver.davos.schedule.workflow.actions.PushbulletNotifyAction;
 import io.linuxserver.davos.transfer.ftp.FileTransferType;
@@ -94,12 +95,21 @@ public class ScheduleConfigurationFactoryTest {
         action2.actionType = "pushbullet";
         action2.f1 = "apiKey";
         
+        ActionModel action3 = new ActionModel();
+        action3.actionType = "api";
+        action3.f1 = "url";
+        action3.f2 = "POST";
+        action3.f3 = "application/json";
+        action3.f4 = "some body";
+        
         model.actions.add(action1);
         model.actions.add(action2);
+        model.actions.add(action3);
         
         ScheduleConfiguration config = ScheduleConfigurationFactory.createConfig(model);
         
         assertThat(config.getActions().get(0)).isInstanceOf(MoveFileAction.class);
         assertThat(config.getActions().get(1)).isInstanceOf(PushbulletNotifyAction.class);
+        assertThat(config.getActions().get(2)).isInstanceOf(HttpAPICallAction.class);
     }
 }

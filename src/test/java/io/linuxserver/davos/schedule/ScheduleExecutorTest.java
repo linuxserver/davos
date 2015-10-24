@@ -2,6 +2,8 @@ package io.linuxserver.davos.schedule;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -9,6 +11,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
@@ -17,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import io.linuxserver.davos.exception.ScheduleAlreadyRunningException;
+import io.linuxserver.davos.exception.ScheduleNotRunningException;
 import io.linuxserver.davos.persistence.dao.ScheduleConfigurationDAO;
 import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
 
@@ -82,5 +86,58 @@ public class ScheduleExecutorTest {
 
         scheduleExecutor.startSchedule(1337L);
         scheduleExecutor.startSchedule(1337L);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void stopScheduleShouldStopRunningSchedule() {
+
+        ScheduleConfigurationModel config = new ScheduleConfigurationModel();
+        config.interval = 86;
+        config.id = 1337L;
+
+        @SuppressWarnings("rawtypes")
+        ScheduledFuture mockFuture = mock(ScheduledFuture.class);
+
+        when(mockConfigurationDAO.getConfig(1337L)).thenReturn(config);
+        when(mockExecutorService.scheduleAtFixedRate(any(Runnable.class), eq(0l), eq(86l), eq(TimeUnit.MINUTES))).thenReturn(mockFuture);
+
+        scheduleExecutor.startSchedule(1337L);
+        scheduleExecutor.stopSchedule(1337L);
+        
+        verify(mockFuture).cancel(true);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void stopScheduleShouldNotStopRunningScheduleIfItHasAlreadyBeenCancelled() {
+
+        ScheduleConfigurationModel config = new ScheduleConfigurationModel();
+        config.interval = 86;
+        config.id = 1337L;
+
+        @SuppressWarnings("rawtypes")
+        ScheduledFuture mockFuture = mock(ScheduledFuture.class);
+        when(mockFuture.isCancelled()).thenReturn(true);
+        
+        when(mockConfigurationDAO.getConfig(1337L)).thenReturn(config);
+        when(mockExecutorService.scheduleAtFixedRate(any(Runnable.class), eq(0l), eq(86l), eq(TimeUnit.MINUTES))).thenReturn(mockFuture);
+
+        scheduleExecutor.startSchedule(1337L);
+        scheduleExecutor.stopSchedule(1337L);
+        
+        verify(mockFuture, never()).cancel(true);
+    }
+    
+    @Test(expected = ScheduleNotRunningException.class)
+    public void stopScheduleShouldNotAttemptToStopNonRunningSchedule() {
+
+        ScheduleConfigurationModel config = new ScheduleConfigurationModel();
+        config.interval = 86;
+        config.id = 1337L;
+
+        when(mockConfigurationDAO.getConfig(1337L)).thenReturn(config);
+
+        scheduleExecutor.stopSchedule(1337L);
     }
 }

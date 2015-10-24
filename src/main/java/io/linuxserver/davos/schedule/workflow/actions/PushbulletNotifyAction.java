@@ -6,10 +6,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 public class PushbulletNotifyAction implements PostDownloadAction {
 
@@ -38,9 +37,10 @@ public class PushbulletNotifyAction implements PostDownloadAction {
             LOGGER.info("Sending notification to Pushbullet for {}", execution.fileName);
             HttpEntity<PushbulletRequest> httpEntity = new HttpEntity<PushbulletRequest>(body, headers);
             LOGGER.debug("Sending message to Pushbullet: {}", httpEntity);
-            restTemplate.exchange("https://api.pushbullet.com/v2/pushes", HttpMethod.POST, httpEntity, PushbulletResponse.class);
+            restTemplate.exchange("https://api.pushbullet.com/v2/pushes", HttpMethod.POST, httpEntity, Object.class);
 
-        } catch (RestClientException e) {
+        } catch (RestClientException | HttpMessageConversionException e ) {
+            
             LOGGER.debug("Full stacktrace", e);
             LOGGER.error("Unable to complete notification to Pushbullet. Given error: {}", e.getMessage());
         }
@@ -49,11 +49,6 @@ public class PushbulletNotifyAction implements PostDownloadAction {
     @Override
     public String toString() {
         return getClass().getSimpleName();
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    class PushbulletResponse {
-
     }
 
     class PushbulletRequest {

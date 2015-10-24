@@ -1,10 +1,12 @@
 package io.linuxserver.davos.schedule;
 
 import org.joda.time.DateTime;
+import org.springframework.http.HttpMethod;
 
 import io.linuxserver.davos.persistence.model.ActionModel;
 import io.linuxserver.davos.persistence.model.FilterModel;
 import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.schedule.workflow.actions.HttpAPICallAction;
 import io.linuxserver.davos.schedule.workflow.actions.MoveFileAction;
 import io.linuxserver.davos.schedule.workflow.actions.PushbulletNotifyAction;
 import io.linuxserver.davos.transfer.ftp.client.UserCredentials;
@@ -38,6 +40,9 @@ public class ScheduleConfigurationFactory {
 
             if ("pushbullet".equals(action.actionType))
                 config.getActions().add(new PushbulletNotifyAction(action.f1));
+
+            if ("api".equals(action.actionType))
+                config.getActions().add(new HttpAPICallAction(action.f1, HttpMethod.valueOf(action.f2), action.f3, action.f4));
         }
     }
 
