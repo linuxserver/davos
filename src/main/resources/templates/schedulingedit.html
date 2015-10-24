@@ -234,7 +234,7 @@
                     </li>
                     <li>
                         <div class="collapsible-header active"><i class="material-icons">code</i>Post-download Actions</div>
-                        <div class="collapsible-body">
+                        <div class="collapsible-body" id="download_actions">
                             <div class="row">
                                 <div class="col s12">
                                     <p class="subtext">
@@ -246,22 +246,41 @@
                             <div class="row">
 
                                 <div class="input-field col s4">
-                                    <select class="browser-default">
-                                        <option value="" disabled="disabled" selected="selected">Add action...</option>
+                                    <select id="select_download_action" class="browser-default">
+                                        <option value="choose" disabled="disabled" selected="selected">Add action...</option>
                                         <option value="pushbullet">Pushbullet Notification</option>
-                                        <option value="move">Move downloaded file</option>
+                                        <option value="move">Move Downloaded File</option>
+                                        <option value="api">Generic HTTP API Call</option>
                                     </select>
 
                                 </div>
                             </div>
 
-                            <div id="download_actions">
+                            <div th:each="action : ${schedule.actions}" th:switch="${action.actionType}" th:attr="data-action-id=${action.id}, class='row action action_' + ${action.actionType}">
+                                
+                                <div class="input-field col s3 action_type" th:text="${action.actionType}"></div>
 
-                                <div class="row download_action">
+                                <div th:case="'move'" class="action_name input-field col s8">
+                                    <input type="text" placeholder="Move To..." class="f1" th:attr="value=${action.f1}" />
+                                </div>
 
+                                <div th:case="'pushbullet'" class="action_name input-field col s8">
+                                    <input type="text" placeholder="API Key" class="f1" th:attr="value=${action.f1}" />
+                                </div>
+
+                                <div th:case="'api'" class="action_name input-field col s8">
+                                    <input type="text" placeholder="URL" class="f1" th:attr="value=${action.f1}" />
+                                    <br />
+                                    <input type="text" placeholder="Method (e.g. POST, GET)" class="f2" th:attr="value=${action.f2}" />
+                                    <br />
+                                    <input type="text" placeholder="Content Type (e.g. application/json)" class="f3" th:attr="value=${action.f3}" />
+                                    <br />
+                                    <input type="text" placeholder="Message body" class="f4" th:attr="value=${action.f4}" />
+                                    <br />
                                 </div>
 
                             </div>
+
                         </div>
                     </li>
                 </ul>
@@ -285,9 +304,10 @@
     <script type="text/javascript" th:src="@{/js/jquery-2.1.4.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/materialize.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/davos.js}"></script>
-    
+
     <script type="text/javascript" th:inline="text">
         var base = "[[@{/}]]"
+
     </script>
 
 </body>

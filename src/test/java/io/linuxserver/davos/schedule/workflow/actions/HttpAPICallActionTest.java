@@ -35,7 +35,7 @@ public class HttpAPICallActionTest {
     @Before
     public void setUp() {
 
-        httpAPICallAction = new HttpAPICallAction("http://url", HttpMethod.POST, "application/json", "{\"hello\":\"world\"}");
+        httpAPICallAction = new HttpAPICallAction("http://url", HttpMethod.POST, "application/json", "{\"hello\":\"$filename\"}");
 
         initMocks(this);
     }
@@ -52,7 +52,7 @@ public class HttpAPICallActionTest {
 
         String body = entityCaptor.getValue().getBody();
 
-        assertThat(body).isEqualTo("{\"hello\":\"world\"}");
+        assertThat(body).isEqualTo("{\"hello\":\"file.txt\"}");
     }
 
     @Test
@@ -73,18 +73,24 @@ public class HttpAPICallActionTest {
     @Test
     public void ifRestTemplateFailsThenDoNothing() {
 
+        PostDownloadExecution execution = new PostDownloadExecution();
+        execution.fileName = "filename";
+        
         when(mockRestTemplate.exchange(eq("http://url"), eq(HttpMethod.POST), any(HttpEntity.class), eq(Object.class)))
                 .thenThrow(new RestClientException(""));
 
-        httpAPICallAction.execute(new PostDownloadExecution());
+        httpAPICallAction.execute(execution);
     }
 
     @Test
     public void ifRestTemplateFailsBecauseMessageIsUnreadbleThenDoNothing() {
 
+        PostDownloadExecution execution = new PostDownloadExecution();
+        execution.fileName = "filename";
+        
         when(mockRestTemplate.exchange(eq("http://url"), eq(HttpMethod.POST), any(HttpEntity.class), eq(Object.class)))
                 .thenThrow(new HttpMessageConversionException(""));
 
-        httpAPICallAction.execute(new PostDownloadExecution());
+        httpAPICallAction.execute(execution);
     }
 }

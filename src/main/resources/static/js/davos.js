@@ -32,11 +32,49 @@ var action = (function ($) {
 
     'use strict';
 
-    var initialise;
+    var initialise, addMove, addPushbullet, addApi;
 
     initialise = function () {
 
+        $('#select_download_action').on('change', function () {
 
+            var action = $(this).find('option:selected').val();
+            $(this).val('choose');
+
+            if (action === 'pushbullet') {
+                addPushbullet();
+            }
+
+            if (action === 'move') {
+                addMove();
+            }
+
+            if (action === 'api') {
+                addApi();
+            }
+        });
+    };
+
+    addMove = function () {
+
+        var newAction = $('<div class="row action action_move"><div class="input-field col s3 action_type">move</div><div class="input-field col s8"><input type="text" placeholder="Move To.." class="f1" /></div></div>');
+        $('#download_actions').append(newAction);
+    };
+
+    addPushbullet = function () {
+
+        var newAction = $('<div class="row action action_pushbullet"><div class="input-field col s3 action_type">pushbullet</div><div class="input-field col s8"><input type="text" placeholder="API Key" class="f1" /></div></div>');
+        $('#download_actions').append(newAction);
+    };
+
+    addApi = function () {
+
+
+        var newAction = $('<div class="row action action_api"><div class="input-field col s3 action_type">api</div><div class="input-field col s8"><input type="text" placeholder="URL" class="f1" /><br />' +
+            '<input type="text" placeholder="Method (e.g. POST, GET)" class="f2" /><br /><input type="text" placeholder="Content Type (e.g. application/json)" class="f3" /><br /><input type="text"' +
+            ' placeholder="Message body" class="f4" /><br /></div></div>');
+
+        $('#download_actions').append(newAction);
     };
 
     return {
@@ -49,13 +87,13 @@ var schedule = (function ($) {
 
     'use strict';
 
-    var initialise, save, onSuccess, onError, cleanId, startSchedule, stopSchedule, startResponse, stopResponse;
+    var initialise, save, onSuccess, onError, cleanId, startSchedule, stopSchedule, startResponse, stopResponse, cleanActionFunction;
 
     initialise = function () {
 
         $('#start_schedule').on('click', startSchedule);
         $('#stop_schedule').on('click', stopSchedule);
-        
+
         $('#save_schedule').on('click', function () {
 
             var postData = {
@@ -87,6 +125,21 @@ var schedule = (function ($) {
                 postData.filters.push(filter);
             });
 
+            $('#download_actions .action').each(function () {
+
+                var action = {
+                
+                    id: cleanId($(this).attr('data-action-id')),
+                    actionType: $(this).find('.action_type').text(),
+                    f1: cleanActionFunction($(this).find('.f1')),
+                    f2: cleanActionFunction($(this).find('.f2')),
+                    f3: cleanActionFunction($(this).find('.f3')),
+                    f4: cleanActionFunction($(this).find('.f4'))
+                };
+                 
+                postData.actions.push(action);
+            });
+
             $.ajax({
 
                 method: "POST",
@@ -98,6 +151,14 @@ var schedule = (function ($) {
             }).done(onSuccess);
 
         });
+    };
+
+    cleanActionFunction = function (action) {
+
+        if (action)
+            return action.val();
+
+        return null;
     };
 
     cleanId = function (id) {
@@ -116,7 +177,7 @@ var schedule = (function ($) {
             url: "/api/v1/schedule/" + cleanId($('#schedule_id').val()) + "/start"
         }).done(startResponse).fail(startResponse);
     };
-    
+
     stopSchedule = function () {
 
         $.ajax({
@@ -128,7 +189,7 @@ var schedule = (function ($) {
     startResponse = function (msg) {
         Materialize.toast(msg.message, 3000, 'rounded');
     };
-    
+
     stopResponse = function (msg) {
         Materialize.toast(msg.message, 3000, 'rounded');
     };

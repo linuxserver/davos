@@ -26,6 +26,7 @@ public class RunnableSchedule implements Runnable {
         LOGGER.info("Starting schedule {}", scheduleId);
         
         ScheduleConfigurationModel model = configurationDAO.getConfig(scheduleId);
+        
         ScheduleConfiguration config = ScheduleConfigurationFactory.createConfig(model);
         ScheduleWorkflow scheduleWorkflow = new ScheduleWorkflow(config);
 

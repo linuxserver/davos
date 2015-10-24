@@ -112,3 +112,7 @@ a.collection-item.schedule {
 .chip {
     margin-bottom: 10px;
 }
+
+.action_type {
+    text-transform: capitalize;
+}

@@ -1,5 +1,8 @@
 package io.linuxserver.davos.dto;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public class ActionDTO {
 
     public Long id;
@@ -9,4 +12,8 @@ public class ActionDTO {
     public String f2;
     public String f3;
     public String f4;
+    
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
 }

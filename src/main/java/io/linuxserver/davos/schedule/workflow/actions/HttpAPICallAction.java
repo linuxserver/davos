@@ -37,7 +37,7 @@ public class HttpAPICallAction implements PostDownloadAction {
             headers.add("Content-Type", contentType);
 
             LOGGER.info("Sending message to generic API for {}", execution.fileName);
-            HttpEntity<String> httpEntity = new HttpEntity<String>(body, headers);
+            HttpEntity<String> httpEntity = new HttpEntity<String>(body.replaceAll("$filename", execution.fileName), headers);
             LOGGER.debug("Sending message {} to generic API: {}", httpEntity, url);
             restTemplate.exchange(url, method, httpEntity, Object.class);
             

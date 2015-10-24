@@ -8,7 +8,7 @@
 		</Console>
 
 		<RollingFile name="File" fileName="davos.log"
-			filePattern="logs/$${date:yyyy-MM}/app-%d{yyyy-MM-dd-HH}-%i.log">
+			filePattern="/config/logs/$${date:yyyy-MM}/app-%d{yyyy-MM-dd-HH}-%i.log">
 			<PatternLayout>
 				<Pattern>
 					%d{yyyy-MM-dd HH:mm:ss.SSS} - $5p - [%c{1}] - %msg%n

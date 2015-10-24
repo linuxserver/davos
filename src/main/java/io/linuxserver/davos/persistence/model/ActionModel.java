@@ -10,11 +10,7 @@ import javax.persistence.ManyToOne;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ActionModel {
 
     @Id
@@ -37,7 +33,7 @@ public class ActionModel {
     public String f4;
     
     @ManyToOne
-    @JoinColumn(name = "schedule_id")
+    @JoinColumn(name = "action_schedule_id")
     public ScheduleConfigurationModel schedule;
     
     @Override

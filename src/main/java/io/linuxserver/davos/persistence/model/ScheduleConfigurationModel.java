@@ -7,13 +7,14 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import io.linuxserver.davos.transfer.ftp.FileTransferType;
 import io.linuxserver.davos.transfer.ftp.TransferProtocol;
@@ -61,10 +62,12 @@ public class ScheduleConfigurationModel {
     @Column
     public FileTransferType transferType;
 
-    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "schedule", cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true, mappedBy = "schedule", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
     public List<FilterModel> filters = new ArrayList<FilterModel>();
 
-    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "schedule", cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true, mappedBy = "schedule", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
     public List<ActionModel> actions = new ArrayList<ActionModel>();
 
     @Override
