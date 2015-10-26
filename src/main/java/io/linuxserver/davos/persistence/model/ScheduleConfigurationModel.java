@@ -57,7 +57,7 @@ public class ScheduleConfigurationModel {
     public String localFilePath;
 
     @Column
-    public Date lastRun;
+    public Date lastRun = new Date(0);
 
     @Column
     public FileTransferType transferType;
