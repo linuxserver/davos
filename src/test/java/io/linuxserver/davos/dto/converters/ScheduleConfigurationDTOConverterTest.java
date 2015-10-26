@@ -45,7 +45,7 @@ public class ScheduleConfigurationDTOConverterTest {
         assertThat(dto.hostName).isEqualTo(model.hostName);
         assertThat(dto.connectionType).isEqualTo(model.connectionType);
         assertThat(dto.interval).isEqualTo(model.interval);
-        assertThat(dto.lastRun).isEqualTo(model.lastRun);
+        assertThat(dto.lastRun).isEqualTo(model.lastRun.getTime());
         assertThat(dto.localFilePath).isEqualTo(model.localFilePath);
         assertThat(dto.name).isEqualTo(model.name);
         assertThat(dto.password).isEqualTo(model.password);

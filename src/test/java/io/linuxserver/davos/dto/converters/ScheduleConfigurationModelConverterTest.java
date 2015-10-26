@@ -2,6 +2,8 @@ package io.linuxserver.davos.dto.converters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Date;
+
 import org.joda.time.DateTime;
 import org.junit.Test;
 
@@ -23,7 +25,7 @@ public class ScheduleConfigurationModelConverterTest {
         dto.hostName = "host";
         dto.id = 2L;
         dto.interval = 3;
-        dto.lastRun = DateTime.now().toDate();
+        dto.lastRun = DateTime.now().toDate().getTime();
         dto.localFilePath = "Local";
         dto.name = "name";
         dto.password = "pass";
@@ -45,7 +47,7 @@ public class ScheduleConfigurationModelConverterTest {
         assertThat(model.hostName).isEqualTo(dto.hostName);
         assertThat(model.connectionType).isEqualTo(dto.connectionType);
         assertThat(model.interval).isEqualTo(dto.interval);
-        assertThat(model.lastRun).isEqualTo(dto.lastRun);
+        assertThat(model.lastRun).isEqualTo(new Date(dto.lastRun));
         assertThat(model.localFilePath).isEqualTo(dto.localFilePath);
         assertThat(model.name).isEqualTo(dto.name);
         assertThat(model.password).isEqualTo(dto.password);

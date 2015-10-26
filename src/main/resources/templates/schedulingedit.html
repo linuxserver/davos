@@ -50,6 +50,7 @@
                 <div class="section">
                     <h4 class="light" th:text="${schedule.name}"></h4>
                     <input type="hidden" id="schedule_id" th:attr="value=${schedule.id}" />
+                    <input type="hidden" id="schedule_lastrun" th:attr="value=${schedule.lastRun}" />
                     <p class="caption light">Click on the list items below to edit the schedule</p>
                 </div>
             </div>

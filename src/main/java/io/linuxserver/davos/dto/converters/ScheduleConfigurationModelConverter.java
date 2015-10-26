@@ -1,5 +1,7 @@
 package io.linuxserver.davos.dto.converters;
 
+import java.util.Date;
+
 import io.linuxserver.davos.dto.ActionDTO;
 import io.linuxserver.davos.dto.FilterDTO;
 import io.linuxserver.davos.dto.ScheduleConfigurationDTO;
@@ -18,7 +20,7 @@ public class ScheduleConfigurationModelConverter implements Converter<ScheduleCo
         model.hostName = source.hostName;
         model.id = source.id;
         model.interval = source.interval;
-        model.lastRun = source.lastRun;
+        model.lastRun = new Date(source.lastRun);
         model.localFilePath = source.localFilePath;
         model.name = source.name;
         model.password = source.password;

@@ -118,6 +118,7 @@ var schedule = (function ($) {
                 remoteFilePath: $('#remote_path').val(),
                 localFilePath: $('#local_path').val(),
                 transferType: $('input[name="scan_type"]:checked').val(),
+                lastRun: parseInt($('#schedule_lastrun').val(), 10),
                 filters: [],
                 actions: []
             };

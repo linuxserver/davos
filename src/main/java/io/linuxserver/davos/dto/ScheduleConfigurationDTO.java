@@ -1,7 +1,6 @@
 package io.linuxserver.davos.dto;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -23,7 +22,7 @@ public class ScheduleConfigurationDTO {
     public String password;
     public String remoteFilePath;
     public String localFilePath;
-    public Date lastRun;
+    public long lastRun;
     public FileTransferType transferType;
     public List<FilterDTO> filters = new ArrayList<FilterDTO>();
     public List<ActionDTO> actions = new ArrayList<ActionDTO>();
