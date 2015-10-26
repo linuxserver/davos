@@ -80,6 +80,16 @@ public class ScheduleConfigurationDTOConverterTest {
         assertThat(dto.filters.get(1).value).isEqualTo("filter2");
     }
     
+    @Test
+    public void nullDateShouldBeZero() {
+        
+        ScheduleConfigurationModel model = new ScheduleConfigurationModel();
+        
+        ScheduleConfigurationDTO dto = new ScheduleConfigurationDTOConverter().convert(model);
+        
+        assertThat(dto.lastRun).isEqualTo(model.lastRun.getTime());
+    }
+    
     private FilterModel createFilterModel(Long id, String value) {
         
         FilterModel model = new FilterModel();
