@@ -1,3 +1,5 @@
+import java.util.regex.Matcher;
+
 buildscript {
 
     ext {
@@ -18,10 +20,15 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot' 
 apply plugin: 'io.spring.dependency-management' 
 
+def version() {
+  file('version.txt').text.trim()
+}
+
 jar {
     baseName = 'davos'
-    version = '0.0.1-SNAPSHOT'
+    version = version()
 }
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -65,4 +72,21 @@ eclipse {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.7'
+}
+
+task updateBuildVersion << {
+
+	Matcher matcher = file('version.txt').text.trim() =~ /(.+)\.(.+)\.(.+)$/
+	
+	if (matcher.find()) {
+	
+		String major = matcher.group(1)
+		String minor = matcher.group(2)
+		String build = matcher.group(3).trim()
+		int nextBuild = Integer.valueOf(build) + 1
+	
+		String updatedVersion =  "${major}.${minor}.${nextBuild}"
+		
+		file('version.txt').text = "${updatedVersion}\n"
+	}
 }
