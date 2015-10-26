@@ -41,6 +41,7 @@ public abstract class TransferStrategy {
             return;
         }
 
+        LOGGER.debug("Running actions...");
         for (PostDownloadAction action : postDownloadActions) {
 
             PostDownloadExecution execution = new PostDownloadExecution();
@@ -48,5 +49,6 @@ public abstract class TransferStrategy {
 
             action.execute(execution);
         }
+        LOGGER.debug("Finished running actions...");
     }
 }

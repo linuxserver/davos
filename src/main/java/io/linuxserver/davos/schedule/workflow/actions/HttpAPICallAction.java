@@ -38,7 +38,7 @@ public class HttpAPICallAction implements PostDownloadAction {
 
             LOGGER.info("Sending message to generic API for {}", execution.fileName);
             HttpEntity<String> httpEntity = new HttpEntity<String>(body.replaceAll("\\$filename", execution.fileName), headers);
-            LOGGER.debug("Sending message {} to generic API: {}", httpEntity, url);
+            LOGGER.debug("Sending {} message {} to generic API: {}", method, httpEntity, url);
             restTemplate.exchange(url, method, httpEntity, Object.class);
             
         } catch (RestClientException | HttpMessageConversionException e) {
@@ -46,5 +46,10 @@ public class HttpAPICallAction implements PostDownloadAction {
             LOGGER.debug("Full stacktrace", e);
             LOGGER.error("Unable to complete message to generic API. Given error: {}", e.getMessage());
         }
+    }
+    
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
     }
 }

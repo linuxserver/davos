@@ -29,6 +29,7 @@ public class MoveFileAction implements PostDownloadAction {
 
             LOGGER.info("Executing move action: Moving {} to {}", execution.fileName, newFilePath);
             fileUtils.moveFileToDirectory(currentFilePath + execution.fileName, newFilePath);
+            LOGGER.info("File successfully moved!");
 
         } catch (IOException e) {
 
