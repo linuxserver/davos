@@ -32,7 +32,7 @@ var action = (function ($) {
 
     'use strict';
 
-    var initialise, addMove, addPushbullet, addApi;
+    var initialise, addMove, addPushbullet, addApi, removeAction;
 
     initialise = function () {
 
@@ -53,28 +53,36 @@ var action = (function ($) {
                 addApi();
             }
         });
+
+        $('#download_actions').on('click', '.remove_action', function () {
+            removeAction($(this));
+        });
     };
 
     addMove = function () {
 
-        var newAction = $('<div class="row action action_move"><div class="input-field col s3 action_type">move</div><div class="input-field col s8"><input type="text" placeholder="Move To.." class="f1" /></div></div>');
+        var newAction = $('<div class="valign-wrapper row action action_move"><div class="input-field col s4 action_type">move</div><div class="input-field col s6"><input type="text" placeholder="Move To.." class="f1" /></div><div class="col s2"><i class="material-icons remove_action">close</i></div></div>');
         $('#download_actions').append(newAction);
     };
 
     addPushbullet = function () {
 
-        var newAction = $('<div class="row action action_pushbullet"><div class="input-field col s3 action_type">pushbullet</div><div class="input-field col s8"><input type="text" placeholder="API Key" class="f1" /></div></div>');
+        var newAction = $('<div class="valign-wrapper row action action_pushbullet"><div class="input-field col s4 action_type">pushbullet</div><div class="input-field col s6"><input type="text" placeholder="API Key" class="f1" /></div><div class="col s2"><i class="material-icons remove_action">close</i></div></div>');
         $('#download_actions').append(newAction);
     };
 
     addApi = function () {
 
 
-        var newAction = $('<div class="row action action_api"><div class="input-field col s3 action_type">api</div><div class="input-field col s8"><input type="text" placeholder="URL" class="f1" /><br />' +
+        var newAction = $('<div class="valign-wrapper row action action_api"><div class="input-field col s4 action_type">api</div><div class="input-field col s6"><input type="text" placeholder="URL" class="f1" /><br />' +
             '<input type="text" placeholder="Method (e.g. POST, GET)" class="f2" /><br /><input type="text" placeholder="Content Type (e.g. application/json)" class="f3" /><br /><input type="text"' +
-            ' placeholder="Message body" class="f4" /><br /></div></div>');
+            ' placeholder="Message body" class="f4" /><br /></div><div class="col s2"><i class="material-icons remove_action">close</i></div></div>');
 
         $('#download_actions').append(newAction);
+    };
+
+    removeAction = function (closeButton) {
+        closeButton.parents('.action').remove();
     };
 
     return {
@@ -128,7 +136,7 @@ var schedule = (function ($) {
             $('#download_actions .action').each(function () {
 
                 var action = {
-                
+
                     id: cleanId($(this).attr('data-action-id')),
                     actionType: $(this).find('.action_type').text(),
                     f1: cleanActionFunction($(this).find('.f1')),
@@ -136,7 +144,7 @@ var schedule = (function ($) {
                     f3: cleanActionFunction($(this).find('.f3')),
                     f4: cleanActionFunction($(this).find('.f4'))
                 };
-                 
+
                 postData.actions.push(action);
             });
 
@@ -155,8 +163,9 @@ var schedule = (function ($) {
 
     cleanActionFunction = function (action) {
 
-        if (action)
+        if (action) {
             return action.val();
+        }
 
         return null;
     };

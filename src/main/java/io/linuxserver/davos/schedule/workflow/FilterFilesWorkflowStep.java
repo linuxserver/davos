@@ -83,6 +83,8 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
                         expression.toLowerCase());
                 
                 filteredFiles.add(file);
+                
+                return;
             }
         }
     }

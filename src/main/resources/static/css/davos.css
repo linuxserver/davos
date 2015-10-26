@@ -115,4 +115,10 @@ a.collection-item.schedule {
 
 .action_type {
     text-transform: capitalize;
+    font-weight: 500;
+}
+
+.remove_action {
+    cursor: pointer;
+    font-size: 16px;
 }

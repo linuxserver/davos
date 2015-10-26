@@ -1,8 +1,6 @@
 package io.linuxserver.davos.schedule.workflow;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -93,6 +91,37 @@ public class FilterFilesWorkflowStepTest {
 
         ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/", FileTransferType.FILE);
         config.setFilters(Arrays.asList("file1", "file2", "file4"));
+        config.setLastRun(DateTime.now().minusDays(1));
+
+        ArrayList<FTPFile> files = new ArrayList<FTPFile>();
+
+        FTPFile file1 = new FTPFile("file1", 0, "remote/", DateTime.now().minusDays(2).getMillis(), false);
+        FTPFile file2 = new FTPFile("file2", 0, "remote/", DateTime.now().getMillis(), false);
+        FTPFile file3 = new FTPFile("file3", 0, "remote/", DateTime.now().minusDays(2).getMillis(), false);
+        FTPFile file4 = new FTPFile("file4", 0, "remote/", DateTime.now().minusDays(2).getMillis(), false);
+        FTPFile file5 = new FTPFile("file5", 0, "remote/", DateTime.now().getMillis(), false);
+
+        files.add(file1);
+        files.add(file2);
+        files.add(file3);
+        files.add(file4);
+        files.add(file5);
+
+        when(mockConnection.listFiles("remote/")).thenReturn(files);
+
+        ScheduleWorkflow schedule = new ScheduleWorkflow(config);
+        schedule.setConnection(mockConnection);
+
+        workflowStep.runStep(schedule);
+
+        verify(mockNextStep).setFilesToDownload(Arrays.asList(file2));
+    }
+    
+    @Test
+    public void shouldOnlyAddOneInstanceOfAFileEvenIfTwoFiltersMatch() {
+
+        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/", FileTransferType.FILE);
+        config.setFilters(Arrays.asList("file1", "file2", "file2"));
         config.setLastRun(DateTime.now().minusDays(1));
 
         ArrayList<FTPFile> files = new ArrayList<FTPFile>();

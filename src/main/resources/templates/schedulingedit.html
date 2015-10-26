@@ -256,19 +256,19 @@
                                 </div>
                             </div>
 
-                            <div th:each="action : ${schedule.actions}" th:switch="${action.actionType}" th:attr="data-action-id=${action.id}, class='row action action_' + ${action.actionType}">
+                            <div th:each="action : ${schedule.actions}" th:switch="${action.actionType}" th:attr="data-action-id=${action.id}, class='valign-wrapper row action action_' + ${action.actionType}">
                                 
-                                <div class="input-field col s3 action_type" th:text="${action.actionType}"></div>
+                                <div class="input-field col s4 action_type" th:text="${action.actionType}"></div>
 
-                                <div th:case="'move'" class="action_name input-field col s8">
+                                <div th:case="'move'" class="action_name input-field col s6">
                                     <input type="text" placeholder="Move To..." class="f1" th:attr="value=${action.f1}" />
                                 </div>
 
-                                <div th:case="'pushbullet'" class="action_name input-field col s8">
+                                <div th:case="'pushbullet'" class="action_name input-field col s6">
                                     <input type="text" placeholder="API Key" class="f1" th:attr="value=${action.f1}" />
                                 </div>
 
-                                <div th:case="'api'" class="action_name input-field col s8">
+                                <div th:case="'api'" class="action_name input-field col s6">
                                     <input type="text" placeholder="URL" class="f1" th:attr="value=${action.f1}" />
                                     <br />
                                     <input type="text" placeholder="Method (e.g. POST, GET)" class="f2" th:attr="value=${action.f2}" />
@@ -278,6 +278,8 @@
                                     <input type="text" placeholder="Message body" class="f4" th:attr="value=${action.f4}" />
                                     <br />
                                 </div>
+                                
+                                <div class="col s2"><i class="material-icons remove_action">close</i></div>
 
                             </div>
 
