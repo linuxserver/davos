@@ -6,6 +6,8 @@
     <link type="text/css" rel="stylesheet" th:href="@{/css/materialize.min.css}" media="screen,projection" />
     <link type="text/css" rel="stylesheet" th:href="@{/css/davos.css}" media="screen" />
 
+    <title>Scheduling</title>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
@@ -13,49 +15,54 @@
 
     <header>
 
-        <div id="main-nav">
 
-            <div id="logo">
-                <div id="logo-text" class="center">davos</div>
-            </div>
+        <nav>
+            <div class="nav-wrapper teal lighten-2">
 
-            <div id="navigation">
-                <ul>
-                    <li><i class="material-icons">home</i><a th:href="@{/}" class="waves-effect waves-teal">Home</a></li>
-                    <li><i class="material-icons">web</i><a th:href="@{/}" class="waves-effect waves-teal">File Manager</a></li>
-                    <li class="active"><i class="material-icons">schedule</i><a th:href="@{/scheduling/edit}" class="waves-effect waves-teal">Scheduling</a></li>
-                    <li><i class="material-icons">settings</i><a class="waves-effect waves-teal">App Settings</a></li>
+                <a href="@{/}" class="brand-logo">davos</a>
+                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+                <ul class="right hide-on-med-and-down">
+                    <li><i class="material-icons left">home</i><a th:href="@{/}" class="waves-effect waves-teal">Home</a></li>
+                    <li><i class="material-icons left">web</i><a th:href="@{/}" class="waves-effect waves-teal">File Manager</a></li>
+                    <li class="active"><i class="material-icons left">schedule</i><a th:href="@{/scheduling}" class="waves-effect waves-teal">Scheduling</a></li>
+                    <li><i class="material-icons left">settings</i><a class="waves-effect waves-teal">App Settings</a></li>
+                </ul>
+                <ul class="side-nav" id="mobile-demo">
+                    <li class="valign-wrapper"><i class="material-icons left">home</i><a th:href="@{/}" class="waves-effect waves-teal">Home</a></li>
+                    <li class="valign-wrapper"><i class="material-icons left">web</i><a th:href="@{/}" class="waves-effect waves-teal">File Manager</a></li>
+                    <li class="valign-wrapper"><i class="material-icons left">schedule</i><a th:href="@{/scheduling}" class="waves-effect waves-teal">Scheduling</a></li>
+                    <li class="valign-wrapper"><i class="material-icons left">settings</i><a class="waves-effect waves-teal">App Settings</a></li>
                 </ul>
             </div>
-        </div>
-    </header>
+        </nav>
 
+    </header>
     <main>
 
-        <div class="section teal lighten-3">
-            <div class="container">
-                <div class="row">
-                    <div class="col s12 m9">
-                        <h1 class="header light center-on-small-only">Scheduling</h1>
-                        <h4 class="light teal-text text-lighten-5 center-on-small-only">Create and configure automated downloads</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="container">
             <div class="row">
                 <div id="scheduling">
 
                     <div class="section">
-                        <p class="caption">A schedule allows you to create automated processes that poll a given FTP server based on a pre-defined interval. Schedules are especially useful when you need to download files on a regular basis from any given server. They are highly configurable, with the ability to filter down the kinds of files the schedule pulls down, as well
-                        as <strong>completion hooks</strong> which allow you to define what happens when a file has successfully finished downloading.</p>
+                        <p class="caption">A schedule allows you to create automated processes that poll a given FTP server based on a pre-defined interval. Schedules are especially useful when you need to download files on a regular basis from any given server. They are highly configurable, with the ability to filter down the kinds of files the schedule pulls down, as well as <strong>completion hooks</strong> which allow you to define what happens when a file has successfully finished downloading.</p>
                     </div>
 
                     <div class="section">
                         <h4 class="light">Current Schedules</h4>
 
-                        <div class="collection">
-                        	<a th:each="schedule : ${schedules}" th:href="@{/scheduling/} + ${schedule.id}" class="collection-item schedule" th:text="${schedule.name}"></a>
+                        <div class="row">
+                            <div th:each="schedule : ${schedules}" class="col s12 m6">
+                                
+                                <div class="card small">
+                                    <div class="card-image teal lighten-2">
+                                        <i class="material-icons">schedule</i>
+                                        <span class="card-title" th:text="${schedule.name}"></span>
+                                    </div>
+                                    <div class="card-action">
+                                        <a th:href="@{/scheduling/} + ${schedule.id}">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -76,9 +83,10 @@
     <script type="text/javascript" th:src="@{/js/jquery-2.1.4.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/materialize.min.js}"></script>
 
-    <script type="text/javascript">
-
-
+    <script type="text/javascript" th:inline="text">
+        $(document).ready(function() {
+            $(".button-collapse").sideNav();
+        });
     </script>
 </body>
 

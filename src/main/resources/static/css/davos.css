@@ -1,51 +1,18 @@
-#main-nav {
-    position: fixed;
-    height: 100%;
-    width: 250px;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-}
-#logo {
-    width: 100%;
-    height: 200px;
-    position: relative;
-}
-#navigation ul li {
-    line-height: 50px;
-    margin: 5px 0;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 300;
-    position: relative;
-}
-#navigation ul li a {
-    display: block;
-    padding-left: 45px;
-    color: #666;
-}
-#navigation ul li.active,
-#navigation ul li.active:hover {
-    background-color: #80cbc4;
-    font-weight: 500;
-    color: #fff;
-}
-#navigation ul li.active a {
-    color: #fff;
-}
-#navigation ul li i.material-icons {
-    position: absolute;
-    font-size: 25px;
-    margin: auto;
-    height: 25px;
-    width: 25px;
-    top: 0;
-    bottom: 0;
-    left: 10px;
-}
-#navigation ul li:hover {
-    background-color: #efefef;
-}
 html {
     color: #666;
+}
+nav ul li {
+    padding: 0 15px;
+}
+nav ul li.active {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+nav ul a {
+    padding: 0 15px 0 0;
+}
+nav .brand-logo {
+    padding: 0 15px;
+    font-weight: 300;
 }
 #logo-text {
     font-size: 40px;
@@ -57,19 +24,11 @@ html {
     top: 0;
     bottom: 0;
 }
-main {
-    padding-left: 250px;
-}
 h1.header {
     color: #fff;
 }
 h2.header {
     color: #80cbc4;
-}
-@media only screen and (min-width: 993px) {
-    .container {
-        width: 85%;
-    }
 }
 span.badge.info {
     font-weight: 300;
@@ -83,15 +42,12 @@ span.badge.info.idle {
 span.badge.info.idle:after {
     content: "Idle";
 }
-
 span.badge.info.in-progress:after {
     content: "Download in Progress";
 }
-
 span.badge.info.in-progress {
     background-color: #26a69a;
 }
-
 a.collection-item.schedule {
     font-weight: 300;
     color: #666;
@@ -99,26 +55,40 @@ a.collection-item.schedule {
 .collapsible-body {
     padding: 40px
 }
-
 .collapsible-header {
     position: relative;
 }
-
 .subtext {
     font-size: 12px;
-    padding: 10px !important;
 }
-
 .chip {
     margin-bottom: 10px;
 }
-
 .action_type {
     text-transform: capitalize;
     font-weight: 500;
 }
-
 .remove_action {
     cursor: pointer;
     font-size: 16px;
+}
+.card-image i {
+    font-size: 250px;
+    color: #fff;
+    position: absolute;
+    right: 0;
+    top: -50px;
+    opacity: 0.3;
+}
+.heading {
+    margin-bottom: 30px;
+}
+.side-nav i {
+    color: #666;
+}
+a.button-collapse > i {
+    margin-left: 15px;
+}
+.card.small {
+    height: 210px;
 }

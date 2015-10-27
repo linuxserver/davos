@@ -13,21 +13,26 @@
 
     <header>
 
-        <div id="main-nav">
+         <nav>
+            <div class="nav-wrapper teal lighten-2">
 
-            <div id="logo">
-                <div id="logo-text" class="center">davos</div>
-            </div>
-
-            <div id="navigation">
-                <ul>
-                    <li class="active"><i class="material-icons">home</i><a th:href="@{/}" class="waves-effect waves-teal">Home</a></li>
-                    <li><i class="material-icons">web</i><a th:href="@{/}" class="waves-effect waves-teal">File Manager</a></li>
-                    <li><i class="material-icons">schedule</i><a th:href="@{/scheduling}" class="waves-effect waves-teal">Scheduling</a></li>
-                    <li><i class="material-icons">settings</i><a class="waves-effect waves-teal">App Settings</a></li>
+                <a href="@{/}" class="brand-logo">davos</a>
+                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+                <ul class="right hide-on-med-and-down">
+                    <li class="active"><i class="material-icons left">home</i><a th:href="@{/}" class="waves-effect waves-teal">Home</a></li>
+                    <li><i class="material-icons left">web</i><a th:href="@{/}" class="waves-effect waves-teal">File Manager</a></li>
+                    <li><i class="material-icons left">schedule</i><a th:href="@{/scheduling}" class="waves-effect waves-teal">Scheduling</a></li>
+                    <li><i class="material-icons left">settings</i><a class="waves-effect waves-teal">App Settings</a></li>
+                </ul>
+                <ul class="side-nav" id="mobile-demo">
+                    <li class="valign-wrapper"><i class="material-icons left">home</i><a th:href="@{/}" class="waves-effect waves-teal">Home</a></li>
+                    <li class="valign-wrapper"><i class="material-icons left">web</i><a th:href="@{/}" class="waves-effect waves-teal">File Manager</a></li>
+                    <li class="valign-wrapper"><i class="material-icons left">schedule</i><a th:href="@{/scheduling}" class="waves-effect waves-teal">Scheduling</a></li>
+                    <li class="valign-wrapper"><i class="material-icons left">settings</i><a class="waves-effect waves-teal">App Settings</a></li>
                 </ul>
             </div>
-        </div>
+        </nav>
+        
     </header>
 
     <main>
@@ -43,6 +48,11 @@
     <script type="text/javascript" th:src="@{/js/jquery-2.1.4.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/materialize.min.js}"></script>
 
+    <script type="text/javascript" th:inline="text">
+        $(document).ready(function() {
+            $(".button-collapse").sideNav();
+        });
+    </script>
 </body>
 
 </html>
