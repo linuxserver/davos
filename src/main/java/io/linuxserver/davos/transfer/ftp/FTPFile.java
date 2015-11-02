@@ -6,15 +6,15 @@ public class FTPFile {
 
     private String name;
     private long size;
-    private String absolutePath;
+    private String path;
     private DateTime lastModified;
     private boolean directory;
 
-    public FTPFile(String name, long size, String absolutePath, long mTime, boolean directory) {
+    public FTPFile(String name, long size, String path, long mTime, boolean directory) {
         
         this.name = name;
         this.size = size;
-        this.absolutePath = absolutePath;
+        this.path = path;
         this.lastModified = new DateTime(mTime);
         this.directory = directory;
     }
@@ -28,7 +28,7 @@ public class FTPFile {
     }
 
     public String getPath() {
-        return absolutePath;
+        return path;
     }
 
     public DateTime getLastModified() {

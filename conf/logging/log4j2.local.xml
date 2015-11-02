@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+	<Appenders>
+
+		<Console name="Console" target="SYSTEM_OUT" follow="true">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} - %5p - [%c{1}] - %msg%n" />
+		</Console>
+
+		<RollingFile name="File" fileName="davos.log"
+			filePattern="/config/logs/$${date:yyyy-MM}/app-%d{yyyy-MM-dd-HH}-%i.log">
+			<PatternLayout>
+				<Pattern>
+					%d{yyyy-MM-dd HH:mm:ss.SSS} - $5p - [%c{1}] - %msg%n
+				</Pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+		</RollingFile>
+
+	</Appenders>
+
+	<Loggers>
+
+		<Logger name="io.linuxserver" level="debug" />
+		<Logger name="org.thymeleaf" level="warn" />
+
+		<Root level="info">
+			<AppenderRef ref="Console" />
+		</Root>
+
+	</Loggers>
+
+</Configuration>

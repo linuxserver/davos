@@ -90,3 +90,11 @@ task updateBuildVersion << {
 		file('version.txt').text = "${updatedVersion}\n"
 	}
 }
+
+task copyConfig(type: Copy) {
+	
+	from 'conf/app/application.${env}.properties'
+	from 'conf/app/log4j2.${env}.xml'
+	
+	to 'src/main/resources/'
+}
