@@ -93,8 +93,11 @@ task updateBuildVersion << {
 
 task copyConfig(type: Copy) {
 	
-	from 'conf/app/application.${env}.properties'
-	from 'conf/app/log4j2.${env}.xml'
+	def location = project.hasProperty('env') ? "$env" : 'local'
 	
-	to 'src/main/resources/'
+	from "conf/${location}"
+	into "src/main/resources/"
 }
+
+build.dependsOn copyConfig
+build.mustRunAfter copyConfig
