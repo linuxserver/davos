@@ -19,6 +19,7 @@ import io.linuxserver.davos.dto.converters.ScheduleConfigurationDTOConverter;
 import io.linuxserver.davos.dto.converters.ScheduleConfigurationModelConverter;
 import io.linuxserver.davos.exception.ScheduleAlreadyRunningException;
 import io.linuxserver.davos.exception.ScheduleNotRunningException;
+import io.linuxserver.davos.logging.LoggingManager;
 import io.linuxserver.davos.persistence.dao.ScheduleConfigurationDAO;
 import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
 import io.linuxserver.davos.schedule.ScheduleExecutor;
@@ -84,6 +85,18 @@ public class RestAPIController {
         return scheduleConfigurationDAO.getAll().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
+    @RequestMapping(value = "/debug/{debugEnabled}")
+    public boolean updateSettings(@PathVariable("debugEnabled") boolean debugEnabled) {
+        
+        if (debugEnabled)
+            LoggingManager.enableDebug();
+        
+        else
+            LoggingManager.disableDebug();
+        
+        return true;
+    }
+    
     private ScheduleConfigurationDTO toDTO(ScheduleConfigurationModel model) {
         return new ScheduleConfigurationDTOConverter().convert(model);
     }

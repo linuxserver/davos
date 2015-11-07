@@ -26,7 +26,7 @@ def version() {
 
 jar {
     baseName = 'davos'
-    version = '0.0.1-SNAPSHOT'
+    version = version()
 }
 
 sourceCompatibility = 1.8
@@ -46,7 +46,10 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.boot:spring-boot-starter-jdbc'
-	compile 'org.springframework.boot:spring-boot-starter-log4j2'
+    
+    compile 'org.apache.logging.log4j:log4j-api:2.4.1'
+    compile 'org.apache.logging.log4j:log4j-core:2.4.1'
+    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.4.1'
 	
 	compile 'com.jcraft:jsch:0.1.50'
     compile 'joda-time:joda-time:2.3'
@@ -76,16 +79,15 @@ task wrapper(type: Wrapper) {
 
 task updateBuildVersion << {
 
-	Matcher matcher = file('version.txt').text.trim() =~ /(.+)\.(.+)\.(.+)$/
+	Matcher matcher = file('version.txt').text.trim() =~ /(.+)\.(.+)$/
 	
 	if (matcher.find()) {
 	
 		String major = matcher.group(1)
-		String minor = matcher.group(2)
-		String build = matcher.group(3).trim()
-		int nextBuild = Integer.valueOf(build) + 1
+		String minor = matcher.group(2).trim()
+		int nextBuild = Integer.valueOf(minor) + 1
 	
-		String updatedVersion =  "${major}.${minor}.${nextBuild}"
+		String updatedVersion =  "${major}.${nextBuild}"
 		
 		file('version.txt').text = "${updatedVersion}\n"
 	}
@@ -101,3 +103,6 @@ task copyConfig(type: Copy) {
 
 build.dependsOn copyConfig
 build.mustRunAfter copyConfig
+
+run.dependsOn copyConfig
+run.mustRunAfter copyConfig
