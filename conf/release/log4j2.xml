@@ -3,7 +3,7 @@
 
 	<Appenders>
 
-		<RollingFile name="File" fileName="davos.log" filePattern="/config/logs/${date:yyyy-MM}/app-%d{yyyy-MM-dd-HH}-%i.log">
+		<RollingFile name="File" fileName="/config/logs/davos.log" filePattern="/config/logs/${date:yyyy-MM}/app-%d{yyyy-MM-dd-HH}-%i.log">
 			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} - %5p - [%c{1}] - %msg%n" />
 			<Policies>
 				<SizeBasedTriggeringPolicy size="10 MB" />
