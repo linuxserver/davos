@@ -20,13 +20,9 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot' 
 apply plugin: 'io.spring.dependency-management' 
 
-def version() {
-  file('version.txt').text.trim()
-}
-
 jar {
     baseName = 'davos'
-    version = version()
+    version = file('version.txt').text.trim()
 }
 
 sourceCompatibility = 1.8
