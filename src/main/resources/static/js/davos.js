@@ -3,23 +3,39 @@ var filter = (function ($) {
 
     'use strict';
 
-    var initialise;
+    var initialise, removeChip, addFilter;
 
     initialise = function () {
 
-        $('#add_new_filter').on('click', function () {
+        $('#add_new_filter').on('click', addFilter);
 
-            var filter = $('#new_filter').val();
+        $('#new_filter').on('keypress', function (e) {
 
-            if ($.trim(filter.length) > 0) {
-
-                $('#filter_chips').append('<div class="chip"><input type="hidden" value="" class="filter_id" /><span class="filter_value">' +
-                    filter + '</span><i class="material-icons">close</i></div>&nbsp;');
-
-                $('#new_filter').val('');
+            if (e.keyCode == 13) {
+                addFilter();
             }
-
         });
+
+        $('#filters').on('click', '.chip i.material-icons', function () {
+            removeChip($(this).parents('.chip'));
+        });
+    };
+
+    addFilter = function () {
+
+        var filter = $('#new_filter').val();
+
+        if ($.trim(filter.length) > 0) {
+
+            $('#filter_chips').append('<div class="chip"><input type="hidden" value="" class="filter_id" /><div class="letter">'+filter.substring(0,1)+'</div><span class="filter_value">' +
+                filter + '</span><i class="material-icons">close</i></div>&nbsp;');
+
+            $('#new_filter').val('');
+        }
+    };
+
+    removeChip = function (chip) {
+        chip.remove();
     };
 
     return {
@@ -60,29 +76,39 @@ var action = (function ($) {
     };
 
     addMove = function () {
+        var newAction = $('<div data-action-type="move" class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone action action_move">'+
+          '<div class="demo-card-wide mdl-card mdl-shadow--2dp action-card"><div class="mdl-card__title"><h2 class="mdl-card__title-text">Move Downloaded File</h2>'+
+          '</div><div class="mdl-card__actions mdl-card--border"><div class="full mdl-textfield mdl-js-textfield mdl-textfield--floating-label"><span>To</span>'+
+          '<input class="mdl-textfield__input f1"></div></div><div class="mdl-card__menu"><i class="material-icons remove_action">close</i></div></div></div>');
 
-        var newAction = $('<div class="row action action_move"><div class="input-field col m4 s12 action_type">move</div><div class="input-field col m6 s10"><input type="text" placeholder="Move To.." class="f1" /></div><div class="col m2 s2"><i class="material-icons remove_action">close</i></div></div>');
-        $('#download_actions').append(newAction);
+        $('#download_actions').append(newAction).children(':last').hide().fadeIn(500);
     };
 
     addPushbullet = function () {
 
-        var newAction = $('<div class="row action action_pushbullet"><div class="input-field col m4 s12 action_type">pushbullet</div><div class="input-field col m6 s10"><input type="text" placeholder="API Key" class="f1" /></div><div class="col m2 s2"><i class="material-icons remove_action">close</i></div></div>');
-        $('#download_actions').append(newAction);
+        var newAction = $('<div data-action-type="pushbullet" class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone action action_pushbullet">'+
+          '<div class="demo-card-wide mdl-card mdl-shadow--2dp action-card"><div class="mdl-card__title"><h2 class="mdl-card__title-text">Pushbullet Notification</h2>'+
+          '</div><div class="mdl-card__actions mdl-card--border"><div class="full mdl-textfield mdl-js-textfield mdl-textfield--floating-label"><span>API Access Token</span>'+
+          '<input class="mdl-textfield__input f1"></div></div><div class="mdl-card__menu"><i class="material-icons remove_action">close</i></div></div></div>');
+
+        $('#download_actions').append(newAction).children(':last').hide().fadeIn(500);
     };
 
     addApi = function () {
 
+        var newAction = $('<div data-action-type="api" class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone action action_api">'+
+        '<div class="demo-card-wide mdl-card mdl-shadow--2dp action-card"><div class="mdl-card__title"><h2 class="mdl-card__title-text">Generic HTTP API Call</h2>'+
+        '</div><div class="mdl-card__actions mdl-card--border"><div class="full mdl-textfield mdl-js-textfield mdl-textfield--floating-label"><span>URL</span>'+
+        '<input class="mdl-textfield__input f1"></div><div class="full mdl-textfield mdl-js-textfield mdl-textfield--floating-label"><span>HTTP Method</span>'+
+        '<input class="mdl-textfield__input f2"></div><div class="full mdl-textfield mdl-js-textfield mdl-textfield--floating-label"><span>Content Type</span>'+
+        '<input class="mdl-textfield__input f3"></div><div class="full mdl-textfield mdl-js-textfield mdl-textfield--floating-label"><span>Body</span>'+
+        '<input class="mdl-textfield__input f4" placeholder="Use $filename to reference the file"></div></div><div class="mdl-card__menu"><i class="material-icons remove_action">close</i></div></div></div>');
 
-        var newAction = $('<div class="row action action_api"><div class="input-field col m4 s12 action_type">api</div><div class="input-field col m6 s10"><input type="text" placeholder="URL" class="f1" /><br />' +
-            '<input type="text" placeholder="Method (e.g. POST, GET)" class="f2" /><br /><input type="text" placeholder="Content Type (e.g. application/json)" class="f3" /><br /><input type="text"' +
-            ' placeholder="Message body" class="f4" /><br /></div><div class="col m2 s2"><i class="material-icons remove_action">close</i></div></div>');
-
-        $('#download_actions').append(newAction);
+        $('#download_actions').append(newAction).children(':last').hide().fadeIn(500);
     };
 
     removeAction = function (closeButton) {
-        closeButton.parents('.action').remove();
+        closeButton.parents('.action').fadeOut(500).remove();
     };
 
     return {
@@ -99,8 +125,8 @@ var schedule = (function ($) {
 
     initialise = function () {
 
-        $('#start_schedule').on('click', startSchedule);
-        $('#stop_schedule').on('click', stopSchedule);
+        $('.start-stop').on('click', '.schedule-start', function() { startSchedule($(this).attr('data-schedule-id')) });
+        $('.start-stop').on('click', '.schedule-stop', function() { stopSchedule($(this).attr('data-schedule-id')) });
 
         $('#save_schedule').on('click', function () {
 
@@ -139,7 +165,7 @@ var schedule = (function ($) {
                 var action = {
 
                     id: cleanId($(this).attr('data-action-id')),
-                    actionType: $(this).find('.action_type').text(),
+                    actionType: $(this).attr('data-action-type'),
                     f1: cleanActionFunction($(this).find('.f1')),
                     f2: cleanActionFunction($(this).find('.f2')),
                     f3: cleanActionFunction($(this).find('.f3')),
@@ -180,34 +206,47 @@ var schedule = (function ($) {
         return parseInt(id, 10);
     };
 
-    startSchedule = function () {
+    startSchedule = function (id) {
 
         $.ajax({
             method: "GET",
-            url: "/api/v1/schedule/" + cleanId($('#schedule_id').val()) + "/start"
+            url: "/api/v1/schedule/" + id + "/start"
         }).done(startResponse).fail(startResponse);
     };
 
-    stopSchedule = function () {
+    stopSchedule = function (id) {
 
         $.ajax({
             method: "GET",
-            url: "/api/v1/schedule/" + cleanId($('#schedule_id').val()) + "/stop"
+            url: "/api/v1/schedule/" + id + "/stop"
         }).done(stopResponse).fail(stopResponse);
     };
 
     startResponse = function (msg) {
-        Materialize.toast(msg.message, 3000, 'rounded');
+      var snackbarContainer = document.querySelector('#toast-message');
+      snackbarContainer.MaterialSnackbar.showSnackbar({ message: msg.message, timeout: 3000 });
+
+      if (msg.message === 'Schedule started') {
+          $('#start-stop-' + msg.id).find('.schedule-start').remove();
+          $('#start-stop-' + msg.id).append('<button class="mdl-button mdl-js-button mdl-button--raised schedule-stop" data-schedule-id="'+msg.id+'">Stop</button>');
+      }
     };
 
     stopResponse = function (msg) {
-        Materialize.toast(msg.message, 3000, 'rounded');
+      var snackbarContainer = document.querySelector('#toast-message');
+      snackbarContainer.MaterialSnackbar.showSnackbar({ message: msg.message, timeout: 3000 });
+
+      if (msg.message === 'Schedule stopped') {
+          $('#start-stop-' + msg.id).find('.schedule-stop').remove();
+          $('#start-stop-' + msg.id).append('<button class="mdl-button mdl-js-button mdl-button--raised schedule-start" data-schedule-id="'+msg.id+'">Start</button>');
+      }
     };
 
     onSuccess = function (msg) {
 
         if (msg.id === cleanId($('#schedule_id').val())) {
-            Materialize.toast('Schedule Saved', 3000, 'rounded');
+            var snackbarContainer = document.querySelector('#toast-message');
+            snackbarContainer.MaterialSnackbar.showSnackbar({ message: 'Schedule Saved', timeout: 3000 });
         } else {
             window.location.replace('/scheduling/' + msg.id);
         }

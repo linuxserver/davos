@@ -1,5 +1,7 @@
 package io.linuxserver.davos.web;
 
+import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import io.linuxserver.davos.dto.ScheduleConfigurationDTO;
 import io.linuxserver.davos.dto.converters.ScheduleConfigurationDTOConverter;
 import io.linuxserver.davos.persistence.dao.ScheduleConfigurationDAO;
 import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.schedule.ScheduleExecutor;
 import io.linuxserver.davos.transfer.ftp.FileTransferType;
 import io.linuxserver.davos.transfer.ftp.TransferProtocol;
 
@@ -20,6 +23,9 @@ public class MainController {
 
     @Resource
     private ScheduleConfigurationDAO scheduleConfigurationDAO;
+    
+    @Resource
+    private ScheduleExecutor scheduleExecutor;
 
     @RequestMapping
     public String index() {
@@ -29,7 +35,7 @@ public class MainController {
     @RequestMapping("/scheduling")
     public String scheduling(Model model) {
 
-        model.addAttribute("schedules", scheduleConfigurationDAO.getAll());
+        model.addAttribute("schedules", scheduleConfigurationDAO.getAll().stream().map(this::toDTO).collect(Collectors.toList()));
 
         return "scheduling";
     }
@@ -50,9 +56,15 @@ public class MainController {
         schedule.interval = 60;
         schedule.transferType = FileTransferType.FILE;
         schedule.connectionType = TransferProtocol.FTP;
-        
+
         model.addAttribute("schedule", schedule);
 
         return "schedulingedit";
+    }
+
+    private ScheduleConfigurationDTO toDTO(ScheduleConfigurationModel model) {
+        ScheduleConfigurationDTO schedule = new ScheduleConfigurationDTOConverter().convert(model);
+        schedule.running = scheduleExecutor.isScheduleRunning(schedule.id);
+        return schedule;
     }
 }

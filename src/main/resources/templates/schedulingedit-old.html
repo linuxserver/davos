@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link th:href="@{https://fonts.googleapis.com/icon?family=Material+Icons}" rel="stylesheet" />
+    <link type="text/css" rel="stylesheet" th:href="@{/old/css/materialize.min.css}" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" th:href="@{/old/css/davos.css}" media="screen" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title th:inline="text">Edit [[${schedule.name}]]</title>
+</head>
+
+<body>
+
+    <header>
+
+
+        <nav>
+            <div class="nav-wrapper teal lighten-2">
+
+                <a href="@{/}" class="brand-logo">davos</a>
+                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+                <ul class="right hide-on-med-and-down">
+                    <li><i class="material-icons left">home</i><a th:href="@{/}" class="waves-effect waves-teal">Home</a></li>
+                    <li><i class="material-icons left">web</i><a th:href="@{/}" class="waves-effect waves-teal">File Manager</a></li>
+                    <li class="active"><i class="material-icons left">schedule</i><a th:href="@{/scheduling}" class="waves-effect waves-teal">Scheduling</a></li>
+                    <li><i class="material-icons left">settings</i><a class="waves-effect waves-teal">App Settings</a></li>
+                </ul>
+                <ul class="side-nav" id="mobile-demo">
+                    <li class="valign-wrapper"><i class="material-icons left">home</i><a th:href="@{/}" class="waves-effect waves-teal">Home</a></li>
+                    <li class="valign-wrapper"><i class="material-icons left">web</i><a th:href="@{/}" class="waves-effect waves-teal">File Manager</a></li>
+                    <li class="valign-wrapper"><i class="material-icons left">schedule</i><a th:href="@{/scheduling}" class="waves-effect waves-teal">Scheduling</a></li>
+                    <li class="valign-wrapper"><i class="material-icons left">settings</i><a class="waves-effect waves-teal">App Settings</a></li>
+                </ul>
+            </div>
+        </nav>
+
+    </header>
+
+    <main>
+
+        <div class="container">
+
+            <div class="row">
+                <div class="section">
+                    <h4 class="light" th:text="${schedule.name}"></h4>
+                    <input type="hidden" id="schedule_id" th:attr="value=${schedule.id}" />
+                    <input type="hidden" id="schedule_lastrun" th:attr="value=${schedule.lastRun}" />
+                </div>
+            </div>
+
+            <div class="section heading">
+                <h5 class="light valign-wrapper"><i class="material-icons left">settings_applications</i>General</h5>
+            </div>
+
+            <div class="row">
+
+                <div class="input-field col m4 s12">
+                    <input id="schedule_name" placeholder="Please choose a name for this schedule" th:attr="value=${schedule.name}" type="text" />
+                    <label for="schedule_name">Schedule name</label>
+                </div>
+                <div class="col m8 s12">
+                    <p class="subtext">
+                        Give this schedule a meaningful name so you know what its purpose is.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="switch col m4 s12">
+                    <label>
+                        <input id="start_automatically" type="checkbox" th:checked="${schedule.startAutomatically}" />
+                        <span class="lever"></span>
+                    </label>
+                    Start Automatically
+                </div>
+                <div class="col m8 s12">
+                    <p class="subtext">
+                        Select this if you want this schedule to automatically start when davos starts. This is a useful option if davos needs to restart and you don't want to have to manually kick off this process.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="input-field col m4 s12">
+                    <select class="browser-default" id="interval">
+                        <option th:selected="${schedule.interval == 15}" th:value="15">Every 15 minutes</option>
+                        <option th:selected="${schedule.interval == 30}" th:value="30">Every 30 minutes</option>
+                        <option th:selected="${schedule.interval == 60}" selected="selected" th:value="60">Every hour</option>
+                        <option th:selected="${schedule.interval == 120}" th:value="120">Every 2 hours</option>
+                        <option th:selected="${schedule.interval == 720}" th:value="720">Twice a day</option>
+                        <option th:selected="${schedule.interval == 1440}" th:value="1440">Once a day</option>
+                    </select>
+                </div>
+                <div class="col s12 m8">
+                    <p class="subtext">
+                        The interval that defines how often this schedule will poll the server to check for new files.
+                    </p>
+                </div>
+            </div>
+
+            <div class="section heading">
+                <h5 class="light valign-wrapper"><i class="material-icons left">business</i>Server</h5>
+            </div>
+
+            <div class="row valign-wrapper">
+                <div class="switch col m2 s6">
+                    <input name="protocol_type" value="FTP" type="radio" id="protocol_ftp" th:checked="${schedule.connectionType != null and schedule.connectionType.name() == 'FTP'}" />
+                    <label for="protocol_ftp">FTP</label>
+                </div>
+                <div class="switch col m2 s6">
+                    <input name="protocol_type" value="FTPS" type="radio" id="protocol_ftps" th:checked="${schedule.connectionType != null and schedule.connectionType.name() == 'FTPS'}" />
+                    <label for="protocol_ftps">FTPS</label>
+                </div>
+                <div class="switch col m2 s6">
+                    <input name="protocol_type" value="SFTP" type="radio" id="protocol_sftp" th:checked="${schedule.connectionType != null and schedule.connectionType.name() == 'SFTP'}" />
+                    <label for="protocol_sftp">SFTP</label>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="input-field col m6 s12">
+                    <i class="material-icons prefix">business</i>
+                    <input id="server_name" type="text" th:attr="value=${schedule.hostName}" />
+                    <label for="server_name">Server Name (or IP address)</label>
+                </div>
+                <div class="input-field col m2 s12">
+                    <i class="material-icons prefix">settings_input_svideo</i>
+                    <input id="server_port" type="number" th:attr="value=${schedule.port}" />
+                    <label for="server_port">Port</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col m6 s12">
+                    <i class="material-icons prefix">perm_identity</i>
+                    <input id="username" type="text" th:attr="value=${schedule.username}" />
+                    <label for="username">Username</label>
+                </div>
+                <div class="input-field col m6 s12">
+                    <i class="material-icons prefix">vpn_key</i>
+                    <input id="password" type="password" th:attr="value=${schedule.password}" />
+                    <label for="password">Password</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col m6 s12">
+                    <i class="material-icons prefix">track_changes</i>
+                    <input id="remote_path" type="text" th:attr="value=${schedule.remoteFilePath}" />
+                    <label for="remote-path">Remote folder to scan</label>
+                </div>
+                <div class="input-field col m6 s12">
+                    <i class="material-icons prefix">play_for_work</i>
+                    <input id="local_path" type="text" th:attr="value=${schedule.localFilePath}" />
+                    <label for="local-path">Local destination folder</label>
+                </div>
+            </div>
+
+            <div class="section heading">
+                <h5 class="light valign-wrapper"><i class="material-icons left">swap_vert</i>File Transfers</h5>
+            </div>
+
+            <div class="row">
+                <div class="switch col m2 s12">
+                    <input name="scan_type" value="FILE" type="radio" id="scan_files_only" th:checked="${schedule.transferType != null and schedule.transferType.name() == 'FILE'}" />
+                    <label for="scan_files_only">Files only</label>
+                </div>
+                <div class="col s12 m10">
+                    <p class="subtext">
+                        Only download files in the remote folder. Ignore sub-folders.
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="switch col m2 s12">
+                    <input name="scan_type" value="RECURSIVE" type="radio" id="scan_recursive" th:checked="${schedule.transferType != null and schedule.transferType.name() == 'RECURSIVE'}" />
+                    <label for="scan_recursive">Recursive</label>
+                </div>
+                <div class="col m10 s12">
+                    <p class="subtext">
+                        Look inside any sub-folders in the remote folder. If any files are found, download them.
+                    </p>
+                </div>
+            </div>
+
+            <div class="section heading">
+                <h5 class="light valign-wrapper"><i class="material-icons left">sort_by_alpha</i>Filters</h5>
+            </div>
+
+            <div class="row">
+                <div class="col s12 m12">
+                    <p class="subtext">
+                        If you do not want davos to pull down all recent files from the server during the next scheduled run, please define a filter (or more). A filter works by telling davos that a file must adhere to a particular naming structure (file name or extension) before it decides to download it. For example, if you only want the schedule to download <i>.doc</i> files, you should enter a filter of <strong>*.doc</strong>. You may use a question mark (<strong>?</strong>) to denote a single wildcard character, or an asterisk (<strong>*</strong>) to denote any number of wildcard characters.
+                    </p>
+
+                </div>
+
+                <div class="row">
+                    <div class="input-field col m6 s12">
+                        <input id="new_filter" type="text" />
+                        <label for="new_filter">Add filter</label>
+                    </div>
+                    <div class="input-field col m6 s12">
+                        <button class="btn waves-effect waves-light" type="button" id="add_new_filter">Add</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-field col m12 s12" id="filter_chips">
+
+                        <div class="chip" th:each="filter : ${schedule.filters}">
+                            <input type="hidden" class="filter_id" th:attr="value=${filter.id}" />
+                            <span class="filter_value" th:text="${filter.value}"></span>
+                            <i class="material-icons">close</i>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="section heading">
+                <h5 class="light valign-wrapper"><i class="material-icons left">code</i>Post-Download Actions</h5>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <p class="subtext">
+                        Add actions for davos to perform after each file has been successfully downloaded.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="input-field col m4 s12">
+                    <select id="select_download_action" class="browser-default">
+                        <option value="choose" disabled="disabled" selected="selected">Add action...</option>
+                        <option value="pushbullet">Pushbullet Notification</option>
+                        <option value="move">Move Downloaded File</option>
+                        <option value="api">Generic HTTP API Call</option>
+                    </select>
+
+                </div>
+            </div>
+
+            <div id="download_actions">
+                <div th:each="action : ${schedule.actions}" th:switch="${action.actionType}" th:attr="data-action-id=${action.id}, class='row action action_' + ${action.actionType}">
+
+                    <div class="input-field col m4 s12 action_type" th:text="${action.actionType}"></div>
+
+                    <div th:case="'move'" class="action_name input-field col m6 s10">
+                        <input type="text" placeholder="Move To..." class="f1" th:attr="value=${action.f1}" />
+                    </div>
+
+                    <div th:case="'pushbullet'" class="action_name input-field col m6 s10">
+                        <input type="text" placeholder="API Key" class="f1" th:attr="value=${action.f1}" />
+                    </div>
+
+                    <div th:case="'api'" class="action_name input-field col m6 s10">
+                        <input type="text" placeholder="URL" class="f1" th:attr="value=${action.f1}" />
+                        <br />
+                        <input type="text" placeholder="Method (e.g. POST, GET)" class="f2" th:attr="value=${action.f2}" />
+                        <br />
+                        <input type="text" placeholder="Content Type (e.g. application/json)" class="f3" th:attr="value=${action.f3}" />
+                        <br />
+                        <input type="text" placeholder="Message body" class="f4" th:attr="value=${action.f4}" />
+                        <br />
+                    </div>
+
+                    <div class="col m2 s2"><i class="material-icons remove_action">close</i></div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <button class="btn waves-effect waves-light" type="button" id="save_schedule">Save changes</button>
+            </div>
+
+            <div class="row">
+                <div class="section">
+                    <h5 class="light">Schedule Options</h5>
+                    <button class="btn waves-effect waves-light green lighten-2" id="start_schedule" type="button">Start</button>
+                    <button class="btn waves-effect waves-light red lighten-2" id="stop_schedule" type="button">Stop</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="text/javascript" th:src="@{/old/js/jquery-2.1.4.min.js}"></script>
+    <script type="text/javascript" th:src="@{/old/js/materialize.min.js}"></script>
+    <script type="text/javascript" th:src="@{/old/js/davos.js}"></script>
+
+    <script type="text/javascript" th:inline="text">
+        $(document).ready(function() {
+            $(".button-collapse").sideNav();
+        });
+
+    </script>
+
+</body>
+
+</html>

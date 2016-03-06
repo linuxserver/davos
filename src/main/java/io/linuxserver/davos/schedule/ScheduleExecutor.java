@@ -34,6 +34,10 @@ public class ScheduleExecutor {
     public ScheduleExecutor() {
         this.scheduledExecutorService = Executors.newScheduledThreadPool(10);
     }
+    
+    public boolean isScheduleRunning(Long id) {
+        return runningSchedules.containsKey(id);
+    }
 
     @PostConstruct
     public void runAutomaticStartupSchedules() {

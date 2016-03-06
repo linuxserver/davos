@@ -1,58 +1,54 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content="An FTP client for your home server"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>davos :: Home</title>
+
+    <link th:href="@{https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en}" rel="stylesheet" />
     <link th:href="@{https://fonts.googleapis.com/icon?family=Material+Icons}" rel="stylesheet" />
-    <link type="text/css" rel="stylesheet" th:href="@{/css/materialize.min.css}" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" th:href="@{/css/material.min.css}" media="screen,projection" />
     <link type="text/css" rel="stylesheet" th:href="@{/css/davos.css}" media="screen" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
 <body>
+    <div class="davos-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+        <header class="davos-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
+            <div class="mdl-layout__header-row">
+                <span class="mdl-layout-title">Home</span>
+                <div class="mdl-layout-spacer"></div>
 
-    <header>
-
-         <nav>
-            <div class="nav-wrapper teal lighten-2">
-
-                <a href="@{/}" class="brand-logo">davos</a>
-                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-                <ul class="right hide-on-med-and-down">
-                    <li class="active"><i class="material-icons left">home</i><a th:href="@{/}" class="waves-effect waves-teal">Home</a></li>
-                    <li><i class="material-icons left">web</i><a th:href="@{/}" class="waves-effect waves-teal">File Manager</a></li>
-                    <li><i class="material-icons left">schedule</i><a th:href="@{/scheduling}" class="waves-effect waves-teal">Scheduling</a></li>
-                    <li><i class="material-icons left">settings</i><a class="waves-effect waves-teal">App Settings</a></li>
-                </ul>
-                <ul class="side-nav" id="mobile-demo">
-                    <li class="valign-wrapper"><i class="material-icons left">home</i><a th:href="@{/}" class="waves-effect waves-teal">Home</a></li>
-                    <li class="valign-wrapper"><i class="material-icons left">web</i><a th:href="@{/}" class="waves-effect waves-teal">File Manager</a></li>
-                    <li class="valign-wrapper"><i class="material-icons left">schedule</i><a th:href="@{/scheduling}" class="waves-effect waves-teal">Scheduling</a></li>
-                    <li class="valign-wrapper"><i class="material-icons left">settings</i><a class="waves-effect waves-teal">App Settings</a></li>
-                </ul>
             </div>
-        </nav>
-        
-    </header>
+        </header>
+        <div class="davos-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+            <header class="davos-drawer-header">
 
-    <main>
-        <div class="container">
+                <div class="davos-avatar-dropdown">
+                    <span>davos - a server FTP client</span>
+                    <div class="mdl-layout-spacer"></div>
 
+                </div>
+            </header>
+            <nav class="davos-navigation mdl-navigation mdl-color--blue-grey-800">
+                <a th:href="@{/}" class="mdl-navigation__link"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Home</a>
+                <a th:href="@{/}" class="mdl-navigation__link"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">web</i>File Manager</a>
+                <a th:href="@{/scheduling}" class="mdl-navigation__link"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">schedule</i>Scheduling</a>
+                <a th:href="@{/}" class="mdl-navigation__link"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">settings</i>Settings</a>
+                <div class="mdl-layout-spacer"></div>
+                <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">help_outline</i><span class="visuallyhidden">Help</span></a>
+            </nav>
         </div>
-    </main>
+        <main class="mdl-layout__content mdl-color--grey-100">
 
-    <footer>
+            <div class="mdl-grid davos-content"></div>
+        </main>
+    </div>
 
-    </footer>
-
-    <script type="text/javascript" th:src="@{/js/jquery-2.1.4.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/materialize.min.js}"></script>
-
-    <script type="text/javascript" th:inline="text">
-        $(document).ready(function() {
-            $(".button-collapse").sideNav();
-        });
-    </script>
+      <script type="text/javascript" th:src="@{/js/material.min.js}"></script>
 </body>
 
 </html>

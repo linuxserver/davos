@@ -23,6 +23,7 @@ public class ScheduleConfigurationDTO {
     public String remoteFilePath;
     public String localFilePath;
     public long lastRun;
+    public boolean running;
     public FileTransferType transferType;
     public List<FilterDTO> filters = new ArrayList<FilterDTO>();
     public List<ActionDTO> actions = new ArrayList<ActionDTO>();

@@ -45,6 +45,7 @@ public class RestAPIController {
     public ScheduleProcessResponse stopScheduleConfig(@PathVariable("id") Long id) {
 
         ScheduleProcessResponse scheduleProcessResponse = new ScheduleProcessResponse();
+        scheduleProcessResponse.id = id;
 
         try {
             scheduleExecutor.stopSchedule(id);
@@ -61,7 +62,8 @@ public class RestAPIController {
     public ScheduleProcessResponse startScheduleConfig(@PathVariable("id") Long id) {
 
         ScheduleProcessResponse scheduleProcessResponse = new ScheduleProcessResponse();
-
+        scheduleProcessResponse.id = id;
+        
         try {
             scheduleExecutor.startSchedule(id);
             scheduleProcessResponse.message = "Schedule started";

@@ -1,5 +1,6 @@
 package io.linuxserver.davos.schedule;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -104,6 +105,29 @@ public class ScheduleExecutorTest {
 
         scheduleExecutor.startSchedule(1337L);
         scheduleExecutor.stopSchedule(1337L);
+        
+        verify(mockFuture).cancel(true);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldBeAbleToInformWhetherScheduleIsRunningOrNot() {
+
+        ScheduleConfigurationModel config = new ScheduleConfigurationModel();
+        config.interval = 86;
+        config.id = 1337L;
+
+        @SuppressWarnings("rawtypes")
+        ScheduledFuture mockFuture = mock(ScheduledFuture.class);
+
+        when(mockConfigurationDAO.getConfig(1337L)).thenReturn(config);
+        when(mockExecutorService.scheduleAtFixedRate(any(Runnable.class), eq(0l), eq(86l), eq(TimeUnit.MINUTES))).thenReturn(mockFuture);
+
+        scheduleExecutor.startSchedule(1337L);
+        assertThat(scheduleExecutor.isScheduleRunning(1337L)).isTrue();
+        
+        scheduleExecutor.stopSchedule(1337L);
+        assertThat(scheduleExecutor.isScheduleRunning(1337L)).isFalse();
         
         verify(mockFuture).cancel(true);
     }
