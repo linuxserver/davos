@@ -17,7 +17,7 @@ import io.linuxserver.davos.transfer.ftp.FileTransferType;
 import io.linuxserver.davos.transfer.ftp.TransferProtocol;
 
 public class ScheduleConfigurationFactoryTest {
-
+    
     @Test
     public void shouldConvertAllMainFields() {
         
