@@ -210,10 +210,12 @@ font-size: 16px;
 
 .schedule-start {
   background-color: rgb(76, 175, 80);
+  color: #FFF;
 }
 
 .schedule-stop {
   background-color: rgb(244, 67, 54);
+  color: #FFF;
 }
 
 .action-card {
