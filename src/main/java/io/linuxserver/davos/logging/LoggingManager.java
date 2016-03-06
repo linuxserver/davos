@@ -18,4 +18,9 @@ public class LoggingManager {
         Configurator.setLevel("io.linuxserver", Level.INFO);
         LOGGER.info("DEBUG has been disabled. Back at INFO.");
     }
+    
+    public static void setLogLevel(Level level) {
+        Configurator.setLevel("io.linuxserver", level);
+        LOGGER.info("Logging level now set at {}", level);
+    }
 }

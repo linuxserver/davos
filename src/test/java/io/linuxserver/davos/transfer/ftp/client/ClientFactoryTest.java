@@ -14,9 +14,9 @@ public class ClientFactoryTest {
     }
     
     @Test
-    public void shouldReturnNullForAnythingElse() {
+    public void shouldReturnFTPClientForAnythingElse() {
         
-        assertThat(new ClientFactory().getClient(TransferProtocol.FTP)).isNull();
-        assertThat(new ClientFactory().getClient(TransferProtocol.FTPS)).isNull();
+        assertThat(new ClientFactory().getClient(TransferProtocol.FTP)).isInstanceOf(FTPClient.class);
+        assertThat(new ClientFactory().getClient(TransferProtocol.FTPS)).isInstanceOf(FTPSClient.class);
     }
 }

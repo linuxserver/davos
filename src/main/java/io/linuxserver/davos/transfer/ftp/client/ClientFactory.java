@@ -9,6 +9,9 @@ public class ClientFactory {
         if (protocol.equals(TransferProtocol.SFTP))
             return new SFTPClient();
         
-        return null;
+        if (protocol.equals(TransferProtocol.FTPS))
+            return new FTPSClient();
+        
+        return new FTPClient();
     }
 }

@@ -34,7 +34,7 @@ public class DefaultScheduleConfigurationDAO implements ScheduleConfigurationDAO
     @Override
     public void updateLastRun(Long configId, DateTime lastRun) {
         
-        ScheduleConfigurationModel model = configRepository.findOne(configId);
+        ScheduleConfigurationModel model = getConfig(configId);
         
         model.lastRun = lastRun.toDate();
         configRepository.save(model);
