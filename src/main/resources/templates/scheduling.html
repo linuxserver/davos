@@ -49,27 +49,31 @@
 
             <div th:if="${not #lists.isEmpty(schedules)}" class="mdl-grid davos-content">
 
-              <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="schedule-list">
-                <thead>
-                  <tr>
-                    <th class="mdl-data-table__cell--non-numeric">Schedule</th>
-                    <th class="mdl-data-table__cell--non-numeric">Last Run</th>
-                    <th class="mdl-data-table__cell--non-numeric">Start/Stop</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr th:each="schedule : ${schedules}">
-                    <td class="mdl-data-table__cell--non-numeric" th:text="${schedule.name}"></td>
-                    <td class="mdl-data-table__cell--non-numeric" th:text="${#dates.format(schedule.lastRun, 'dd MMM yyyy HH:mm:ss')}"></td>
-                    <td class="mdl-data-table__cell--non-numeric start-stop" th:attr="id='start-stop-' + ${schedule.id}">
-                      <button th:unless="${schedule.running}" class="mdl-button mdl-js-button mdl-button--raised schedule-start" th:attr="data-schedule-id=${schedule.id}">Start</button>
-                      <button th:if="${schedule.running}" class="mdl-button mdl-js-button mdl-button--raised schedule-stop" th:attr="data-schedule-id=${schedule.id}">Stop</button>
-                    </td>
-                    <td><a th:href="@{/scheduling/} + ${schedule.id}" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Edit</a></td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+
+                <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="schedule-list">
+                  <thead>
+                    <tr>
+                      <th class="mdl-data-table__cell--non-numeric">Schedule</th>
+                      <th class="mdl-data-table__cell--non-numeric">Last Run</th>
+                      <th class="mdl-data-table__cell--non-numeric">Start/Stop</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr th:each="schedule : ${schedules}">
+                      <td class="mdl-data-table__cell--non-numeric" th:text="${schedule.name}"></td>
+                      <td class="mdl-data-table__cell--non-numeric" th:text="${#dates.format(schedule.lastRun, 'dd MMM yyyy HH:mm:ss')}"></td>
+                      <td class="mdl-data-table__cell--non-numeric start-stop" th:attr="id='start-stop-' + ${schedule.id}">
+                        <button th:unless="${schedule.running}" class="mdl-button mdl-js-button mdl-button--raised schedule-start" th:attr="data-schedule-id=${schedule.id}">Start</button>
+                        <button th:if="${schedule.running}" class="mdl-button mdl-js-button mdl-button--raised schedule-stop" th:attr="data-schedule-id=${schedule.id}">Stop</button>
+                      </td>
+                      <td><a th:href="@{/scheduling/} + ${schedule.id}" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Edit</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>
             </div>
 
               <div th:unless="${not #lists.isEmpty(schedules)}" class="mdl-grid davos-content">

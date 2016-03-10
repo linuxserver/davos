@@ -78,8 +78,8 @@ var action = (function ($) {
     addMove = function () {
         var newAction = $('<div data-action-type="move" class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone action action_move">'+
           '<div class="demo-card-wide mdl-card mdl-shadow--2dp action-card"><div class="mdl-card__title"><h2 class="mdl-card__title-text">Move Downloaded File</h2>'+
-          '</div><div class="mdl-card__actions mdl-card--border"><div class="full mdl-textfield mdl-js-textfield mdl-textfield--floating-label"><span>To</span>'+
-          '<input class="mdl-textfield__input f1"></div></div><div class="mdl-card__menu"><i class="material-icons remove_action">close</i></div></div></div>');
+          '<i class="material-icons">folder_open</i></div><div class="mdl-card__actions mdl-card--border"><div class="full mdl-textfield mdl-js-textfield mdl-textfield--floating-label">'+
+          '<span>To</span><input class="mdl-textfield__input f1"></div></div><div class="mdl-card__menu"><i class="material-icons remove_action">close</i></div></div></div>');
 
         $('#download_actions').append(newAction).children(':last').hide().fadeIn(500);
     };
@@ -98,7 +98,7 @@ var action = (function ($) {
 
         var newAction = $('<div data-action-type="api" class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone action action_api">'+
         '<div class="demo-card-wide mdl-card mdl-shadow--2dp action-card"><div class="mdl-card__title"><h2 class="mdl-card__title-text">Generic HTTP API Call</h2>'+
-        '</div><div class="mdl-card__actions mdl-card--border"><div class="full mdl-textfield mdl-js-textfield mdl-textfield--floating-label"><span>URL</span>'+
+        '<i class="material-icons">http</i></div><div class="mdl-card__actions mdl-card--border"><div class="full mdl-textfield mdl-js-textfield mdl-textfield--floating-label"><span>URL</span>'+
         '<input class="mdl-textfield__input f1"></div><div class="full mdl-textfield mdl-js-textfield mdl-textfield--floating-label"><span>HTTP Method</span>'+
         '<input class="mdl-textfield__input f2"></div><div class="full mdl-textfield mdl-js-textfield mdl-textfield--floating-label"><span>Content Type</span>'+
         '<input class="mdl-textfield__input f3"></div><div class="full mdl-textfield mdl-js-textfield mdl-textfield--floating-label"><span>Body</span>'+
