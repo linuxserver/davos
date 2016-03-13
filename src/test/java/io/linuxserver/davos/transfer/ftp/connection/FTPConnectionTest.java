@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -18,6 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.output.CountingOutputStream;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,6 +30,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import io.linuxserver.davos.transfer.ftp.FTPFile;
+import io.linuxserver.davos.transfer.ftp.connection.progress.FTPProgressListener;
 import io.linuxserver.davos.transfer.ftp.exception.DownloadFailedException;
 import io.linuxserver.davos.transfer.ftp.exception.FileListingException;
 import io.linuxserver.davos.util.FileStreamFactory;
@@ -140,6 +143,18 @@ public class FTPConnectionTest {
         ftpConnection.download(file, LOCAL_DIRECTORY);
 
         verify(mockFileStreamFactory).createOutputStream(LOCAL_DIRECTORY + "/remote.file");
+    }
+    
+    @Test
+    public void downloadMethodShouldCreateLocalFileStreamContainingProgressListener() throws IOException {
+
+        FTPFile file = new FTPFile("remote.file", 0l, "path/to", 0, false);
+        
+        ftpConnection.setProgressListener(new FTPProgressListener());
+        ftpConnection.download(file, LOCAL_DIRECTORY);
+
+        verify(mockFileStreamFactory).createOutputStream(LOCAL_DIRECTORY + "/remote.file");
+        verify(mockFtpClient).retrieveFile(eq("path/to/remote.file"), any(CountingOutputStream.class));
     }
 
     @Test

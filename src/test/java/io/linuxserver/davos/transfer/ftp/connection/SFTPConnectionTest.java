@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -28,6 +29,7 @@ import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 
 import io.linuxserver.davos.transfer.ftp.FTPFile;
+import io.linuxserver.davos.transfer.ftp.connection.progress.SFTPProgressListener;
 import io.linuxserver.davos.transfer.ftp.exception.DownloadFailedException;
 import io.linuxserver.davos.transfer.ftp.exception.FileListingException;
 import io.linuxserver.davos.util.FileUtils;
@@ -150,6 +152,19 @@ public class SFTPConnectionTest {
         sftpConnection.download(file, "some/directory");
 
         verify(mockChannel).get("path/name", "some/directory/");
+    }
+    
+    @Test
+    public void downloadMethodShouldCallChannelGetMethodWithListenerIfSet() throws SftpException {
+
+        FTPFile file = new FTPFile("name", 0, "path", 0, false);
+        SFTPProgressListener progressListener = new SFTPProgressListener();
+
+        sftpConnection.setProgressListener(progressListener);
+        sftpConnection.download(file, "some/directory");
+
+        verify(mockChannel).get("path/name", "some/directory/", progressListener);
+        verify(mockChannel, never()).get("path/name", "some/directory/");
     }
 
     @Test

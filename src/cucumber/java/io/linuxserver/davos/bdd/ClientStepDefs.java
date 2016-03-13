@@ -22,6 +22,8 @@ import io.linuxserver.davos.transfer.ftp.client.Client;
 import io.linuxserver.davos.transfer.ftp.client.FTPClient;
 import io.linuxserver.davos.transfer.ftp.client.UserCredentials;
 import io.linuxserver.davos.transfer.ftp.connection.Connection;
+import io.linuxserver.davos.transfer.ftp.connection.progress.FTPProgressListener;
+import io.linuxserver.davos.transfer.ftp.connection.progress.ProgressListener;
 
 public class ClientStepDefs {
 
@@ -31,6 +33,7 @@ public class ClientStepDefs {
     private int fakeFtpServerPort;
     private Connection connection;
     private Client client;
+    private ProgressListener progressListener;
 
     @After("@Client")
     public void after() {
@@ -82,7 +85,7 @@ public class ClientStepDefs {
 
     @When("^downloads a file$")
     public void downloads_a_file() throws Throwable {
-        connection.download(new FTPFile("file2.txt", 0, "/tmp", 0, false), TMP);
+        connection.download(new FTPFile("file2.txt", "hello world".getBytes().length, "/tmp/", 0, false), TMP);
     }
 
     @Then("^the file is located in the specified local directory$")
@@ -91,5 +94,35 @@ public class ClientStepDefs {
         File file = new File(TMP + "/file2.txt");
         assertThat(file.exists()).isTrue();
         file.delete();
+    }
+    
+    @When("^initialises a Progress Listener for that connection$")
+    public void initialises_a_Progress_Listener_for_that_connection() throws Throwable {
+        
+        progressListener = new CountingFTPProgressListener();
+        
+        connection.setProgressListener(progressListener);
+    }
+
+    @Then("^the Progress Listener will have its values updated$")
+    public void the_Progress_Listener_will_have_its_values_updated() throws Throwable {
+        
+        assertThat(progressListener.getProgress()).isEqualTo(100);
+        assertThat(((CountingFTPProgressListener) progressListener).getTimesCalled()).isEqualTo(11);
+    }
+    
+    class CountingFTPProgressListener extends FTPProgressListener {
+        
+        int timesCalled;
+        
+        @Override 
+        public void updateBytesWritten(long byteCount) {
+            super.updateBytesWritten(byteCount);
+            timesCalled++;
+        }
+        
+        public int getTimesCalled() {
+            return timesCalled;
+        }
     }
 }

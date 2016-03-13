@@ -25,10 +25,10 @@ import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
 import io.linuxserver.davos.schedule.ScheduleExecutor;
 
 @RestController
-@RequestMapping("/api/v1")
-public class RestAPIController {
+@RequestMapping("/api/v1/schedule")
+public class ScheduleAPIController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RestAPIController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleAPIController.class);
 
     @Resource
     private ScheduleConfigurationDAO scheduleConfigurationDAO;
@@ -36,12 +36,12 @@ public class RestAPIController {
     @Resource
     private ScheduleExecutor scheduleExecutor;
 
-    @RequestMapping(value = "/schedule/{id}")
+    @RequestMapping(value = "/{id}")
     public ScheduleConfigurationDTO getScheduleConfig(@PathVariable("id") Long id) {
         return toDTO(scheduleConfigurationDAO.getConfig(id));
     }
 
-    @RequestMapping(value = "/schedule/{id}/stop")
+    @RequestMapping(value = "/{id}/stop")
     public ScheduleProcessResponse stopScheduleConfig(@PathVariable("id") Long id) {
 
         ScheduleProcessResponse scheduleProcessResponse = new ScheduleProcessResponse();
@@ -58,7 +58,7 @@ public class RestAPIController {
         return scheduleProcessResponse;
     }
 
-    @RequestMapping(value = "/schedule/{id}/start")
+    @RequestMapping(value = "/{id}/start")
     public ScheduleProcessResponse startScheduleConfig(@PathVariable("id") Long id) {
 
         ScheduleProcessResponse scheduleProcessResponse = new ScheduleProcessResponse();
@@ -75,7 +75,7 @@ public class RestAPIController {
         return scheduleProcessResponse;
     }
 
-    @RequestMapping(value = "/schedule", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public ScheduleConfigurationDTO createScheduleConfig(@RequestBody ScheduleConfigurationDTO dto) {
 
         ScheduleConfigurationModel model = new ScheduleConfigurationModelConverter().convert(dto);

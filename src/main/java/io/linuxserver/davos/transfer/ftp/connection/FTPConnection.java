@@ -8,10 +8,13 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.output.CountingOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.linuxserver.davos.transfer.ftp.FTPFile;
+import io.linuxserver.davos.transfer.ftp.connection.progress.FTPProgressListener;
+import io.linuxserver.davos.transfer.ftp.connection.progress.ProgressListener;
 import io.linuxserver.davos.transfer.ftp.exception.DownloadFailedException;
 import io.linuxserver.davos.transfer.ftp.exception.FileListingException;
 import io.linuxserver.davos.util.FileStreamFactory;
@@ -24,6 +27,7 @@ public class FTPConnection implements Connection {
     private org.apache.commons.net.ftp.FTPClient client;
     private FileStreamFactory fileStreamFactory = new FileStreamFactory();
     private FileUtils fileUtils = new FileUtils();
+    private FTPProgressListener progressListener;
 
     public FTPConnection(org.apache.commons.net.ftp.FTPClient client) {
         this.client = client;
@@ -87,13 +91,50 @@ public class FTPConnection implements Connection {
         return files.stream().filter(removeCurrentAndParentDirs()).collect(Collectors.toList());
     }
 
+    @Override
+    public void setProgressListener(ProgressListener progressListener) {
+        this.progressListener = (FTPProgressListener) progressListener;
+    }
+
+    private CountingOutputStream listenOn(OutputStream outputStream) {
+
+        LOGGER.debug("Creating wrapping output stream for progress listener");
+        
+        CountingOutputStream countingStream = new CountingOutputStream(outputStream) {
+
+            @Override
+            protected void beforeWrite(int n) {
+
+                super.beforeWrite(n);
+                progressListener.updateBytesWritten(getByteCount());
+            }
+        };
+
+        return countingStream;
+    }
+
     private void doDownload(FTPFile file, String cleanRemotePath, String cleanLocalPath)
             throws FileNotFoundException, IOException {
 
         LOGGER.info("Downloading {} to {}", cleanRemotePath, cleanLocalPath);
         LOGGER.debug("Creating output stream for file {}", cleanLocalPath + file.getName());
+
         OutputStream outputStream = fileStreamFactory.createOutputStream(cleanLocalPath + file.getName());
-        boolean hasDownloaded = client.retrieveFile(cleanRemotePath, outputStream);
+
+        boolean hasDownloaded;
+
+        if (null != progressListener) {
+         
+            LOGGER.debug("ProgressListener has been set. Initialising...");
+            LOGGER.debug("Total file size is {}", file.getSize());
+            progressListener.reset();
+            progressListener.setTotalSize(file.getSize());
+            
+            hasDownloaded = client.retrieveFile(cleanRemotePath, listenOn(outputStream));
+        }
+        else
+            hasDownloaded = client.retrieveFile(cleanRemotePath, outputStream);
+
         outputStream.close();
 
         if (!hasDownloaded)

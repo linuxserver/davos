@@ -14,6 +14,8 @@ import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.SftpException;
 
 import io.linuxserver.davos.transfer.ftp.FTPFile;
+import io.linuxserver.davos.transfer.ftp.connection.progress.ProgressListener;
+import io.linuxserver.davos.transfer.ftp.connection.progress.SFTPProgressListener;
 import io.linuxserver.davos.transfer.ftp.exception.DownloadFailedException;
 import io.linuxserver.davos.transfer.ftp.exception.FileListingException;
 import io.linuxserver.davos.util.FileUtils;
@@ -24,6 +26,7 @@ public class SFTPConnection implements Connection {
 
     private ChannelSftp channel;
     private FileUtils fileUtils = new FileUtils();
+    private SFTPProgressListener progressListener;
 
     public SFTPConnection(ChannelSftp channel) {
         this.channel = channel;
@@ -50,7 +53,7 @@ public class SFTPConnection implements Connection {
             if (file.isDirectory())
                 downloadDirectoryAndContents(file, cleanLocalPath, path);
             else
-                channel.get(path, cleanLocalPath);
+                doGet(path, cleanLocalPath);
 
         } catch (SftpException e) {
             throw new DownloadFailedException("Unable to download file " + path, e);
@@ -88,6 +91,22 @@ public class SFTPConnection implements Connection {
         }
     }
 
+    @Override
+    public void setProgressListener(ProgressListener progressListener) {
+        this.progressListener = (SFTPProgressListener) progressListener;
+    }
+
+    private void doGet(String fullRemotePath, String fullLocalDownloadPath) throws SftpException {
+
+        if (null != progressListener) {
+
+            LOGGER.debug("Progress listener has been enabled");
+            channel.get(fullRemotePath, fullLocalDownloadPath, progressListener);
+
+        } else
+            channel.get(fullRemotePath, fullLocalDownloadPath);
+    }
+
     private void downloadDirectoryAndContents(FTPFile file, String localDownloadFolder, String path) throws SftpException {
 
         LOGGER.info("Item {} is a directory. Will now check sub-items", file.getName());
@@ -111,7 +130,7 @@ public class SFTPConnection implements Connection {
             else {
 
                 LOGGER.info("Downloading {} to {}", subItemPath, fullLocalDownloadPath);
-                channel.get(subItemPath, fullLocalDownloadPath);
+                doGet(subItemPath, fullLocalDownloadPath);
             }
         }
     }
