@@ -30,7 +30,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import io.linuxserver.davos.transfer.ftp.FTPFile;
-import io.linuxserver.davos.transfer.ftp.connection.progress.FTPProgressListener;
+import io.linuxserver.davos.transfer.ftp.connection.progress.ProgressListener;
 import io.linuxserver.davos.transfer.ftp.exception.DownloadFailedException;
 import io.linuxserver.davos.transfer.ftp.exception.FileListingException;
 import io.linuxserver.davos.util.FileStreamFactory;
@@ -150,7 +150,7 @@ public class FTPConnectionTest {
 
         FTPFile file = new FTPFile("remote.file", 0l, "path/to", 0, false);
         
-        ftpConnection.setProgressListener(new FTPProgressListener());
+        ftpConnection.setProgressListener(new ProgressListener());
         ftpConnection.download(file, LOCAL_DIRECTORY);
 
         verify(mockFileStreamFactory).createOutputStream(LOCAL_DIRECTORY + "/remote.file");

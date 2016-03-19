@@ -1,4 +1,4 @@
-@Client
+@Client @Server
 Feature: General client tests
 
 	Scenario: Connecting to the FTP server
@@ -22,3 +22,5 @@ Feature: General client tests
 		And initialises a Progress Listener for that connection
 		And downloads a file
 		Then the Progress Listener will have its values updated
+		
+		

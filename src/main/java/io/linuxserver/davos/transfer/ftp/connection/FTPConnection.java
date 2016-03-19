@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.linuxserver.davos.transfer.ftp.FTPFile;
-import io.linuxserver.davos.transfer.ftp.connection.progress.FTPProgressListener;
 import io.linuxserver.davos.transfer.ftp.connection.progress.ProgressListener;
 import io.linuxserver.davos.transfer.ftp.exception.DownloadFailedException;
 import io.linuxserver.davos.transfer.ftp.exception.FileListingException;
@@ -27,7 +26,7 @@ public class FTPConnection implements Connection {
     private org.apache.commons.net.ftp.FTPClient client;
     private FileStreamFactory fileStreamFactory = new FileStreamFactory();
     private FileUtils fileUtils = new FileUtils();
-    private FTPProgressListener progressListener;
+    private ProgressListener progressListener;
 
     public FTPConnection(org.apache.commons.net.ftp.FTPClient client) {
         this.client = client;
@@ -93,7 +92,7 @@ public class FTPConnection implements Connection {
 
     @Override
     public void setProgressListener(ProgressListener progressListener) {
-        this.progressListener = (FTPProgressListener) progressListener;
+        this.progressListener = progressListener;
     }
 
     private CountingOutputStream listenOn(OutputStream outputStream) {
@@ -106,7 +105,7 @@ public class FTPConnection implements Connection {
             protected void beforeWrite(int n) {
 
                 super.beforeWrite(n);
-                progressListener.updateBytesWritten(getByteCount());
+                progressListener.setBytesWritten(getByteCount());
             }
         };
 
@@ -128,7 +127,8 @@ public class FTPConnection implements Connection {
             LOGGER.debug("ProgressListener has been set. Initialising...");
             LOGGER.debug("Total file size is {}", file.getSize());
             progressListener.reset();
-            progressListener.setTotalSize(file.getSize());
+            progressListener.setTotalBytes(file.getSize());
+            progressListener.start();
             
             hasDownloaded = client.retrieveFile(cleanRemotePath, listenOn(outputStream));
         }

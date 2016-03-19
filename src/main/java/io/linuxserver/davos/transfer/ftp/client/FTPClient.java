@@ -55,8 +55,12 @@ public class FTPClient extends Client {
 
         ftpClient.connect(host, port);
 
-        if (!FTPReply.isPositiveCompletion(ftpClient.getReplyCode()))
+        if (!FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
+            
+            ftpClient.disconnect();
+            
             throw new ClientConnectionException(String.format("The host %s on port %d returned a bad status code.", host, port));
+        }
     }
 
     private void login() throws IOException, FTPException {
