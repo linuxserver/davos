@@ -1,15 +1,13 @@
 package io.linuxserver.davos.schedule.workflow;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.linuxserver.davos.schedule.workflow.filter.TemporalFileFilter;
 import io.linuxserver.davos.transfer.ftp.FTPFile;
 import io.linuxserver.davos.transfer.ftp.exception.FTPException;
 import io.linuxserver.davos.util.PatternBuilder;
@@ -33,7 +31,7 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
             List<String> filters = schedule.getConfig().getFilters();
 
             List<FTPFile> allFiles = schedule.getConnection().listFiles(schedule.getConfig().getRemoteFilePath());
-            List<FTPFile> filesToFilter = allFiles.stream().filter(after(lastRun)).collect(toList());
+            List<FTPFile> filesToFilter = new TemporalFileFilter(lastRun).filter(allFiles);
             List<FTPFile> filteredFiles = new ArrayList<FTPFile>();
 
             if (filters.isEmpty()) {
@@ -63,12 +61,6 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
             LOGGER.info("Backing out of this run.");
             backoutStep.runStep(schedule);
         }
-    }
-
-    private Predicate<? super FTPFile> after(DateTime lastRun) {
-        
-        LOGGER.debug("Filtering initial set of files by lastRun. Last run was {}", lastRun);
-        return f -> f.getLastModified().isAfter(lastRun);
     }
 
     private void filterFilesByName(List<String> filters, List<FTPFile> filteredFiles, FTPFile file) {
