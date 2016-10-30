@@ -1,7 +1,12 @@
 package io.linuxserver.davos.transfer.ftp.connection.progress;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ProgressListener {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProgressListener.class);
+    
     private long lastWriteTime;
     private long totalBytesWritten;
     private long bytesInWrite;
@@ -9,7 +14,9 @@ public class ProgressListener {
     private double currentTransferSpeed;
 
     public double getProgress() {
-        return ((double) totalBytesWritten / (double) totalBytes) * 100;
+        double progress = ((double) totalBytesWritten / (double) totalBytes) * 100;
+        LOGGER.trace("Progress downloaded: {}%", progress);
+        return progress;
     }
 
     public double getTransferSpeed() {

@@ -34,7 +34,7 @@ public class ScheduleExecutor {
     public ScheduleExecutor() {
         this.scheduledExecutorService = Executors.newScheduledThreadPool(10);
     }
-    
+
     public boolean isScheduleRunning(Long id) {
         return runningSchedules.containsKey(id);
     }
@@ -48,7 +48,7 @@ public class ScheduleExecutor {
 
             if (model.startAutomatically) {
 
-                RunnableSchedule runnable = new RunnableSchedule(model.id, scheduleConfigurationDAO);
+                Runnable runnable = new RunnableSchedule(model.id, scheduleConfigurationDAO);
                 ScheduledFuture<?> runningSchedule = scheduledExecutorService.scheduleAtFixedRate(runnable, 0, model.interval,
                         TimeUnit.MINUTES);
 
@@ -64,7 +64,7 @@ public class ScheduleExecutor {
         if (!runningSchedules.containsKey(id)) {
 
             ScheduleConfigurationModel model = scheduleConfigurationDAO.getConfig(id);
-            RunnableSchedule runnable = new RunnableSchedule(model.id, scheduleConfigurationDAO);
+            Runnable runnable = new RunnableSchedule(model.id, scheduleConfigurationDAO);
 
             LOGGER.info("Starting schedule {}", id);
             ScheduledFuture<?> runningSchedule = scheduledExecutorService.scheduleAtFixedRate(runnable, 0, model.interval,
@@ -82,14 +82,14 @@ public class ScheduleExecutor {
         if (runningSchedules.containsKey(id)) {
 
             LOGGER.info("Stopping schedule {}", id);
-            
+
             if (!runningSchedules.get(id).isCancelled()) {
-                
+
                 runningSchedules.get(id).cancel(true);
                 runningSchedules.remove(id);
                 LOGGER.info("Schedule should now be stopped");
             }
-            
+
         } else {
             throw new ScheduleNotRunningException();
         }
