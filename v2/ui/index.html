@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="An automated FTP client for your home server" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>davos</title>
+
+    <link rel="icon" href="favicon.ico">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/davos.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="#" class="navbar-brand">davos</a>
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar-main">
+                <ul class="nav navbar-nav">
+
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="scheduling">Scheduling <span class="caret" /></a>
+                        <ul class="dropdown-menu" aria-labelledby="settings">
+                            <li><a href="#">Schedules</a></li>
+                            <li><a href="#">Hosts</a></li>
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Settings</a>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="schedules-section">
+
+            <div class="row">
+                <div class="page-header">
+                    <h2>Schedules <a href="new-schedule.html" class="btn btn-default">Add</a></h2>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">TV Shows &nbsp;&nbsp;<span class="glyphicon glyphicon-wrench"></span></div>
+                        <div class="panel-body">
+                            <div class="downloads">No active downloads</div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Movies &nbsp;&nbsp;<span class="glyphicon glyphicon-wrench"></span></div>
+                        <div class="panel-body">
+                            <div class="downloads">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>File</th>
+                                            <th>Size</th>
+                                            <th>Status</th>
+                                            <th>Progress</th>
+                                            <th>Speed</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Family.Guy.S16E07.1080p.SOMETHING.mkv</td>
+                                            <td>700MB</td>
+                                            <td>Downloading</td>
+                                            <td>
+                                                <div class="progress">
+                                                    <div class="progress-bar" style="width: 60%;">60%</div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                3.7 MBps
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Family.Guy.S16E08.1080p.SOMETHING.mkv</td>
+                                            <td>600MB</td>
+                                            <td>Pending</td>
+                                            <td>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-bar-striped active" style="width: 100%;"></div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                3.7 MBps
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+
+</body>
+
+</html>

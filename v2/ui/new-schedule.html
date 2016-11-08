@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="An automated FTP client for your home server" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>davos</title>
+
+    <link rel="icon" href="favicon.ico">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/davos.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="#" class="navbar-brand">davos</a>
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar-main">
+                <ul class="nav navbar-nav">
+
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="scheduling">Scheduling <span class="caret" /></a>
+                        <ul class="dropdown-menu" aria-labelledby="settings">
+                            <li><a href="index.html">Schedules</a></li>
+                            <li><a href="#">Hosts</a></li>
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Settings</a>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="schedules-section">
+
+            <div class="row">
+                <div class="page-header">
+                    <h2>New Schedule</h2>
+                </div>
+            </div>
+
+            <form class="form-horizontal">
+                <fieldset>
+
+                    <div class="row">
+                        <div class="page-header">
+                            <h3>General</h3>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <label for="sch-name" class="col-lg-2 control-label">Name <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="What you want to refer to this schedule as" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="sch-name" autocomplete="off">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="select" class="col-lg-2 control-label">Interval <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="How often this schedule should run" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <select class="form-control" id="sch-interval">
+                                            <option>Every 30 minutes</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="select" class="col-lg-2 control-label">Host <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Which host to connect to" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <select class="form-control" id="sch-host">
+                                            <option>OVH</option>
+                                        </select>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sch-name" class="col-lg-2 control-label">Host Directory <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Remote directory containing files to download" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="sch-host-directory" placeholder="" autocomplete="off">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Transfer Type <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Should it download only files, or get nested folders too" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <div class="radio">
+                                        <label>
+                                                <input type="radio" name="sch-transfer-type" id="sch-files-only" value="FILE" checked="">
+                                                Files Only
+                                              </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                                <input type="radio" name="sch-transfer-type" id="sch-recursive" value="RECURSIVE">
+                                                Recursive
+                                              </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="page-header">
+                            <h3>Filtering</h3>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+
+                            <div class="form-group">
+                                <label for="sch-name" class="col-lg-2 control-label">Filters <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Define which files to download based on file name" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="sch-new-filter" placeholder="Add a filter (? = single char wildcard. * = multi char wildcard)" autocomplete="off">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="button">Add</button>
+                                          </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group filters">
+                                <div class="col-lg-2"></div>
+                                <div class="col-lg-10">
+                                    <span class="label label-default filter-label">family?guy* <span class="filter-close">&times;</span></span>
+                                    <span class="label label-default filter-label">family?guy* <span class="filter-close">&times;</span></span>
+                                    <span class="label label-default filter-label">family?guy* <span class="filter-close">&times;</span></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="page-header">
+                            <h3>File Management</h3>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <label for="sch-move-file" class="col-lg-2 control-label">Move File <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Move the file to the given directory once the download has completed" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="sch-move-file" autocomplete="off">
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="page-header">
+                            <h3>Downstream Notifications</h3>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <label for="sch-pushbullet" class="col-lg-2 control-label">Pushbullet <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Send a Pushbullet notification using the given Access Token once the download has finished" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="sch-pushbullet" placeholder="API Key" autocomplete="off">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sch-api-url" class="col-lg-2 control-label">API Call</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="sch-api-url" placeholder="URL" autocomplete="off">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sch-api-method" class="col-lg-2 control-label"></label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="sch-api-method" placeholder="GET POST PUT" autocomplete="off">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sch-api-content-type" class="col-lg-2 control-label"></label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="sch-api-content-type" placeholder="Content-Type" autocomplete="off">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sch-api-body" class="col-lg-2 control-label"></label>
+                                <div class="col-lg-10">
+                                   <textarea class="form-control" rows="3" id="sch-api-body"></textarea>
+                                   <span class="help-block"></span>
+                                 </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group last">
+                                <div class="col-lg-10 col-lg-offset-2">
+                                    <button type="reset" class="btn btn-default">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Create</button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </fieldset>
+            </form>
+
+        </div>
+
+    </div>
+
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+
+</body>
+
+</html>

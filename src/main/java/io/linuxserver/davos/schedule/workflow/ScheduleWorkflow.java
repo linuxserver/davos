@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import io.linuxserver.davos.schedule.ScheduleConfiguration;
 import io.linuxserver.davos.transfer.ftp.client.Client;
 import io.linuxserver.davos.transfer.ftp.connection.Connection;
+import io.linuxserver.davos.transfer.ftp.connection.progress.ListenerFactory;
+import io.linuxserver.davos.transfer.ftp.connection.progress.ProgressListener;
 
 public class ScheduleWorkflow {
 
@@ -15,6 +17,7 @@ public class ScheduleWorkflow {
     
     private Client client;
     private Connection connection;
+    private ProgressListener listener;
     
     public ScheduleWorkflow(ScheduleConfiguration config) {
         this.config = config;
@@ -31,8 +34,15 @@ public class ScheduleWorkflow {
     public Connection getConnection() {
         return connection;
     }
+    
+    public ProgressListener getListener() {
+        return listener;
+    }
 
     public void start() {
+        
+        LOGGER.debug("Assigning listener to workflow");
+        listener = new ListenerFactory().createListener(config.getConnectionType());
         
         LOGGER.info("Running schedule: {}", config.getScheduleName());
         new ConnectWorkflowStep().runStep(this);

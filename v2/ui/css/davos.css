@@ -1,0 +1,26 @@
+body {
+    padding-top: 100px;
+}
+
+.filter-label {
+    padding: 10px;
+    font-weight: normal;
+}
+
+.filter-close {
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.form-group.last {
+    margin-top: 40px;
+}
+
+.form-group.filters {
+    margin-bottom: 50px;
+}
+
+
+.glyphicon.help {
+    cursor: pointer;
+}

@@ -24,7 +24,7 @@ public class ScheduleExecutor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleExecutor.class);
 
-    private Map<Long, ScheduledFuture<?>> runningSchedules = new HashMap<>();
+    private Map<Long, RunningSchedule> runningSchedules = new HashMap<>();
 
     @Resource
     private ScheduleConfigurationDAO scheduleConfigurationDAO;
@@ -48,11 +48,11 @@ public class ScheduleExecutor {
 
             if (model.startAutomatically) {
 
-                Runnable runnable = new RunnableSchedule(model.id, scheduleConfigurationDAO);
+                RunnableSchedule runnable = new RunnableSchedule(model.id, scheduleConfigurationDAO);
                 ScheduledFuture<?> runningSchedule = scheduledExecutorService.scheduleAtFixedRate(runnable, 0, model.interval,
                         TimeUnit.MINUTES);
 
-                runningSchedules.put(model.id, runningSchedule);
+                runningSchedules.put(model.id, new RunningSchedule(runningSchedule, runnable));
             }
         }
 
@@ -64,13 +64,13 @@ public class ScheduleExecutor {
         if (!runningSchedules.containsKey(id)) {
 
             ScheduleConfigurationModel model = scheduleConfigurationDAO.getConfig(id);
-            Runnable runnable = new RunnableSchedule(model.id, scheduleConfigurationDAO);
+            RunnableSchedule runnable = new RunnableSchedule(model.id, scheduleConfigurationDAO);
 
             LOGGER.info("Starting schedule {}", id);
             ScheduledFuture<?> runningSchedule = scheduledExecutorService.scheduleAtFixedRate(runnable, 0, model.interval,
                     TimeUnit.MINUTES);
 
-            runningSchedules.put(model.id, runningSchedule);
+            runningSchedules.put(model.id, new RunningSchedule(runningSchedule, runnable));
 
         } else {
             throw new ScheduleAlreadyRunningException();
@@ -83,9 +83,11 @@ public class ScheduleExecutor {
 
             LOGGER.info("Stopping schedule {}", id);
 
-            if (!runningSchedules.get(id).isCancelled()) {
+            ScheduledFuture<?> future = runningSchedules.get(id).getFuture();
+            
+            if (!future.isCancelled()) {
 
-                runningSchedules.get(id).cancel(true);
+                future.cancel(true);
                 runningSchedules.remove(id);
                 LOGGER.info("Schedule should now be stopped");
             }
