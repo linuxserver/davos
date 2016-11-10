@@ -24,3 +24,20 @@ body {
 .glyphicon.help {
     cursor: pointer;
 }
+
+.align-right {
+    text-align: right;
+}
+
+td .progress {
+    margin-bottom: 0;
+}
+
+.downloads {
+    font-size: 12px;
+}
+
+.panel .panel-heading, .panel .panel-title {
+    font-size: 13px;
+    line-height: 26px;
+}

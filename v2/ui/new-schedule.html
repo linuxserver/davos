@@ -7,7 +7,7 @@
     <meta name="description" content="An automated FTP client for your home server" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>davos</title>
+    <title>New Schedule</title>
 
     <link rel="icon" href="favicon.ico">
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -36,14 +36,20 @@
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="scheduling">Scheduling <span class="caret" /></a>
-                        <ul class="dropdown-menu" aria-labelledby="settings">
-                            <li><a href="index.html">Schedules</a></li>
-                            <li><a href="#">Hosts</a></li>
+                        <ul class="dropdown-menu" aria-labelledby="scheduling">
+                            <li><a href="index.html"><span class="glyphicon glyphicon-time"></span> Schedules</a></li>
+                            <li><a href="#"><span class="glyphicon glyphicon-cloud"></span> Hosts</a></li>
 
                         </ul>
                     </li>
                     <li>
-                        <a href="#">Settings</a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="settings">Settings <span class="caret" /></a>
+                        <ul class="dropdown-menu" aria-labelledby="settings">
+                            <li><a href="#"><span class="glyphicon glyphicon-plus"></span> New Schedule</a></li>
+                            <li><a href="#"><span class="glyphicon glyphicon-plus"></span> New Host</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#"><span class="glyphicon glyphicon-cog"></span> App Settings</a></li>
+                        </ul>
                     </li>
 
                 </ul>
@@ -57,8 +63,10 @@
         <div class="schedules-section">
 
             <div class="row">
-                <div class="page-header">
-                    <h2>New Schedule</h2>
+                <div class="col-md-12">
+                    <div class="page-header">
+                        <h2>New Schedule</h2>
+                    </div>
                 </div>
             </div>
 
@@ -66,8 +74,10 @@
                 <fieldset>
 
                     <div class="row">
-                        <div class="page-header">
-                            <h3>General</h3>
+                        <div class="col-md-12">
+                            <div class="page-header">
+                                <h3>General</h3>
+                            </div>
                         </div>
                     </div>
 
@@ -134,8 +144,10 @@
                     </div>
 
                     <div class="row">
-                        <div class="page-header">
-                            <h3>Filtering</h3>
+                        <div class="col-md-12">
+                            <div class="page-header">
+                                <h3>Filtering</h3>
+                            </div>
                         </div>
                     </div>
 
@@ -169,8 +181,10 @@
                     </div>
 
                     <div class="row">
-                        <div class="page-header">
-                            <h3>File Management</h3>
+                        <div class="col-md-12">
+                            <div class="page-header">
+                                <h3>File Management</h3>
+                            </div>
                         </div>
                     </div>
 
@@ -190,52 +204,111 @@
                     </div>
 
                     <div class="row">
-                        <div class="page-header">
-                            <h3>Downstream Notifications</h3>
+                        <div class="col-md-12">
+                            <div class="page-header">
+                                <h3>Downstream Actions</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            These provide a way for <em>davos</em> to inform other applications, such as file managers or 3rd party notifers that the schedule has completed downloading a file. This is useful when part of a wider workflow. Each downstream
+                            action will be triggered after <em>each file has been downloaded</em>, in order for a more granular workflow.
                         </div>
                     </div>
 
                     <div class="row">
 
                         <div class="col-md-12">
+                            <div class="page-header">
+                                <h4>Notifications</h4>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
 
                             <div class="form-group">
-                                <label for="sch-pushbullet" class="col-lg-2 control-label">Pushbullet <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Send a Pushbullet notification using the given Access Token once the download has finished" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <label for="sch-pushbullet" class="col-lg-2 control-label">Pushbullet</label>
                                 <div class="col-lg-10">
                                     <input type="text" class="form-control" id="sch-pushbullet" placeholder="API Key" autocomplete="off">
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="form-group">
-                                <label for="sch-api-url" class="col-lg-2 control-label">API Call</label>
-                                <div class="col-lg-10">
-                                    <input type="text" class="form-control" id="sch-api-url" placeholder="URL" autocomplete="off">
-                                </div>
+                        <div class="col-md-12 align-right">
+
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Add
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Pushbullet</a></li>
+                                    <li class="disabled"><a href="#">Pushover</a></li>
+                                </ul>
                             </div>
+                        </div>
 
-                            <div class="form-group">
-                                <label for="sch-api-method" class="col-lg-2 control-label"></label>
-                                <div class="col-lg-10">
-                                    <input type="text" class="form-control" id="sch-api-method" placeholder="GET POST PUT" autocomplete="off">
-                                </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="page-header">
+                                <h4>API Calls</h4>
                             </div>
+                        </div>
 
-                            <div class="form-group">
-                                <label for="sch-api-content-type" class="col-lg-2 control-label"></label>
-                                <div class="col-lg-10">
-                                    <input type="text" class="form-control" id="sch-api-content-type" placeholder="Content-Type" autocomplete="off">
+                        <div class="col-md-12 sch-api">
+
+                            <div class="well">
+                                <div class="form-group">
+                                    <label for="sch-api-url" class="col-lg-2 control-label">URL</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control" id="sch-api-url" autocomplete="off">
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group">
-                                <label for="sch-api-body" class="col-lg-2 control-label"></label>
-                                <div class="col-lg-10">
-                                   <textarea class="form-control" rows="3" id="sch-api-body"></textarea>
-                                   <span class="help-block"></span>
-                                 </div>
+                                <div class="form-group">
+                                    <label for="sch-api-method" class="col-lg-2 control-label">Method</label>
+                                    <div class="col-lg-10">
+                                        <select class="form-control" id="sch-api-method">
+                                        <option>POST</option>
+                                        <option>PUT</option>
+                                        <option>GET</option>
+                                        <option>DELETE</option>
+                                    </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sch-api-content-type" class="col-lg-2 control-label">Content-Type</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control" id="sch-api-content-type" placeholder="e.g. application/json" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sch-api-body" class="col-lg-2 control-label">Message Body <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Use $filename to reference the downloaded file" class="help glyphicon glyphicon-question-sign"></span></label>
+                                    <div class="col-lg-10">
+                                        <textarea class="form-control" rows="3" id="sch-api-body"></textarea>
+                                        <span class="help-block"></span>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
+
+                        <div class="col-md-12 align-right">
+
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Add
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">API Call</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row">
@@ -243,7 +316,7 @@
                         <div class="col-md-12">
 
                             <div class="form-group last">
-                                <div class="col-lg-10 col-lg-offset-2">
+                                <div class="col-lg-12">
                                     <button type="reset" class="btn btn-default">Cancel</button>
                                     <button type="submit" class="btn btn-primary">Create</button>
                                 </div>
@@ -264,7 +337,7 @@
     <script src="js/bootstrap.min.js"></script>
 
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
             $('[data-toggle="popover"]').popover();
         });
     </script>

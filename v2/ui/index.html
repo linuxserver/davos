@@ -36,14 +36,20 @@
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="scheduling">Scheduling <span class="caret" /></a>
-                        <ul class="dropdown-menu" aria-labelledby="settings">
-                            <li><a href="#">Schedules</a></li>
-                            <li><a href="#">Hosts</a></li>
+                        <ul class="dropdown-menu" aria-labelledby="scheduling">
+                            <li><a href="index.html"><span class="glyphicon glyphicon-time"></span> Schedules</a></li>
+                            <li><a href="#"><span class="glyphicon glyphicon-cloud"></span> Hosts</a></li>
 
                         </ul>
                     </li>
                     <li>
-                        <a href="#">Settings</a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="settings">Settings <span class="caret" /></a>
+                        <ul class="dropdown-menu" aria-labelledby="settings">
+                            <li><a href="#"><span class="glyphicon glyphicon-plus"></span> New Schedule</a></li>
+                            <li><a href="#"><span class="glyphicon glyphicon-plus"></span> New Host</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#"><span class="glyphicon glyphicon-cog"></span> App Settings</a></li>
+                        </ul>
                     </li>
 
                 </ul>
@@ -58,7 +64,7 @@
 
             <div class="row">
                 <div class="page-header">
-                    <h2>Schedules <a href="new-schedule.html" class="btn btn-default">Add</a></h2>
+                    <h2>Schedules</h2>
                 </div>
             </div>
 
@@ -67,7 +73,7 @@
                 <div class="col-md-12">
 
                     <div class="panel panel-default">
-                        <div class="panel-heading">TV Shows &nbsp;&nbsp;<span class="glyphicon glyphicon-wrench"></span></div>
+                        <div class="panel-heading">TV Shows &nbsp;&nbsp;<span class="glyphicon glyphicon-play"></span>&nbsp;&nbsp;<span class="glyphicon glyphicon-wrench"></span></div>
                         <div class="panel-body">
                             <div class="downloads">No active downloads</div>
                         </div>
@@ -82,7 +88,7 @@
                 <div class="col-md-12">
 
                     <div class="panel panel-default">
-                        <div class="panel-heading">Movies &nbsp;&nbsp;<span class="glyphicon glyphicon-wrench"></span></div>
+                        <div class="panel-heading">Movies &nbsp;&nbsp;<span class="glyphicon glyphicon-stop"></span>&nbsp;&nbsp;<span class="glyphicon glyphicon-wrench"></span></div>
                         <div class="panel-body">
                             <div class="downloads">
                                 <table class="table">
@@ -96,8 +102,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Family.Guy.S16E07.1080p.SOMETHING.mkv</td>
+                                        <tr id="dl-0">
+                                            <td>my-file-1.mkv</td>
                                             <td>700MB</td>
                                             <td>Downloading</td>
                                             <td>
@@ -106,11 +112,11 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                3.7 MBps
+                                                3.7 MB/s
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>Family.Guy.S16E08.1080p.SOMETHING.mkv</td>
+                                        <tr id="dl-1">
+                                            <td>my-file-2.mkv</td>
                                             <td>600MB</td>
                                             <td>Pending</td>
                                             <td>
@@ -119,7 +125,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                3.7 MBps
+                                                3.7 MB/s
                                             </td>
                                         </tr>
                                     </tbody>
