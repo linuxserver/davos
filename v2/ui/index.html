@@ -30,25 +30,21 @@
             </div>
             <div class="navbar-collapse collapse" id="navbar-main">
                 <ul class="nav navbar-nav">
-
-                    <li>
-                        <a href="/">Home</a>
-                    </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="scheduling">Scheduling <span class="caret" /></a>
                         <ul class="dropdown-menu" aria-labelledby="scheduling">
                             <li><a href="index.html"><span class="glyphicon glyphicon-time"></span> Schedules</a></li>
-                            <li><a href="#"><span class="glyphicon glyphicon-cloud"></span> Hosts</a></li>
+                            <li><a href="hosts.html"><span class="glyphicon glyphicon-cloud"></span> Hosts</a></li>
 
                         </ul>
                     </li>
                     <li>
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="settings">Settings <span class="caret" /></a>
                         <ul class="dropdown-menu" aria-labelledby="settings">
-                            <li><a href="#"><span class="glyphicon glyphicon-plus"></span> New Schedule</a></li>
-                            <li><a href="#"><span class="glyphicon glyphicon-plus"></span> New Host</a></li>
+                            <li><a href="new-schedule.html"><span class="glyphicon glyphicon-plus"></span> New Schedule</a></li>
+                            <li><a href="new-host.html"><span class="glyphicon glyphicon-plus"></span> New Host</a></li>
                             <li class="divider"></li>
-                            <li><a href="#"><span class="glyphicon glyphicon-cog"></span> App Settings</a></li>
+                            <li><a href="settings.html"><span class="glyphicon glyphicon-cog"></span> App Settings</a></li>
                         </ul>
                     </li>
 
@@ -73,7 +69,22 @@
                 <div class="col-md-12">
 
                     <div class="panel panel-default">
-                        <div class="panel-heading">TV Shows &nbsp;&nbsp;<span class="glyphicon glyphicon-play"></span>&nbsp;&nbsp;<span class="glyphicon glyphicon-wrench"></span></div>
+                        <div class="panel-heading">TV Shows &nbsp;&nbsp;<span class="glyphicon glyphicon-play" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Start"></span>&nbsp;&nbsp;<span class="glyphicon glyphicon-wrench" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Edit"></span></div>
+                        <div class="panel-body">
+                            <div class="downloads">Not running</div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Some other &nbsp;&nbsp;<span class="label label-default label-title">Running</span>&nbsp;&nbsp;<span class="glyphicon glyphicon-stop" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Stop"></span>&nbsp;&nbsp;<span class="glyphicon glyphicon-wrench" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Edit"></span></div>
                         <div class="panel-body">
                             <div class="downloads">No active downloads</div>
                         </div>
@@ -88,7 +99,7 @@
                 <div class="col-md-12">
 
                     <div class="panel panel-default">
-                        <div class="panel-heading">Movies &nbsp;&nbsp;<span class="glyphicon glyphicon-stop"></span>&nbsp;&nbsp;<span class="glyphicon glyphicon-wrench"></span></div>
+                        <div class="panel-heading">Movies &nbsp;&nbsp;<span class="glyphicon glyphicon-stop" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Stop"></span>&nbsp;&nbsp;<span class="glyphicon glyphicon-wrench" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Edit"></span></div>
                         <div class="panel-body">
                             <div class="downloads">
                                 <table class="table">
@@ -108,7 +119,7 @@
                                             <td>Downloading</td>
                                             <td>
                                                 <div class="progress">
-                                                    <div class="progress-bar" style="width: 60%;">60%</div>
+                                                    <div class="progress-bar" style="width: 60%;"></div>
                                                 </div>
                                             </td>
                                             <td>
@@ -125,7 +136,6 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                3.7 MB/s
                                             </td>
                                         </tr>
                                     </tbody>

@@ -30,25 +30,21 @@
             </div>
             <div class="navbar-collapse collapse" id="navbar-main">
                 <ul class="nav navbar-nav">
-
-                    <li>
-                        <a href="/">Home</a>
-                    </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="scheduling">Scheduling <span class="caret" /></a>
                         <ul class="dropdown-menu" aria-labelledby="scheduling">
                             <li><a href="index.html"><span class="glyphicon glyphicon-time"></span> Schedules</a></li>
-                            <li><a href="#"><span class="glyphicon glyphicon-cloud"></span> Hosts</a></li>
+                            <li><a href="hosts.html"><span class="glyphicon glyphicon-cloud"></span> Hosts</a></li>
 
                         </ul>
                     </li>
                     <li>
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="settings">Settings <span class="caret" /></a>
                         <ul class="dropdown-menu" aria-labelledby="settings">
-                            <li><a href="#"><span class="glyphicon glyphicon-plus"></span> New Schedule</a></li>
-                            <li><a href="#"><span class="glyphicon glyphicon-plus"></span> New Host</a></li>
+                            <li><a href="new-schedule.html"><span class="glyphicon glyphicon-plus"></span> New Schedule</a></li>
+                            <li><a href="new-host.html"><span class="glyphicon glyphicon-plus"></span> New Host</a></li>
                             <li class="divider"></li>
-                            <li><a href="#"><span class="glyphicon glyphicon-cog"></span> App Settings</a></li>
+                            <li><a href="settings.html"><span class="glyphicon glyphicon-cog"></span> App Settings</a></li>
                         </ul>
                     </li>
 
@@ -123,6 +119,13 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="sch-name" class="col-lg-2 control-label">Local Directory <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Where files should be downloaded" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="sch-local-directory" placeholder="" autocomplete="off">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label class="col-lg-2 control-label">Transfer Type <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Should it download only files, or get nested folders too" class="help glyphicon glyphicon-question-sign"></span></label>
                                 <div class="col-lg-10">
                                     <div class="radio">
@@ -138,6 +141,18 @@
                                               </label>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Start Automatically <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Should this schedule run automatically when davos starts" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <div class="checkbox">
+                                        <label>
+                                        <input type="checkbox" name="sch-automatic">
+                                      </label>
+                                    </div>
+                                </div>
+
                             </div>
 
                         </div>
@@ -316,9 +331,8 @@
                         <div class="col-md-12">
 
                             <div class="form-group last">
-                                <div class="col-lg-12">
-                                    <button type="reset" class="btn btn-default">Cancel</button>
-                                    <button type="submit" class="btn btn-primary">Create</button>
+                                <div class="col-lg-12 align-right">
+                                    <button type="submit" class="btn btn-lg btn-primary">Create</button>
                                 </div>
                             </div>
 
