@@ -7,9 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 @Entity
 public class FilterModel {
 
@@ -23,9 +20,9 @@ public class FilterModel {
     @ManyToOne
     @JoinColumn(name = "filter_schedule_id")
     public ScheduleModel schedule;
-    
+
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        return "FilterModel [id=" + id + ", value=" + value + "]";
     }
 }

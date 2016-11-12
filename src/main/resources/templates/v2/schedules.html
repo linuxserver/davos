@@ -69,12 +69,17 @@
 
                     <div class="panel panel-default">
                         <div class="panel-heading" th:inline="text">[[${schedule.name}]] &nbsp;&nbsp;
+                            <span th:if="${schedule.running}">
+                                <span class="label label-default label-title">Running</span>&nbsp;&nbsp;
+                                <span class="glyphicon glyphicon-stop" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Stop"></span>
+                            </span>
                             <span th:if="not ${schedule.running}" class="glyphicon glyphicon-play" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Start"></span>
-                            <span th:if="${schedule.running}" class="glyphicon glyphicon-stop" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Stop"></span>
-                            &nbsp;&nbsp;<span class="glyphicon glyphicon-wrench" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Edit"></span>
+                            &nbsp;&nbsp;<a class="link" th:href="@{/v2/schedules/} + ${schedule.id}"><span class="glyphicon glyphicon-wrench" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Edit"></span></a>
                         </div>
                         <div class="panel-body">
-                            <div class="downloads"></div>
+                            <div class="downloads">
+                                <span th:unless="${schedule.running}">Not running</span>
+                            </div>
                         </div>
                     </div>
 

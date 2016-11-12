@@ -78,5 +78,150 @@ var fragments = (function ($) {
 
 }(jQuery));
 
+var schedule = (function ($) {
+
+    'use strict';
+
+    var initialise, cleanId, success, error;
+
+    initialise = function () {
+
+        $('#saveSchedule').on('click', function () {
+
+            $.notify({
+                icon: 'glyphicon glyphicon-info-sign',
+            	message: 'Saving...'
+            },{
+            	// settings
+            	type: 'info',
+                placement: {
+                	from: "top",
+                	align: "right"
+                },
+                delay: 3000
+            });
+
+            var postData = {
+
+                id: "",
+                name: $('#name').val(),
+                interval: parseInt($('#interval option:checked').attr('value'), 10),
+                host: parseInt($('#host option:checked').attr('value'), 10),
+                hostDirectory: $('#hostDirectory').val(),
+                localDirectory: $('#localDirectory').val(),
+                transferType: $('input[name="transferType"]:checked').val(),
+                automatic: $('input[name="automatic"]').prop('checked'),
+                moveFileTo: $('#moveFileTo').val(),
+                filters: [],
+                notifications: [],
+                apis: []
+            };
+
+            $('.filter-label').each(function() {
+
+                postData.filters.push(
+                    {
+                        "id": cleanId($(this).attr('data-filter-id')),
+                        "value": $(this).attr('data-filter-value')
+                    }
+                );
+            });
+
+            $('#notifications .notification').each(function() {
+
+                postData.notifications.push(
+                    {
+                        "id": cleanId($(this).attr('data-notification-id')),
+                        "apiKey": $(this).find('.apiKey').val()
+                    }
+                );
+            });
+
+            $('#apis .api').each(function() {
+
+                postData.apis.push(
+                    {
+                        "id": cleanId($(this).attr('data-api-id')),
+                        "url": $(this).find('.url').val(),
+                        "method": $(this).find('.method option:checked').attr('value'),
+                        "contentType": $(this).find('.contentType').val(),
+                        "body": $(this).find('.body').val()
+                    }
+                );
+            });
+
+            var url = "/api/v2/schedule";
+            var method = "POST";
+
+            if (null !== cleanId($('#id').val())) {
+
+                url += "/" + cleanId($('#id').val());
+                method = "PUT";
+            }
+
+            $.ajax({
+
+                method: method,
+                url: url,
+                dataType: "json",
+                contentType: 'application/json',
+                data: JSON.stringify(postData)
+
+            }).done(success).fail(error);
+        });
+    };
+
+    cleanId = function (id) {
+
+        if (id && $.trim(id).length > 0) {
+            return parseInt(id, 10);
+        }
+
+        return null;
+    };
+
+    success = function (msg) {
+
+        $.notify({
+            icon: 'glyphicon glyphicon-ok-sign',
+            message: 'Schedule Saved!'
+        },{
+            // settings
+            type: 'success',
+            placement: {
+                from: "top",
+                align: "right"
+            },
+            delay: 3000
+        });
+
+        if (window.location.pathname === '/v2/schedules/new') {
+            window.location.replace('/v2/schedules/' + msg.body.id);
+        }
+    };
+
+    error = function (msg) {
+
+        $.notify({
+            icon: 'glyphicon glyphicon-warning-sign',
+            message: 'There was an error: ' + JSON.stringify(msg)
+        },{
+            // settings
+            type: 'danger',
+            placement: {
+                from: "top",
+                align: "right"
+            },
+            delay: 3000
+        });
+    };
+
+    return {
+        init: initialise
+    }
+
+}(jQuery));
+
+jQuery(document).ready(schedule.init);
 jQuery(document).ready(fragments.init);
 jQuery(document).ready(edit.init);

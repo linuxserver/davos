@@ -57,3 +57,7 @@ td .progress {
 .dropdown-menu li a {
     cursor: pointer;
 }
+
+a.link {
+    color: #98978b
+}

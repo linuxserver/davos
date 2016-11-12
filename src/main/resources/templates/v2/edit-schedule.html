@@ -83,7 +83,7 @@
                             <div class="form-group">
                                 <label for="sch-name" class="col-lg-2 control-label">Name <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="What you want to refer to this schedule as" class="help glyphicon glyphicon-question-sign"></span></label>
                                 <div class="col-lg-10">
-                                    <input type="hidden" class="form-control" th:field="*{id}" />
+                                    <input type="hidden" class="form-control" th:if="*{id}" th:field="*{id}" />
                                     <input type="text" class="form-control" th:field="*{name}" autocomplete="off" />
                                 </div>
                             </div>
@@ -135,7 +135,7 @@
                                 <label class="col-lg-2 control-label">Start Automatically <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Should this schedule run automatically when davos starts" class="help glyphicon glyphicon-question-sign"></span></label>
                                 <div class="col-lg-10">
                                     <div class="checkbox">
-                                      <label th:for="#{ids.next('automatic')}"></label>
+                                      <label></label>
                                       <input type="checkbox" th:field="*{automatic}" />
                                     </div>
                                 </div>
@@ -173,7 +173,7 @@
                             <div class="form-group">
                                 <div class="col-lg-2"></div>
                                 <div class="col-lg-10" id="filters">
-                                    <span th:each="filter : *{filters}" th:inline="text" class="label label-default filter-label">[[${filter.value}]] <span class="filter-close">&times;</span></span>
+                                    <span th:each="filter : *{filters}" th:inline="text" class="label label-default filter-label" th:attr="data-filter-value=${filter.value},data-filter-id=${filter.id}">[[${filter.value}]] <span class="filter-close">&times;</span></span>
                                 </div>
                             </div>
 
@@ -225,13 +225,12 @@
 
                         <div class="col-md-12" id="notifications">
 
-                            <div class="well notification" th:each="notification : *{notifications}">
+                            <div class="well notification" th:each="notification : *{notifications}" th:attr="data-notification-id=${notification.id}">
 
                                 <div class="form-group">
                                     <label for="sch-pushbullet" class="col-lg-2 control-label">Pushbullet</label>
                                     <div class="col-lg-10">
-                                        <input type="hidden" class="form-control id" th:value="${notification.id}" />
-                                        <input type="text" class="form-control" th:value="${notification.apiKey}" placeholder="API Key" autocomplete="off" />
+                                        <input type="text" class="form-control apiKey" th:value="${notification.apiKey}" placeholder="API Key" autocomplete="off" />
                                     </div>
                                 </div>
 
@@ -270,11 +269,10 @@
 
                         <div class="col-md-12" id="apis">
 
-                            <div class="well api" th:each="api : *{apis}">
+                            <div class="well api" th:each="api : *{apis}" th:attr="data-api-id=${api.id}">
                                 <div class="form-group">
                                     <label for="sch-api-url" class="col-lg-2 control-label">URL</label>
                                     <div class="col-lg-10">
-                                        <input type="hidden" class="form-control id" th:value="${api.id}" />
                                         <input type="text" class="form-control url" th:value="${api.url}" autocomplete="off" />
                                     </div>
                                 </div>
@@ -337,7 +335,7 @@
                                     <button th:if="${schedule.id}" type="button" class="btn btn-danger">Delete</button>
                                 </div>
                                 <div class="col-lg-6 align-right">
-                                    <button type="button" class="btn btn-primary">Save</button>
+                                    <button type="button" class="btn btn-primary" id="saveSchedule">Save</button>
                                 </div>
                             </div>
 
@@ -352,9 +350,30 @@
 
     </div>
 
+    <div th:if="${#lists.isEmpty(allHosts)}" id="noHostsModal" class="modal fade" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="noHostsModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">No hosts found</h4>
+                </div>
+                <div class="modal-body">
+                    <p>You can't create a Schedule without first creating a Host for it to use. Please create a host.</p>
+                    <a th:href="@{/v2/hosts/new}" class="btn btn-primary" id="createHost">Create Host</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="text/javascript" th:src="@{/v2/js/jquery-2.1.4.min.js}"></script>
     <script type="text/javascript" th:src="@{/v2/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/v2/js/bootstrap-notify.min.js}"></script>
     <script type="text/javascript" th:src="@{/v2/js/davos.js}"></script>
+
+    <script th:if="${#lists.isEmpty(allHosts)}">
+        $(window).load(function(){
+            $('#noHostsModal').modal('show');
+        });
+    </script>
 
     <script>
         $('body').popover({ container: 'body', selector: '[data-toggle="popover"]', trigger: 'hover' });

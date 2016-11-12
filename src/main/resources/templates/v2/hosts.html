@@ -83,7 +83,7 @@
                                 <td th:text="${host.protocol}"></td>
                                 <td th:text="${host.address}"></td>
                                 <td th:text="${host.username}"></td>
-                                <td><a th:href="@{/v2/hosts/} + ${host.id}"><span class="glyphicon glyphicon-wrench edit-host" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Edit"></span></a></td>
+                                <td><a class="link" th:href="@{/v2/hosts/} + ${host.id}"><span class="glyphicon glyphicon-wrench edit-host" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Edit"></span></a></td>
                             </tr>
                         </tbody>
                     </table>

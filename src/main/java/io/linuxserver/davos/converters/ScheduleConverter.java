@@ -12,6 +12,7 @@ import io.linuxserver.davos.web.Filter;
 import io.linuxserver.davos.web.Notification;
 import io.linuxserver.davos.web.Schedule;
 import io.linuxserver.davos.web.selectors.MethodSelector;
+import io.linuxserver.davos.web.selectors.TransferSelector;
 
 @Component
 public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
@@ -28,6 +29,7 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
         schedule.setHostDirectory(source.remoteFilePath);
         schedule.setAutomatic(source.startAutomatically);
         schedule.setHost(source.host.id);
+        schedule.setTransferType(TransferSelector.valueOf(source.transferType.toString()));
 
         for (ActionModel action : source.actions) {
 

@@ -13,8 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -59,6 +57,8 @@ public class ScheduleModel {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        return "ScheduleModel [id=" + id + ", name=" + name + ", startAutomatically=" + startAutomatically + ", interval="
+                + interval + ", remoteFilePath=" + remoteFilePath + ", localFilePath=" + localFilePath + ", transferType="
+                + transferType + ", filters=" + filters + ", actions=" + actions + "]";
     }
 }
