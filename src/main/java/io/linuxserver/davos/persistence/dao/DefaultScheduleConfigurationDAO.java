@@ -7,7 +7,7 @@ import javax.annotation.Resource;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 
-import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.persistence.model.ScheduleModel;
 import io.linuxserver.davos.persistence.repository.ScheduleConfigurationRepository;
 
 @Component
@@ -17,24 +17,24 @@ public class DefaultScheduleConfigurationDAO implements ScheduleConfigurationDAO
     private ScheduleConfigurationRepository configRepository;
 
     @Override
-    public List<ScheduleConfigurationModel> getAll() {
+    public List<ScheduleModel> getAll() {
         return configRepository.findAll();
     }
 
     @Override
-    public ScheduleConfigurationModel getConfig(Long id) {
+    public ScheduleModel getConfig(Long id) {
         return configRepository.findOne(id);
     }
 
     @Override
-    public ScheduleConfigurationModel updateConfig(ScheduleConfigurationModel model) {
+    public ScheduleModel updateConfig(ScheduleModel model) {
         return configRepository.save(model);
     }
 
     @Override
     public void updateLastRun(Long configId, DateTime lastRun) {
         
-        ScheduleConfigurationModel model = getConfig(configId);
+        ScheduleModel model = getConfig(configId);
         
         model.lastRun = lastRun.toDate();
         configRepository.save(model);

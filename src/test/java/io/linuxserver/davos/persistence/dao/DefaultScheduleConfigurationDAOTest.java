@@ -14,7 +14,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.persistence.model.ScheduleModel;
 import io.linuxserver.davos.persistence.repository.ScheduleConfigurationRepository;
 
 public class DefaultScheduleConfigurationDAOTest {
@@ -33,9 +33,9 @@ public class DefaultScheduleConfigurationDAOTest {
     @Test
     public void updateLastRunShouldOnlySetLastRunOnExisting() {
 
-        ArgumentCaptor<ScheduleConfigurationModel> captor = ArgumentCaptor.forClass(ScheduleConfigurationModel.class);
+        ArgumentCaptor<ScheduleModel> captor = ArgumentCaptor.forClass(ScheduleModel.class);
         
-        ScheduleConfigurationModel model = new ScheduleConfigurationModel();
+        ScheduleModel model = new ScheduleModel();
         model.lastRun = new Date();
         model.interval = 3;
         

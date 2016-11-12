@@ -9,17 +9,17 @@ import org.junit.Test;
 
 import io.linuxserver.davos.dto.ActionDTO;
 import io.linuxserver.davos.dto.FilterDTO;
-import io.linuxserver.davos.dto.ScheduleConfigurationDTO;
-import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.dto.ScheduleDTO;
+import io.linuxserver.davos.persistence.model.ScheduleModel;
 import io.linuxserver.davos.transfer.ftp.FileTransferType;
 import io.linuxserver.davos.transfer.ftp.TransferProtocol;
 
-public class ScheduleConfigurationModelConverterTest {
+public class ScheduleModelConverterTest {
 
     @Test
     public void shouldConvertAlLValues() {
         
-        ScheduleConfigurationDTO dto = new ScheduleConfigurationDTO();
+        ScheduleDTO dto = new ScheduleDTO();
 
         dto.connectionType = TransferProtocol.FTPS;
         dto.hostName = "host";
@@ -41,7 +41,7 @@ public class ScheduleConfigurationModelConverterTest {
         dto.filters.add(createFilterModel(1L, "filter1"));
         dto.filters.add(createFilterModel(2L, "filter2"));
 
-        ScheduleConfigurationModel model = new ScheduleConfigurationModelConverter().convert(dto);
+        ScheduleModel model = new ScheduleModelConverter().convert(dto);
 
         assertThat(model.id).isEqualTo(dto.id);
         assertThat(model.hostName).isEqualTo(dto.hostName);

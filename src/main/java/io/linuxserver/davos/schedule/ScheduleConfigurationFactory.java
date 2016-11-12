@@ -1,11 +1,10 @@
 package io.linuxserver.davos.schedule;
 
 import org.joda.time.DateTime;
-import org.springframework.http.HttpMethod;
 
 import io.linuxserver.davos.persistence.model.ActionModel;
 import io.linuxserver.davos.persistence.model.FilterModel;
-import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.persistence.model.ScheduleModel;
 import io.linuxserver.davos.schedule.workflow.actions.HttpAPICallAction;
 import io.linuxserver.davos.schedule.workflow.actions.MoveFileAction;
 import io.linuxserver.davos.schedule.workflow.actions.PushbulletNotifyAction;
@@ -13,7 +12,7 @@ import io.linuxserver.davos.transfer.ftp.client.UserCredentials;
 
 public class ScheduleConfigurationFactory {
 
-    public static ScheduleConfiguration createConfig(ScheduleConfigurationModel model) {
+    public static ScheduleConfiguration createConfig(ScheduleModel model) {
 
         ScheduleConfiguration config = new ScheduleConfiguration(model.name, model.connectionType, model.hostName, model.port,
                 new UserCredentials(model.username, model.password), model.remoteFilePath, model.localFilePath,
@@ -31,7 +30,7 @@ public class ScheduleConfigurationFactory {
         return config;
     }
 
-    private static void addActions(ScheduleConfigurationModel model, ScheduleConfiguration config) {
+    private static void addActions(ScheduleModel model, ScheduleConfiguration config) {
 
         for (ActionModel action : model.actions) {
 
@@ -42,11 +41,11 @@ public class ScheduleConfigurationFactory {
                 config.getActions().add(new PushbulletNotifyAction(action.f1));
 
             if ("api".equals(action.actionType))
-                config.getActions().add(new HttpAPICallAction(action.f1, HttpMethod.valueOf(action.f2), action.f3, action.f4));
+                config.getActions().add(new HttpAPICallAction(action.f1, action.f2, action.f3, action.f4));
         }
     }
 
-    private static void addFilters(ScheduleConfigurationModel model, ScheduleConfiguration config) {
+    private static void addFilters(ScheduleModel model, ScheduleConfiguration config) {
 
         for (FilterModel filter : model.filters)
             config.getFilters().add(filter.value);

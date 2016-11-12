@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="An automated FTP client for your home server" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>New Schedule</title>
+
+    <link rel="icon" th:href="@{/v2/favicon.ico}" />
+
+    <link type="text/css" rel="stylesheet" th:href="@{/v2/css/bootstrap.min.css}" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" th:href="@{/v2/css/davos.css}" media="screen" />
+
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="#" class="navbar-brand">davos</a>
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar-main">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="scheduling">Scheduling <span class="caret" /></a>
+                        <ul class="dropdown-menu" aria-labelledby="scheduling">
+                            <li><a href="index.html"><span class="glyphicon glyphicon-time"></span> Schedules</a></li>
+                            <li><a href="hosts.html"><span class="glyphicon glyphicon-cloud"></span> Hosts</a></li>
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="settings">Settings <span class="caret" /></a>
+                        <ul class="dropdown-menu" aria-labelledby="settings">
+                            <li><a href="new-schedule.html"><span class="glyphicon glyphicon-plus"></span> New Schedule</a></li>
+                            <li><a href="new-host.html"><span class="glyphicon glyphicon-plus"></span> New Host</a></li>
+                            <li class="divider"></li>
+                            <li><a href="settings.html"><span class="glyphicon glyphicon-cog"></span> App Settings</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="schedules-section">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="page-header">
+                        <h2>New Schedule</h2>
+                    </div>
+                </div>
+            </div>
+
+            <form class="form-horizontal" action="#" th:action="@{/v2/schedules/update}" th:object="${schedule}">
+                <fieldset>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="page-header">
+                                <h3>General</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <label for="sch-name" class="col-lg-2 control-label">Name <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="What you want to refer to this schedule as" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <input type="hidden" class="form-control" th:field="*{id}" />
+                                    <input type="text" class="form-control" th:field="*{name}" autocomplete="off" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="select" class="col-lg-2 control-label">Interval <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="How often this schedule should run" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <select class="form-control" th:field="*{interval}">
+                                        <option th:each="interval : ${allIntervals}" th:value="${interval.minutes}" th:text="${interval.text}"></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="select" class="col-lg-2 control-label">Host <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Which host to connect to" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <select class="form-control" th:field="*{host}">
+                                        <option th:each="host: ${allHosts}" th:value="${host.id}" th:text="${host.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sch-name" class="col-lg-2 control-label">Host Directory <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Remote directory containing files to download" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" th:field="*{hostDirectory}" autocomplete="off" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sch-name" class="col-lg-2 control-label">Local Directory <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Where files should be downloaded" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" th:field="*{localDirectory}" autocomplete="off" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Transfer Type <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Should it download only files, or get nested folders too" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <div class="radio" th:each="type : ${allTransferTypes}">
+                                        <label th:inline="text">
+                                            <input type="radio" th:field="*{transferType}" th:value="${type}" /> [[${type}]]
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Start Automatically <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Should this schedule run automatically when davos starts" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <div class="checkbox">
+                                      <label th:for="#{ids.next('automatic')}"></label>
+                                      <input type="checkbox" th:field="*{automatic}" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="page-header">
+                                <h3>Filtering</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+
+                            <div class="form-group">
+                                <label for="sch-name" class="col-lg-2 control-label">Filters <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Define which files to download based on file name" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <div class="input-group">
+                                        <input type="text" name="newFilter" class="form-control" placeholder="Add a filter (? = single char wildcard. * = multi char wildcard)" autocomplete="off" />
+                                        <span class="input-group-btn">
+                                            <button type="submit" name="addFilter" class="btn btn-primary">Add</button>
+                                          </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group filters">
+                                <div class="col-lg-2"></div>
+                                <div class="col-lg-10">
+                                    <span th:each="filter : *{filters}" th:inline="text" class="label label-default filter-label">[[${filter.value}]] <span class="filter-close">&times;</span></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="page-header">
+                                <h3>File Management</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <label for="sch-move-file" class="col-lg-2 control-label">Move File <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Move the file to the given directory once the download has completed" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" th:field="*{moveFileTo}" autocomplete="off" />
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="page-header">
+                                <h3>Downstream Actions</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            These provide a way for <em>davos</em> to inform other applications, such as file managers or 3rd party notifers that the schedule has completed downloading a file. This is useful when part of a wider workflow. Each downstream
+                            action will be triggered after <em>each file has been downloaded</em>, in order for a more granular workflow.
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="page-header">
+                                <h4>Notifications</h4>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+
+                            <div class="well"  th:each="notification : *{notifications}">
+
+                                <div class="form-group">
+                                    <label for="sch-pushbullet" class="col-lg-2 control-label">Pushbullet</label>
+                                    <div class="col-lg-10">
+                                        <input type="hidden" class="form-control" th:value="${notification.id}" />
+                                        <input type="text" class="form-control" th:value="${notification.apiKey}" placeholder="API Key" autocomplete="off" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-lg-12 align-right">
+                                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-12 align-right">
+
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Add
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Pushbullet</a></li>
+                                    <li class="disabled"><a href="#">Pushover</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="page-header">
+                                <h4>API Calls</h4>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 sch-api">
+
+                            <div class="well" th:each="api : *{apis}">
+                                <div class="form-group">
+                                    <label for="sch-api-url" class="col-lg-2 control-label">URL</label>
+                                    <div class="col-lg-10">
+                                        <input type="hidden" class="form-control" th:value="${api.id}" />
+                                        <input type="text" class="form-control url" th:value="${api.url}" autocomplete="off" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sch-api-method" class="col-lg-2 control-label">Method</label>
+                                    <div class="col-lg-10">
+                                        <select class="form-control method">
+                                            <option th:each="method : ${allMethods}" th:value="${method}" th:text="${method}" th:selected="${api.method == method}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sch-api-content-type" class="col-lg-2 control-label">Content-Type</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control contentType" th:value="${api.contentType}" placeholder="e.g. application/json" autocomplete="off" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sch-api-body" class="col-lg-2 control-label">Message Body <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Use $filename to reference the downloaded file" class="help glyphicon glyphicon-question-sign"></span></label>
+                                    <div class="col-lg-10">
+                                        <textarea class="form-control body" rows="3" th:text="${api.body}"></textarea>
+                                        <span class="help-block"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-lg-12 align-right">
+                                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-12 align-right">
+
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Add
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">API Call</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group last">
+                                <div class="col-lg-12 align-right">
+                                    <button type="submit" class="btn btn-primary">Create</button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </fieldset>
+            </form>
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript" th:src="@{/v2/js/jquery-2.1.4.min.js}"></script>
+    <script type="text/javascript" th:src="@{/v2/js/bootstrap.min.js}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+
+</body>
+
+</html>

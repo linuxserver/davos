@@ -22,7 +22,7 @@ public class FilterModel {
     
     @ManyToOne
     @JoinColumn(name = "filter_schedule_id")
-    public ScheduleConfigurationModel schedule;
+    public ScheduleModel schedule;
     
     @Override
     public String toString() {

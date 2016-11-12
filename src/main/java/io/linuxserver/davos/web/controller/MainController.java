@@ -1,4 +1,4 @@
-package io.linuxserver.davos.web;
+package io.linuxserver.davos.web.controller;
 
 import java.util.stream.Collectors;
 
@@ -9,10 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import io.linuxserver.davos.dto.ScheduleConfigurationDTO;
-import io.linuxserver.davos.dto.converters.ScheduleConfigurationDTOConverter;
+import io.linuxserver.davos.dto.ScheduleDTO;
+import io.linuxserver.davos.dto.converters.ScheduleDTOConverter;
 import io.linuxserver.davos.persistence.dao.ScheduleConfigurationDAO;
-import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.persistence.model.ScheduleModel;
 import io.linuxserver.davos.schedule.ScheduleExecutor;
 import io.linuxserver.davos.transfer.ftp.FileTransferType;
 import io.linuxserver.davos.transfer.ftp.TransferProtocol;
@@ -43,8 +43,8 @@ public class MainController {
     @RequestMapping("/scheduling/{id}")
     public String schedulingEdit(@PathVariable Long id, Model model) {
 
-        ScheduleConfigurationModel config = scheduleConfigurationDAO.getConfig(id);
-        model.addAttribute("schedule", new ScheduleConfigurationDTOConverter().convert(config));
+        ScheduleModel config = scheduleConfigurationDAO.getConfig(id);
+        model.addAttribute("schedule", new ScheduleDTOConverter().convert(config));
 
         return "schedulingedit";
     }
@@ -52,7 +52,7 @@ public class MainController {
     @RequestMapping("/scheduling/new")
     public String schedulingNew(Model model) {
 
-        ScheduleConfigurationDTO schedule = new ScheduleConfigurationDTO();
+        ScheduleDTO schedule = new ScheduleDTO();
         schedule.interval = 60;
         schedule.transferType = FileTransferType.FILE;
         schedule.connectionType = TransferProtocol.FTP;
@@ -62,8 +62,8 @@ public class MainController {
         return "schedulingedit";
     }
 
-    private ScheduleConfigurationDTO toDTO(ScheduleConfigurationModel model) {
-        ScheduleConfigurationDTO schedule = new ScheduleConfigurationDTOConverter().convert(model);
+    private ScheduleDTO toDTO(ScheduleModel model) {
+        ScheduleDTO schedule = new ScheduleDTOConverter().convert(model);
         schedule.running = scheduleExecutor.isScheduleRunning(schedule.id);
         return schedule;
     }

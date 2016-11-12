@@ -4,15 +4,15 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
-import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.persistence.model.ScheduleModel;
 
 public interface ScheduleConfigurationDAO {
 
-    List<ScheduleConfigurationModel> getAll();
+    List<ScheduleModel> getAll();
 
-    ScheduleConfigurationModel getConfig(Long id);
+    ScheduleModel getConfig(Long id);
 
-    ScheduleConfigurationModel updateConfig(ScheduleConfigurationModel model);
+    ScheduleModel updateConfig(ScheduleModel model);
     
     void updateLastRun(Long configId, DateTime lastRun);
 }

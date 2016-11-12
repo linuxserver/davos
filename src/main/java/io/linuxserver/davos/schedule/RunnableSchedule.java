@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.linuxserver.davos.persistence.dao.ScheduleConfigurationDAO;
-import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.persistence.model.ScheduleModel;
 import io.linuxserver.davos.schedule.workflow.ScheduleWorkflow;
 
 public class RunnableSchedule implements Runnable {
@@ -25,7 +25,7 @@ public class RunnableSchedule implements Runnable {
 
         LOGGER.info("Starting schedule {}", scheduleId);
         
-        ScheduleConfigurationModel model = configurationDAO.getConfig(scheduleId);
+        ScheduleModel model = configurationDAO.getConfig(scheduleId);
         
         ScheduleConfiguration config = ScheduleConfigurationFactory.createConfig(model);
         ScheduleWorkflow scheduleWorkflow = new ScheduleWorkflow(config);

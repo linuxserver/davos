@@ -20,10 +20,10 @@ public class HttpAPICallAction implements PostDownloadAction {
     private String contentType;
     private String body;
 
-    public HttpAPICallAction(String url, HttpMethod method, String contentType, String body) {
+    public HttpAPICallAction(String url, String method, String contentType, String body) {
 
         this.url = url;
-        this.method = method;
+        this.method = HttpMethod.valueOf(method);
         this.contentType = contentType;
         this.body = body;
     }

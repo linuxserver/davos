@@ -3,14 +3,14 @@ import java.util.regex.Matcher;
 buildscript {
 
     ext {
-        springBootVersion = '1.2.6.RELEASE'
+        springBootVersion = '1.4.2.RELEASE'
     }
     repositories {
         mavenCentral()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
-        classpath('io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE')
+        classpath('io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE')
     }
 }
 
@@ -21,7 +21,7 @@ plugins {
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'spring-boot' 
+apply plugin: 'org.springframework.boot' 
 apply plugin: 'io.spring.dependency-management' 
 
 jar {
@@ -92,20 +92,21 @@ eclipse {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.7'
+    gradleVersion = '2.14'
 }
 
 task updateBuildVersion << {
 
-	Matcher matcher = file('version.txt').text.trim() =~ /(.+)\.(.+)$/
+	Matcher matcher = file('version.txt').text.trim() =~ /(.+)\.(.+)\.(.+)$/
 	
 	if (matcher.find()) {
 	
 		String major = matcher.group(1)
-		String minor = matcher.group(2).trim()
-		int nextBuild = Integer.valueOf(minor) + 1
+		String minor = matcher.group(2)
+		String patch = matcher.group(3).trim()
+		int nextBuild = Integer.valueOf(patch) + 1
 	
-		String updatedVersion =  "${major}.${nextBuild}"
+		String updatedVersion =  "${major}.${minor}.${nextBuild}"
 		
 		file('version.txt').text = "${updatedVersion}\n"
 	}
@@ -129,6 +130,3 @@ cucumber {
 
 build.dependsOn copyConfig
 build.mustRunAfter copyConfig
-
-run.dependsOn copyConfig
-run.mustRunAfter copyConfig

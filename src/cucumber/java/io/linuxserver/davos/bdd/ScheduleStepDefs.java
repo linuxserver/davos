@@ -14,7 +14,7 @@ import cucumber.api.java.en.When;
 import io.linuxserver.davos.bdd.helpers.FakeFTPServerFactory;
 import io.linuxserver.davos.persistence.dao.ScheduleConfigurationDAO;
 import io.linuxserver.davos.persistence.model.FilterModel;
-import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.persistence.model.ScheduleModel;
 import io.linuxserver.davos.schedule.RunnableSchedule;
 import io.linuxserver.davos.transfer.ftp.TransferProtocol;
 
@@ -22,12 +22,12 @@ public class ScheduleStepDefs {
 
     private static final String TMP = FileUtils.getTempDirectoryPath();
     
-    private ScheduleConfigurationModel scheduleConfig;
+    private ScheduleModel scheduleConfig;
     
     @Given("^a schedule exists for that server, with filters$")
     public void a_schedule_exists_for_that_server_with_filters() throws Throwable {
         
-        scheduleConfig = new ScheduleConfigurationModel();
+        scheduleConfig = new ScheduleModel();
         scheduleConfig.hostName = "localhost";
         scheduleConfig.port = FakeFTPServerFactory.getPort();
         scheduleConfig.username = "user";
@@ -68,17 +68,17 @@ public class ScheduleStepDefs {
     class CucumberScheduleConfigurationDAO implements ScheduleConfigurationDAO {
 
         @Override
-        public List<ScheduleConfigurationModel> getAll() {
+        public List<ScheduleModel> getAll() {
             return null;
         }
 
         @Override
-        public ScheduleConfigurationModel getConfig(Long id) {
+        public ScheduleModel getConfig(Long id) {
             return scheduleConfig;
         }
 
         @Override
-        public ScheduleConfigurationModel updateConfig(ScheduleConfigurationModel model) {
+        public ScheduleModel updateConfig(ScheduleModel model) {
             return null;
         }
 

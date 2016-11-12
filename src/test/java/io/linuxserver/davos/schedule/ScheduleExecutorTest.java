@@ -23,7 +23,7 @@ import org.mockito.Mock;
 import io.linuxserver.davos.exception.ScheduleAlreadyRunningException;
 import io.linuxserver.davos.exception.ScheduleNotRunningException;
 import io.linuxserver.davos.persistence.dao.ScheduleConfigurationDAO;
-import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.persistence.model.ScheduleModel;
 
 public class ScheduleExecutorTest {
 
@@ -44,12 +44,12 @@ public class ScheduleExecutorTest {
     @Test
     public void shouldScheduleBasedOnIntervalAndAutoStartup() {
 
-        List<ScheduleConfigurationModel> models = new ArrayList<ScheduleConfigurationModel>();
+        List<ScheduleModel> models = new ArrayList<ScheduleModel>();
 
-        ScheduleConfigurationModel nonAutoModel = new ScheduleConfigurationModel();
+        ScheduleModel nonAutoModel = new ScheduleModel();
         nonAutoModel.startAutomatically = false;
 
-        ScheduleConfigurationModel autoModel = new ScheduleConfigurationModel();
+        ScheduleModel autoModel = new ScheduleModel();
         autoModel.startAutomatically = true;
         autoModel.interval = 50;
 
@@ -66,7 +66,7 @@ public class ScheduleExecutorTest {
     @Test
     public void startScheduleShouldRunThatSchedule() {
 
-        ScheduleConfigurationModel config = new ScheduleConfigurationModel();
+        ScheduleModel config = new ScheduleModel();
         config.interval = 86;
 
         when(mockConfigurationDAO.getConfig(1337L)).thenReturn(config);
@@ -79,7 +79,7 @@ public class ScheduleExecutorTest {
     @Test(expected = ScheduleAlreadyRunningException.class)
     public void startScheduleShouldNotRunScheduleIfAlreadyRunning() {
 
-        ScheduleConfigurationModel config = new ScheduleConfigurationModel();
+        ScheduleModel config = new ScheduleModel();
         config.interval = 86;
         config.id = 1337L;
 
@@ -93,7 +93,7 @@ public class ScheduleExecutorTest {
     @SuppressWarnings("unchecked")
     public void stopScheduleShouldStopRunningSchedule() {
 
-        ScheduleConfigurationModel config = new ScheduleConfigurationModel();
+        ScheduleModel config = new ScheduleModel();
         config.interval = 86;
         config.id = 1337L;
 
@@ -113,7 +113,7 @@ public class ScheduleExecutorTest {
     @SuppressWarnings("unchecked")
     public void shouldBeAbleToInformWhetherScheduleIsRunningOrNot() {
 
-        ScheduleConfigurationModel config = new ScheduleConfigurationModel();
+        ScheduleModel config = new ScheduleModel();
         config.interval = 86;
         config.id = 1337L;
 
@@ -136,7 +136,7 @@ public class ScheduleExecutorTest {
     @SuppressWarnings("unchecked")
     public void stopScheduleShouldNotStopRunningScheduleIfItHasAlreadyBeenCancelled() {
 
-        ScheduleConfigurationModel config = new ScheduleConfigurationModel();
+        ScheduleModel config = new ScheduleModel();
         config.interval = 86;
         config.id = 1337L;
 
@@ -156,7 +156,7 @@ public class ScheduleExecutorTest {
     @Test(expected = ScheduleNotRunningException.class)
     public void stopScheduleShouldNotAttemptToStopNonRunningSchedule() {
 
-        ScheduleConfigurationModel config = new ScheduleConfigurationModel();
+        ScheduleModel config = new ScheduleModel();
         config.interval = 86;
         config.id = 1337L;
 

@@ -35,7 +35,7 @@ public class HttpAPICallActionTest {
     @Before
     public void setUp() {
 
-        httpAPICallAction = new HttpAPICallAction("http://url", HttpMethod.POST, "application/json", "{\"hello\":\"$filename\"}");
+        httpAPICallAction = new HttpAPICallAction("http://url", "POST", "application/json", "{\"hello\":\"$filename\"}");
 
         initMocks(this);
     }

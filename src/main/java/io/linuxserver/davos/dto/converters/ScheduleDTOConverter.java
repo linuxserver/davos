@@ -4,17 +4,17 @@ import java.util.Date;
 
 import io.linuxserver.davos.dto.ActionDTO;
 import io.linuxserver.davos.dto.FilterDTO;
-import io.linuxserver.davos.dto.ScheduleConfigurationDTO;
+import io.linuxserver.davos.dto.ScheduleDTO;
 import io.linuxserver.davos.persistence.model.ActionModel;
 import io.linuxserver.davos.persistence.model.FilterModel;
-import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.persistence.model.ScheduleModel;
 
-public class ScheduleConfigurationDTOConverter implements Converter<ScheduleConfigurationModel, ScheduleConfigurationDTO> {
+public class ScheduleDTOConverter implements Converter<ScheduleModel, ScheduleDTO> {
 
     @Override
-    public ScheduleConfigurationDTO convert(ScheduleConfigurationModel source) {
+    public ScheduleDTO convert(ScheduleModel source) {
 
-        ScheduleConfigurationDTO dto = new ScheduleConfigurationDTO();
+        ScheduleDTO dto = new ScheduleDTO();
 
         dto.connectionType = source.connectionType;
         dto.hostName = source.hostName;

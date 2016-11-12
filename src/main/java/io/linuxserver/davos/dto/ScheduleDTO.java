@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import io.linuxserver.davos.transfer.ftp.FileTransferType;
 import io.linuxserver.davos.transfer.ftp.TransferProtocol;
 
-public class ScheduleConfigurationDTO {
+public class ScheduleDTO {
 
     public Long id;
     public String name;

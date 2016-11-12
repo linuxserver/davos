@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import io.linuxserver.davos.exception.ScheduleAlreadyRunningException;
 import io.linuxserver.davos.exception.ScheduleNotRunningException;
 import io.linuxserver.davos.persistence.dao.ScheduleConfigurationDAO;
-import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.persistence.model.ScheduleModel;
 
 @Component
 public class ScheduleExecutor {
@@ -44,7 +44,7 @@ public class ScheduleExecutor {
 
         LOGGER.info("Initialising automatic startup schedules");
 
-        for (ScheduleConfigurationModel model : scheduleConfigurationDAO.getAll()) {
+        for (ScheduleModel model : scheduleConfigurationDAO.getAll()) {
 
             if (model.startAutomatically) {
 
@@ -63,7 +63,7 @@ public class ScheduleExecutor {
 
         if (!runningSchedules.containsKey(id)) {
 
-            ScheduleConfigurationModel model = scheduleConfigurationDAO.getConfig(id);
+            ScheduleModel model = scheduleConfigurationDAO.getConfig(id);
             RunnableSchedule runnable = new RunnableSchedule(model.id, scheduleConfigurationDAO);
 
             LOGGER.info("Starting schedule {}", id);

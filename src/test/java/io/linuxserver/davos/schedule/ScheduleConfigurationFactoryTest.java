@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import io.linuxserver.davos.persistence.model.ActionModel;
 import io.linuxserver.davos.persistence.model.FilterModel;
-import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.persistence.model.ScheduleModel;
 import io.linuxserver.davos.schedule.workflow.actions.HttpAPICallAction;
 import io.linuxserver.davos.schedule.workflow.actions.MoveFileAction;
 import io.linuxserver.davos.schedule.workflow.actions.PushbulletNotifyAction;
@@ -21,7 +21,7 @@ public class ScheduleConfigurationFactoryTest {
     @Test
     public void shouldConvertAllMainFields() {
         
-        ScheduleConfigurationModel model = new ScheduleConfigurationModel();
+        ScheduleModel model = new ScheduleModel();
         model.connectionType = TransferProtocol.FTP;
         model.hostName = "hostname";
         model.localFilePath = "local/";
@@ -51,7 +51,7 @@ public class ScheduleConfigurationFactoryTest {
     @Test
     public void ifLastRunInModelIsNullThenSetToEpoch() {
         
-        ScheduleConfigurationModel model = new ScheduleConfigurationModel();
+        ScheduleModel model = new ScheduleModel();
         
         ScheduleConfiguration config = ScheduleConfigurationFactory.createConfig(model);
         
@@ -61,7 +61,7 @@ public class ScheduleConfigurationFactoryTest {
     @Test
     public void shouldAddAllFiltersIfAny() {
         
-        ScheduleConfigurationModel model = new ScheduleConfigurationModel();
+        ScheduleModel model = new ScheduleModel();
         model.filters = new ArrayList<FilterModel>();
         
         FilterModel filterModel = new FilterModel();
@@ -82,7 +82,7 @@ public class ScheduleConfigurationFactoryTest {
     @Test
     public void shouldAddAllActionsIfAny() {
         
-        ScheduleConfigurationModel model = new ScheduleConfigurationModel();
+        ScheduleModel model = new ScheduleModel();
         model.localFilePath = "a/local/path/";
         model.actions = new ArrayList<ActionModel>();
         

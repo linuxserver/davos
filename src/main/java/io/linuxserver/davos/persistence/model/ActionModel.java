@@ -34,7 +34,7 @@ public class ActionModel {
     
     @ManyToOne
     @JoinColumn(name = "action_schedule_id")
-    public ScheduleConfigurationModel schedule;
+    public ScheduleModel schedule;
     
     @Override
     public String toString() {

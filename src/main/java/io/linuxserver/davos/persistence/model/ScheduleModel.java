@@ -20,7 +20,7 @@ import io.linuxserver.davos.transfer.ftp.FileTransferType;
 import io.linuxserver.davos.transfer.ftp.TransferProtocol;
 
 @Entity
-public class ScheduleConfigurationModel {
+public class ScheduleModel {
 
     @Id
     @GeneratedValue

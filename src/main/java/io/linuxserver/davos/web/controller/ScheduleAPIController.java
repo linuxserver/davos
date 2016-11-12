@@ -1,4 +1,4 @@
-package io.linuxserver.davos.web;
+package io.linuxserver.davos.web.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.linuxserver.davos.dto.ScheduleConfigurationDTO;
+import io.linuxserver.davos.dto.ScheduleDTO;
 import io.linuxserver.davos.dto.ScheduleProcessResponse;
-import io.linuxserver.davos.dto.converters.ScheduleConfigurationDTOConverter;
-import io.linuxserver.davos.dto.converters.ScheduleConfigurationModelConverter;
+import io.linuxserver.davos.dto.converters.ScheduleDTOConverter;
+import io.linuxserver.davos.dto.converters.ScheduleModelConverter;
 import io.linuxserver.davos.exception.ScheduleAlreadyRunningException;
 import io.linuxserver.davos.exception.ScheduleNotRunningException;
 import io.linuxserver.davos.logging.LoggingManager;
 import io.linuxserver.davos.persistence.dao.ScheduleConfigurationDAO;
-import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.persistence.model.ScheduleModel;
 import io.linuxserver.davos.schedule.ScheduleExecutor;
 
 @RestController
@@ -37,7 +37,7 @@ public class ScheduleAPIController {
     private ScheduleExecutor scheduleExecutor;
 
     @RequestMapping(value = "/{id}")
-    public ScheduleConfigurationDTO getScheduleConfig(@PathVariable("id") Long id) {
+    public ScheduleDTO getScheduleConfig(@PathVariable("id") Long id) {
         return toDTO(scheduleConfigurationDAO.getConfig(id));
     }
 
@@ -76,14 +76,14 @@ public class ScheduleAPIController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ScheduleConfigurationDTO createScheduleConfig(@RequestBody ScheduleConfigurationDTO dto) {
+    public ScheduleDTO createScheduleConfig(@RequestBody ScheduleDTO dto) {
 
-        ScheduleConfigurationModel model = new ScheduleConfigurationModelConverter().convert(dto);
+        ScheduleModel model = new ScheduleModelConverter().convert(dto);
         return toDTO(scheduleConfigurationDAO.updateConfig(model));
     }
 
     @RequestMapping(value = "/schedules")
-    public List<ScheduleConfigurationDTO> getAllSchedules() {
+    public List<ScheduleDTO> getAllSchedules() {
         return scheduleConfigurationDAO.getAll().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
@@ -99,7 +99,7 @@ public class ScheduleAPIController {
         return true;
     }
     
-    private ScheduleConfigurationDTO toDTO(ScheduleConfigurationModel model) {
-        return new ScheduleConfigurationDTOConverter().convert(model);
+    private ScheduleDTO toDTO(ScheduleModel model) {
+        return new ScheduleDTOConverter().convert(model);
     }
 }

@@ -5,19 +5,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import io.linuxserver.davos.dto.ScheduleConfigurationDTO;
+import io.linuxserver.davos.dto.ScheduleDTO;
 import io.linuxserver.davos.persistence.model.ActionModel;
 import io.linuxserver.davos.persistence.model.FilterModel;
-import io.linuxserver.davos.persistence.model.ScheduleConfigurationModel;
+import io.linuxserver.davos.persistence.model.ScheduleModel;
 import io.linuxserver.davos.transfer.ftp.FileTransferType;
 import io.linuxserver.davos.transfer.ftp.TransferProtocol;
 
-public class ScheduleConfigurationDTOConverterTest {
+public class ScheduleDTOConverterTest {
 
     @Test
     public void shouldConvertAllValues() {
         
-        ScheduleConfigurationModel model = new ScheduleConfigurationModel();
+        ScheduleModel model = new ScheduleModel();
         
         model.connectionType = TransferProtocol.FTPS;
         model.hostName = "host";
@@ -39,7 +39,7 @@ public class ScheduleConfigurationDTOConverterTest {
         model.filters.add(createFilterModel(1L, "filter1"));
         model.filters.add(createFilterModel(2L, "filter2"));
         
-        ScheduleConfigurationDTO dto = new ScheduleConfigurationDTOConverter().convert(model);
+        ScheduleDTO dto = new ScheduleDTOConverter().convert(model);
         
         assertThat(dto.id).isEqualTo(model.id);
         assertThat(dto.hostName).isEqualTo(model.hostName);
@@ -83,9 +83,9 @@ public class ScheduleConfigurationDTOConverterTest {
     @Test
     public void nullDateShouldBeZero() {
         
-        ScheduleConfigurationModel model = new ScheduleConfigurationModel();
+        ScheduleModel model = new ScheduleModel();
         
-        ScheduleConfigurationDTO dto = new ScheduleConfigurationDTOConverter().convert(model);
+        ScheduleDTO dto = new ScheduleDTOConverter().convert(model);
         
         assertThat(dto.lastRun).isEqualTo(model.lastRun.getTime());
     }

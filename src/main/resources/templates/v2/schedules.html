@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="An automated FTP client for your home server" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Schedules</title>
+
+    <link rel="icon" th:href="@{/v2/favicon.ico}" />
+
+    <link type="text/css" rel="stylesheet" th:href="@{/v2/css/bootstrap.min.css}" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" th:href="@{/v2/css/davos.css}" media="screen" />
+
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a th:href="@{/v2}" class="navbar-brand">davos</a>
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar-main">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="scheduling">Scheduling <span class="caret" /></a>
+                        <ul class="dropdown-menu" aria-labelledby="scheduling">
+                            <li><a th:href="@{/v2/schedules}"><span class="glyphicon glyphicon-time"></span>&nbsp;&nbsp; Schedules</a></li>
+                            <li><a th:href="@{/v2/hosts}"><span class="glyphicon glyphicon-cloud"></span>&nbsp;&nbsp; Hosts</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="settings">Settings <span class="caret" /></a>
+                        <ul class="dropdown-menu" aria-labelledby="settings">
+                            <li><a th:href="@{/v2/schedules/new}"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp; New Schedule</a></li>
+                            <li><a th:href="@{/v2/hosts/new}"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp; New Host</a></li>
+                            <li class="divider"></li>
+                            <li><a th:href="@{/v2/settings}"><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp; App Settings</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="schedules-section">
+
+            <div class="row">
+                <div class="page-header">
+                    <h2>Schedules</h2>
+                </div>
+            </div>
+
+            <div class="row" th:each="schedule : ${schedules}">
+
+                <div class="col-md-12">
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading" th:inline="text">[[${schedule.name}]] &nbsp;&nbsp;
+                            <span th:if="not ${schedule.running}" class="glyphicon glyphicon-play" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Start"></span>
+                            <span th:if="${schedule.running}" class="glyphicon glyphicon-stop" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Stop"></span>
+                            &nbsp;&nbsp;<span class="glyphicon glyphicon-wrench" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Edit"></span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="downloads"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript" th:src="@{/v2/js/jquery-2.1.4.min.js}"></script>
+    <script type="text/javascript" th:src="@{/v2/js/bootstrap.min.js}"></script>
+
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+
+</body>
+
+</html>
