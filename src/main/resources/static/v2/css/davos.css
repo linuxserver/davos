@@ -6,6 +6,8 @@ body {
     padding: 10px;
     font-weight: normal;
     font-size: 12px;
+    margin-bottom: 3px;
+    display: inline-block;
 }
 
 .filter-close {
@@ -50,4 +52,8 @@ td .progress {
 
 .label-title {
     background-color: #98978b;
+}
+
+.dropdown-menu li a {
+    cursor: pointer;
 }

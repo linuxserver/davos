@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 import io.linuxserver.davos.exception.ScheduleAlreadyRunningException;
 import io.linuxserver.davos.exception.ScheduleNotRunningException;
-import io.linuxserver.davos.persistence.dao.ScheduleConfigurationDAO;
+import io.linuxserver.davos.persistence.dao.ScheduleDAO;
 import io.linuxserver.davos.persistence.model.ScheduleModel;
 
 @Component
@@ -27,7 +27,7 @@ public class ScheduleExecutor {
     private Map<Long, RunningSchedule> runningSchedules = new HashMap<>();
 
     @Resource
-    private ScheduleConfigurationDAO scheduleConfigurationDAO;
+    private ScheduleDAO scheduleConfigurationDAO;
 
     private ScheduledExecutorService scheduledExecutorService;
 
@@ -63,7 +63,7 @@ public class ScheduleExecutor {
 
         if (!runningSchedules.containsKey(id)) {
 
-            ScheduleModel model = scheduleConfigurationDAO.getConfig(id);
+            ScheduleModel model = scheduleConfigurationDAO.fetchSchedule(id);
             RunnableSchedule runnable = new RunnableSchedule(model.id, scheduleConfigurationDAO);
 
             LOGGER.info("Starting schedule {}", id);

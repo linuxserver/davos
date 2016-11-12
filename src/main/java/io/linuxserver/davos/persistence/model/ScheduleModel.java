@@ -1,14 +1,16 @@
 package io.linuxserver.davos.persistence.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -17,7 +19,6 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import io.linuxserver.davos.transfer.ftp.FileTransferType;
-import io.linuxserver.davos.transfer.ftp.TransferProtocol;
 
 @Entity
 public class ScheduleModel {
@@ -36,31 +37,17 @@ public class ScheduleModel {
     public int interval;
 
     @Column
-    public TransferProtocol connectionType;
-
-    @Column
-    public String hostName;
-
-    @Column
-    public int port;
-
-    @Column
-    public String username;
-
-    @Column
-    public String password;
-
-    @Column
     public String remoteFilePath;
 
     @Column
     public String localFilePath;
 
     @Column
-    public Date lastRun = new Date(0);
-
-    @Column
-    public FileTransferType transferType;
+    public FileTransferType transferType = FileTransferType.FILE;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "schedule_host_id")
+    public HostModel host;
 
     @OneToMany(orphanRemoval = true, mappedBy = "schedule", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)

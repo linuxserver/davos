@@ -7,7 +7,7 @@
     <meta name="description" content="An automated FTP client for your home server" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>New Schedule</title>
+    <title>Edit Schedule</title>
 
     <link rel="icon" th:href="@{/v2/favicon.ico}" />
 
@@ -21,7 +21,7 @@
     <div class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <a href="#" class="navbar-brand">davos</a>
+                <a th:href="@{/v2}" class="navbar-brand">davos</a>
                 <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -33,18 +33,17 @@
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="scheduling">Scheduling <span class="caret" /></a>
                         <ul class="dropdown-menu" aria-labelledby="scheduling">
-                            <li><a href="index.html"><span class="glyphicon glyphicon-time"></span> Schedules</a></li>
-                            <li><a href="hosts.html"><span class="glyphicon glyphicon-cloud"></span> Hosts</a></li>
-
+                            <li><a th:href="@{/v2/schedules}"><span class="glyphicon glyphicon-time"></span>&nbsp;&nbsp; Schedules</a></li>
+                            <li><a th:href="@{/v2/hosts}"><span class="glyphicon glyphicon-cloud"></span>&nbsp;&nbsp; Hosts</a></li>
                         </ul>
                     </li>
                     <li>
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="settings">Settings <span class="caret" /></a>
                         <ul class="dropdown-menu" aria-labelledby="settings">
-                            <li><a href="new-schedule.html"><span class="glyphicon glyphicon-plus"></span> New Schedule</a></li>
-                            <li><a href="new-host.html"><span class="glyphicon glyphicon-plus"></span> New Host</a></li>
+                            <li><a th:href="@{/v2/schedules/new}"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp; New Schedule</a></li>
+                            <li><a th:href="@{/v2/hosts/new}"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp; New Host</a></li>
                             <li class="divider"></li>
-                            <li><a href="settings.html"><span class="glyphicon glyphicon-cog"></span> App Settings</a></li>
+                            <li><a th:href="@{/v2/settings}"><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp; App Settings</a></li>
                         </ul>
                     </li>
 
@@ -61,12 +60,12 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="page-header">
-                        <h2>New Schedule</h2>
+                        <h2>Edit Schedule</h2>
                     </div>
                 </div>
             </div>
 
-            <form class="form-horizontal" action="#" th:action="@{/v2/schedules/update}" th:object="${schedule}">
+            <form class="form-horizontal" id="" action="#" th:object="${schedule}" onsubmit="return false;">
                 <fieldset>
 
                     <div class="row">
@@ -160,20 +159,20 @@
 
 
                             <div class="form-group">
-                                <label for="sch-name" class="col-lg-2 control-label">Filters <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Define which files to download based on file name" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <label class="col-lg-2 control-label">Filters <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Define which files to download based on file name" class="help glyphicon glyphicon-question-sign"></span></label>
                                 <div class="col-lg-10">
                                     <div class="input-group">
-                                        <input type="text" name="newFilter" class="form-control" placeholder="Add a filter (? = single char wildcard. * = multi char wildcard)" autocomplete="off" />
+                                        <input type="text" id="newFilter" class="form-control" placeholder="Add a filter (? = single char wildcard. * = multi char wildcard)" autocomplete="off" />
                                         <span class="input-group-btn">
-                                            <button type="submit" name="addFilter" class="btn btn-primary">Add</button>
+                                            <button type="button" class="btn btn-primary" id="addFilter">Add</button>
                                           </span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="form-group filters">
+                            <div class="form-group">
                                 <div class="col-lg-2"></div>
-                                <div class="col-lg-10">
+                                <div class="col-lg-10" id="filters">
                                     <span th:each="filter : *{filters}" th:inline="text" class="label label-default filter-label">[[${filter.value}]] <span class="filter-close">&times;</span></span>
                                 </div>
                             </div>
@@ -224,21 +223,21 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12">
+                        <div class="col-md-12" id="notifications">
 
-                            <div class="well"  th:each="notification : *{notifications}">
+                            <div class="well notification" th:each="notification : *{notifications}">
 
                                 <div class="form-group">
                                     <label for="sch-pushbullet" class="col-lg-2 control-label">Pushbullet</label>
                                     <div class="col-lg-10">
-                                        <input type="hidden" class="form-control" th:value="${notification.id}" />
+                                        <input type="hidden" class="form-control id" th:value="${notification.id}" />
                                         <input type="text" class="form-control" th:value="${notification.apiKey}" placeholder="API Key" autocomplete="off" />
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <div class="col-lg-12 align-right">
-                                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                        <button type="submit" class="btn btn-danger btn-sm remove">Remove</button>
                                     </div>
                                 </div>
 
@@ -254,7 +253,7 @@
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#">Pushbullet</a></li>
+                                    <li><a id="newPushbullet">Pushbullet</a></li>
                                     <li class="disabled"><a href="#">Pushover</a></li>
                                 </ul>
                             </div>
@@ -269,13 +268,13 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12 sch-api">
+                        <div class="col-md-12" id="apis">
 
-                            <div class="well" th:each="api : *{apis}">
+                            <div class="well api" th:each="api : *{apis}">
                                 <div class="form-group">
                                     <label for="sch-api-url" class="col-lg-2 control-label">URL</label>
                                     <div class="col-lg-10">
-                                        <input type="hidden" class="form-control" th:value="${api.id}" />
+                                        <input type="hidden" class="form-control id" th:value="${api.id}" />
                                         <input type="text" class="form-control url" th:value="${api.url}" autocomplete="off" />
                                     </div>
                                 </div>
@@ -306,7 +305,7 @@
 
                                 <div class="form-group">
                                     <div class="col-lg-12 align-right">
-                                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                        <button type="submit" class="btn btn-danger btn-sm remove">Remove</button>
                                     </div>
                                 </div>
 
@@ -322,7 +321,7 @@
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#">API Call</a></li>
+                                    <li><a id="newAPI">API Call</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -334,8 +333,11 @@
                         <div class="col-md-12">
 
                             <div class="form-group last">
-                                <div class="col-lg-12 align-right">
-                                    <button type="submit" class="btn btn-primary">Create</button>
+                                <div class="col-lg-6">
+                                    <button th:if="${schedule.id}" type="button" class="btn btn-danger">Delete</button>
+                                </div>
+                                <div class="col-lg-6 align-right">
+                                    <button type="button" class="btn btn-primary">Save</button>
                                 </div>
                             </div>
 
@@ -352,11 +354,10 @@
 
     <script type="text/javascript" th:src="@{/v2/js/jquery-2.1.4.min.js}"></script>
     <script type="text/javascript" th:src="@{/v2/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/v2/js/davos.js}"></script>
 
     <script>
-        $(document).ready(function() {
-            $('[data-toggle="popover"]').popover();
-        });
+        $('body').popover({ container: 'body', selector: '[data-toggle="popover"]', trigger: 'hover' });
     </script>
 
 </body>

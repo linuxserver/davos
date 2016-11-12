@@ -22,7 +22,7 @@ import org.mockito.Mock;
 
 import io.linuxserver.davos.exception.ScheduleAlreadyRunningException;
 import io.linuxserver.davos.exception.ScheduleNotRunningException;
-import io.linuxserver.davos.persistence.dao.ScheduleConfigurationDAO;
+import io.linuxserver.davos.persistence.dao.ScheduleDAO;
 import io.linuxserver.davos.persistence.model.ScheduleModel;
 
 public class ScheduleExecutorTest {
@@ -31,7 +31,7 @@ public class ScheduleExecutorTest {
     private ScheduleExecutor scheduleExecutor = new ScheduleExecutor();
 
     @Mock
-    private ScheduleConfigurationDAO mockConfigurationDAO;
+    private ScheduleDAO mockConfigurationDAO;
 
     @Mock
     private ScheduledExecutorService mockExecutorService;
@@ -69,7 +69,7 @@ public class ScheduleExecutorTest {
         ScheduleModel config = new ScheduleModel();
         config.interval = 86;
 
-        when(mockConfigurationDAO.getConfig(1337L)).thenReturn(config);
+        when(mockConfigurationDAO.fetchSchedule(1337L)).thenReturn(config);
 
         scheduleExecutor.startSchedule(1337L);
 
@@ -83,7 +83,7 @@ public class ScheduleExecutorTest {
         config.interval = 86;
         config.id = 1337L;
 
-        when(mockConfigurationDAO.getConfig(1337L)).thenReturn(config);
+        when(mockConfigurationDAO.fetchSchedule(1337L)).thenReturn(config);
 
         scheduleExecutor.startSchedule(1337L);
         scheduleExecutor.startSchedule(1337L);
@@ -100,7 +100,7 @@ public class ScheduleExecutorTest {
         @SuppressWarnings("rawtypes")
         ScheduledFuture mockFuture = mock(ScheduledFuture.class);
 
-        when(mockConfigurationDAO.getConfig(1337L)).thenReturn(config);
+        when(mockConfigurationDAO.fetchSchedule(1337L)).thenReturn(config);
         when(mockExecutorService.scheduleAtFixedRate(any(Runnable.class), eq(0l), eq(86l), eq(TimeUnit.MINUTES))).thenReturn(mockFuture);
 
         scheduleExecutor.startSchedule(1337L);
@@ -120,7 +120,7 @@ public class ScheduleExecutorTest {
         @SuppressWarnings("rawtypes")
         ScheduledFuture mockFuture = mock(ScheduledFuture.class);
 
-        when(mockConfigurationDAO.getConfig(1337L)).thenReturn(config);
+        when(mockConfigurationDAO.fetchSchedule(1337L)).thenReturn(config);
         when(mockExecutorService.scheduleAtFixedRate(any(Runnable.class), eq(0l), eq(86l), eq(TimeUnit.MINUTES))).thenReturn(mockFuture);
 
         scheduleExecutor.startSchedule(1337L);
@@ -144,7 +144,7 @@ public class ScheduleExecutorTest {
         ScheduledFuture mockFuture = mock(ScheduledFuture.class);
         when(mockFuture.isCancelled()).thenReturn(true);
         
-        when(mockConfigurationDAO.getConfig(1337L)).thenReturn(config);
+        when(mockConfigurationDAO.fetchSchedule(1337L)).thenReturn(config);
         when(mockExecutorService.scheduleAtFixedRate(any(Runnable.class), eq(0l), eq(86l), eq(TimeUnit.MINUTES))).thenReturn(mockFuture);
 
         scheduleExecutor.startSchedule(1337L);
@@ -160,7 +160,7 @@ public class ScheduleExecutorTest {
         config.interval = 86;
         config.id = 1337L;
 
-        when(mockConfigurationDAO.getConfig(1337L)).thenReturn(config);
+        when(mockConfigurationDAO.fetchSchedule(1337L)).thenReturn(config);
 
         scheduleExecutor.stopSchedule(1337L);
     }

@@ -1,7 +1,5 @@
 package io.linuxserver.davos.schedule;
 
-import org.joda.time.DateTime;
-
 import io.linuxserver.davos.persistence.model.ActionModel;
 import io.linuxserver.davos.persistence.model.FilterModel;
 import io.linuxserver.davos.persistence.model.ScheduleModel;
@@ -14,12 +12,9 @@ public class ScheduleConfigurationFactory {
 
     public static ScheduleConfiguration createConfig(ScheduleModel model) {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(model.name, model.connectionType, model.hostName, model.port,
-                new UserCredentials(model.username, model.password), model.remoteFilePath, model.localFilePath,
-                model.transferType);
-
-        if (null != model.lastRun)
-            config.setLastRun(new DateTime(model.lastRun));
+        ScheduleConfiguration config = new ScheduleConfiguration(model.name, model.host.protocol, model.host.address,
+                model.host.port, new UserCredentials(model.host.username, model.host.password), model.remoteFilePath,
+                model.localFilePath, model.transferType);
 
         if (null != model.filters)
             addFilters(model, config);

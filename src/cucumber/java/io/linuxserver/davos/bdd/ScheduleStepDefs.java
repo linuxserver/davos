@@ -6,14 +6,14 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.joda.time.DateTime;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.linuxserver.davos.bdd.helpers.FakeFTPServerFactory;
-import io.linuxserver.davos.persistence.dao.ScheduleConfigurationDAO;
+import io.linuxserver.davos.persistence.dao.ScheduleDAO;
 import io.linuxserver.davos.persistence.model.FilterModel;
+import io.linuxserver.davos.persistence.model.HostModel;
 import io.linuxserver.davos.persistence.model.ScheduleModel;
 import io.linuxserver.davos.schedule.RunnableSchedule;
 import io.linuxserver.davos.transfer.ftp.TransferProtocol;
@@ -22,27 +22,29 @@ public class ScheduleStepDefs {
 
     private static final String TMP = FileUtils.getTempDirectoryPath();
     
-    private ScheduleModel scheduleConfig;
+    private ScheduleModel scheduleModel;
     
     @Given("^a schedule exists for that server, with filters$")
     public void a_schedule_exists_for_that_server_with_filters() throws Throwable {
         
-        scheduleConfig = new ScheduleModel();
-        scheduleConfig.hostName = "localhost";
-        scheduleConfig.port = FakeFTPServerFactory.getPort();
-        scheduleConfig.username = "user";
-        scheduleConfig.password = "password";
-        scheduleConfig.remoteFilePath = "/tmp";
-        scheduleConfig.localFilePath = TMP;
-        scheduleConfig.connectionType = TransferProtocol.FTP;
+        scheduleModel = new ScheduleModel();
+        scheduleModel.host = new HostModel();
+        
+        scheduleModel.host.address = "localhost";
+        scheduleModel.host.port = FakeFTPServerFactory.getPort();
+        scheduleModel.host.username = "user";
+        scheduleModel.host.password = "password";
+        scheduleModel.host.protocol = TransferProtocol.FTP;
+        scheduleModel.remoteFilePath = "/tmp";
+        scheduleModel.localFilePath = TMP;
         
         FilterModel filter1 = new FilterModel();
         filter1.value = "file2*";
-        scheduleConfig.filters.add(filter1);
+        scheduleModel.filters.add(filter1);
         
         FilterModel filter2 = new FilterModel();
         filter2.value = "file3*";
-        scheduleConfig.filters.add(filter2);
+        scheduleModel.filters.add(filter2);
     }
 
     @When("^that schedule is run$")
@@ -65,7 +67,7 @@ public class ScheduleStepDefs {
         file3.delete();
     }
     
-    class CucumberScheduleConfigurationDAO implements ScheduleConfigurationDAO {
+    class CucumberScheduleConfigurationDAO implements ScheduleDAO {
 
         @Override
         public List<ScheduleModel> getAll() {
@@ -73,17 +75,13 @@ public class ScheduleStepDefs {
         }
 
         @Override
-        public ScheduleModel getConfig(Long id) {
-            return scheduleConfig;
+        public ScheduleModel fetchSchedule(Long id) {
+            return scheduleModel;
         }
 
         @Override
         public ScheduleModel updateConfig(ScheduleModel model) {
             return null;
-        }
-
-        @Override
-        public void updateLastRun(Long configId, DateTime lastRun) {
         }
     }
 }

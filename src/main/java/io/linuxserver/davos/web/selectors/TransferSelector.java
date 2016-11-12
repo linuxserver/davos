@@ -2,7 +2,7 @@ package io.linuxserver.davos.web.selectors;
 
 public enum TransferSelector {
 
-    FILES, RECURSIVE;
+    FILE, RECURSIVE;
     
-    public static final TransferSelector[] ALL = { FILES, RECURSIVE };
+    public static final TransferSelector[] ALL = { FILE, RECURSIVE };
 }
