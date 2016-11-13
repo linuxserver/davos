@@ -28,6 +28,7 @@ import io.linuxserver.davos.transfer.ftp.TransferProtocol;
 import io.linuxserver.davos.transfer.ftp.client.UserCredentials;
 import io.linuxserver.davos.transfer.ftp.connection.Connection;
 import io.linuxserver.davos.transfer.ftp.exception.DownloadFailedException;
+import io.linuxserver.davos.util.FileUtils;
 
 public class DownloadFilesWorkflowStepTest {
 
@@ -46,6 +47,9 @@ public class DownloadFilesWorkflowStepTest {
     @Mock
     private TransferStrategyFactory mockTransferStrategyFactory;
 
+    @Mock
+    private FileUtils mockFileUtils;
+    
     private TransferStrategy mockTransferStrategy;
 
     @Before
@@ -70,8 +74,6 @@ public class DownloadFilesWorkflowStepTest {
         filesToDownload.add(file);
         filesToDownload.add(file2);
 
-        workflowStep.setFilesToDownload(filesToDownload);
-
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
                 "", "local/", FileTransferType.FILE);
         
@@ -82,6 +84,8 @@ public class DownloadFilesWorkflowStepTest {
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.setConnection(mockConnection);
+        schedule.getFilesToDownload().addAll(filesToDownload);
+        
         workflowStep.runStep(schedule);
 
         verify(mockTransferStrategyFactory).getStrategy(FileTransferType.FILE, mockConnection);
@@ -98,12 +102,11 @@ public class DownloadFilesWorkflowStepTest {
         FTPFile file = new FTPFile("", 0, "", 0, false);
         filesToDownload.add(file);
 
-        workflowStep.setFilesToDownload(filesToDownload);
-        
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
                 "", "local/", FileTransferType.FILE);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
+        schedule.getFilesToDownload().addAll(filesToDownload);
         schedule.setConnection(mockConnection);
         workflowStep.runStep(schedule);
         
@@ -120,12 +123,11 @@ public class DownloadFilesWorkflowStepTest {
         FTPFile file = new FTPFile("", 0, "", 0, false);
         filesToDownload.add(file);
 
-        workflowStep.setFilesToDownload(filesToDownload);
-        
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
                 "", "local/", FileTransferType.FILE);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
+        schedule.getFilesToDownload().addAll(filesToDownload);
         schedule.setConnection(mockConnection);
 
         doThrow(new DownloadFailedException()).when(mockTransferStrategy).transferFile(file, "local/");

@@ -332,7 +332,7 @@
 
                             <div class="form-group last">
                                 <div class="col-lg-6">
-                                    <button th:if="${schedule.id}" type="button" class="btn btn-danger">Delete</button>
+                                    <button th:if="${schedule.id}" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteScheduleModal">Delete</button>
                                 </div>
                                 <div class="col-lg-6 align-right">
                                     <button type="button" class="btn btn-primary" id="saveSchedule">Save</button>
@@ -363,6 +363,22 @@
             </div>
         </div>
     </div>
+
+    <div id="deleteScheduleModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteScheduleModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete this schedule</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure?</p>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="deleteSchedule">Yes, delete this schedule</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script type="text/javascript" th:src="@{/v2/js/jquery-2.1.4.min.js}"></script>
     <script type="text/javascript" th:src="@{/v2/js/bootstrap.min.js}"></script>

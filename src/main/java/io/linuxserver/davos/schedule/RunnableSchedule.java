@@ -1,5 +1,7 @@
 package io.linuxserver.davos.schedule;
 
+import static java.util.stream.Collectors.toList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +32,14 @@ public class RunnableSchedule implements Runnable {
         ScheduleConfiguration config = ScheduleConfigurationFactory.createConfig(model);
         ScheduleWorkflow scheduleWorkflow = new ScheduleWorkflow(config);
 
+        LOGGER.debug("Setting last scanned files on workflow before starting.");
+        scheduleWorkflow.getFilesFromLastScan().addAll(model.scannedFiles.stream().map(sf -> sf.file).collect(toList()));
+        
+        LOGGER.debug("Starting workflow");
         scheduleWorkflow.start();
+        LOGGER.debug("Workflow finished");
+        
+        LOGGER.debug("Saving newly scanned files against schedule");
+        configurationDAO.updateScannedFilesOnSchedule(scheduleId, scheduleWorkflow.getFilesFromLastScan());
     }
 }

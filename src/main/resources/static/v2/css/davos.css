@@ -61,3 +61,7 @@ td .progress {
 a.link {
     color: #98978b
 }
+
+.popover {
+    max-width: 600px;
+}

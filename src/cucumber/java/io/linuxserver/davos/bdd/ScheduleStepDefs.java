@@ -83,5 +83,23 @@ public class ScheduleStepDefs {
         public ScheduleModel updateConfig(ScheduleModel model) {
             return null;
         }
+
+        @Override
+        public List<ScheduleModel> fetchSchedulesUsingHost(Long hostId) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public void updateScannedFilesOnSchedule(Long id, List<String> newlyScannedFiles) {
+            // TODO Auto-generated method stub
+            
+        }
+
+        @Override
+        public void deleteSchedule(Long id) {
+            // TODO Auto-generated method stub
+            
+        }
     }
 }

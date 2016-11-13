@@ -5,6 +5,6 @@ public class ScheduleNotRunningException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public ScheduleNotRunningException() {
-        super();
+        super("The schedule was not running");
     }
 }

@@ -91,12 +91,8 @@ public class ScheduleConfigurationFactoryTest {
         model.host.username = "username";
         
         model.localFilePath = "a/local/path/";
+        model.moveFileTo = "/local/path";
         model.actions = new ArrayList<ActionModel>();
-
-        ActionModel action1 = new ActionModel();
-        action1.actionType = "move";
-        action1.f1 = "a/local/path/";
-        action1.f2 = "new/";
 
         ActionModel action2 = new ActionModel();
         action2.actionType = "pushbullet";
@@ -109,7 +105,6 @@ public class ScheduleConfigurationFactoryTest {
         action3.f3 = "application/json";
         action3.f4 = "some body";
 
-        model.actions.add(action1);
         model.actions.add(action2);
         model.actions.add(action3);
 

@@ -45,7 +45,8 @@ public class FilterFilesWorkflowStepTest {
     @Test
     public void workflowStepShouldListFilesInTheRemoteDirectory() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/", FileTransferType.FILE);
+        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
+                FileTransferType.FILE);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.setConnection(mockConnection);
@@ -56,11 +57,44 @@ public class FilterFilesWorkflowStepTest {
     }
 
     @Test
+    public void workflowStepShouldSetTheFilesFromLastScanToThisScanAtEnd() {
+
+        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
+                FileTransferType.FILE);
+        config.setFilters(Arrays.asList("file1", "file2", "file4"));
+
+        ArrayList<FTPFile> files = new ArrayList<FTPFile>();
+
+        FTPFile file1 = new FTPFile("file1", 0, "remote/", DateTime.now().getMillis(), false);
+        FTPFile file2 = new FTPFile("file2", 0, "remote/", DateTime.now().getMillis(), false);
+        FTPFile file3 = new FTPFile("file3", 0, "remote/", DateTime.now().getMillis(), false);
+        FTPFile file4 = new FTPFile("file4", 0, "remote/", DateTime.now().getMillis(), false);
+        FTPFile file5 = new FTPFile("file5", 0, "remote/", DateTime.now().getMillis(), false);
+
+        files.add(file1);
+        files.add(file2);
+        files.add(file3);
+        files.add(file4);
+        files.add(file5);
+
+        when(mockConnection.listFiles("remote/")).thenReturn(files);
+
+        ScheduleWorkflow schedule = new ScheduleWorkflow(config);
+        
+        schedule.getFilesFromLastScan().addAll(Arrays.asList("some", "old", "files"));
+        schedule.setConnection(mockConnection);
+
+        workflowStep.runStep(schedule);
+
+        assertThat(schedule.getFilesFromLastScan()).isEqualTo(Arrays.asList("file1", "file2", "file3", "file4", "file5"));
+    }
+
+    @Test
     public void workflowStepShouldFilterOutAnyFilesThatAreNotInTheGivenConfigList() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/", FileTransferType.FILE);
+        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
+                FileTransferType.FILE);
         config.setFilters(Arrays.asList("file1", "file2", "file4"));
-        config.setLastRun(DateTime.now().minusDays(1));
 
         ArrayList<FTPFile> files = new ArrayList<FTPFile>();
 
@@ -83,15 +117,15 @@ public class FilterFilesWorkflowStepTest {
 
         workflowStep.runStep(schedule);
 
-        verify(mockNextStep).setFilesToDownload(Arrays.asList(file1, file2, file4));
+        assertThat(schedule.getFilesToDownload()).isEqualTo(Arrays.asList(file1, file2, file4));
     }
 
     @Test
-    public void workflowStepShouldFilterOutAnyFilesThatAreNotInTheGivenConfigListAndWereModifiedBeforeLastRun() {
+    public void workflowStepShouldFilterOutAnyFilesThatAreNotInTheGivenConfigListAndWereNotScannedInLastRun() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/", FileTransferType.FILE);
+        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
+                FileTransferType.FILE);
         config.setFilters(Arrays.asList("file1", "file2", "file4"));
-        config.setLastRun(DateTime.now().minusDays(1));
 
         ArrayList<FTPFile> files = new ArrayList<FTPFile>();
 
@@ -110,19 +144,21 @@ public class FilterFilesWorkflowStepTest {
         when(mockConnection.listFiles("remote/")).thenReturn(files);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
+
+        schedule.getFilesFromLastScan().addAll(Arrays.asList("file1", "file3", "file4", "file5"));
         schedule.setConnection(mockConnection);
 
         workflowStep.runStep(schedule);
 
-        verify(mockNextStep).setFilesToDownload(Arrays.asList(file2));
+        assertThat(schedule.getFilesToDownload()).isEqualTo(Arrays.asList(file2));
     }
-    
+
     @Test
     public void shouldOnlyAddOneInstanceOfAFileEvenIfTwoFiltersMatch() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/", FileTransferType.FILE);
+        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
+                FileTransferType.FILE);
         config.setFilters(Arrays.asList("file1", "file2", "file2"));
-        config.setLastRun(DateTime.now().minusDays(1));
 
         ArrayList<FTPFile> files = new ArrayList<FTPFile>();
 
@@ -145,15 +181,15 @@ public class FilterFilesWorkflowStepTest {
 
         workflowStep.runStep(schedule);
 
-        verify(mockNextStep).setFilesToDownload(Arrays.asList(file2));
+        assertThat(schedule.getFilesToDownload()).isEqualTo(Arrays.asList(file1, file2));
     }
 
     @Test
     public void workflowStepShouldFilterOutAnyFilesThatDoNotMatchTheWildcards() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/", FileTransferType.FILE);
+        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
+                FileTransferType.FILE);
         config.setFilters(Arrays.asList("file1?and?Stuff", "file2*something", "file4*", "file5"));
-        config.setLastRun(DateTime.now().minusDays(1));
 
         ArrayList<FTPFile> files = new ArrayList<FTPFile>();
 
@@ -176,15 +212,15 @@ public class FilterFilesWorkflowStepTest {
 
         workflowStep.runStep(schedule);
 
-        verify(mockNextStep).setFilesToDownload(Arrays.asList(file2, file4));
+        assertThat(schedule.getFilesToDownload()).isEqualTo(Arrays.asList(file1, file2, file4));
     }
 
     @Test
     public void workflowStepShouldCallNextStepRunMethodOnceSettingFilters() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/", FileTransferType.FILE);
+        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
+                FileTransferType.FILE);
         config.setFilters(Arrays.asList("file1", "file2", "file4"));
-        config.setLastRun(DateTime.now().minusDays(1));
 
         ArrayList<FTPFile> files = new ArrayList<FTPFile>();
 
@@ -201,17 +237,15 @@ public class FilterFilesWorkflowStepTest {
 
         InOrder inOrder = Mockito.inOrder(mockNextStep);
 
-        assertThat(config.getLastRun().toString("yyyy-MM-dd hh:mm")).isEqualTo(DateTime.now().toString("yyyy-MM-dd hh:mm"));
-
-        inOrder.verify(mockNextStep).setFilesToDownload(Arrays.asList(file1));
+        assertThat(schedule.getFilesToDownload()).isEqualTo(Arrays.asList(file1));
         inOrder.verify(mockNextStep).runStep(schedule);
     }
 
     @Test
-    public void ifFilterListIsInitiallyEmptyThenAssumeThatAllFilesAfterLastRunShouldBeDownloaded() {
+    public void ifFilterListIsInitiallyEmptyThenAssumeThatAllFilesShouldBeDownloaded() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/", FileTransferType.FILE);
-        config.setLastRun(DateTime.now().minusDays(1));
+        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
+                FileTransferType.FILE);
 
         ArrayList<FTPFile> files = new ArrayList<FTPFile>();
 
@@ -234,13 +268,14 @@ public class FilterFilesWorkflowStepTest {
 
         workflowStep.runStep(schedule);
 
-        verify(mockNextStep).setFilesToDownload(Arrays.asList(file2, file5));
+        assertThat(schedule.getFilesToDownload()).isEqualTo(Arrays.asList(file1, file2, file3, file4, file5));
     }
 
     @Test
     public void ifListingFilesIsUnsuccessfulThenDoNotCallNextStepAndCallBackupStepInstead() {
 
-        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/", FileTransferType.FILE);
+        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
+                FileTransferType.FILE);
 
         when(mockConnection.listFiles("remote/")).thenThrow(new FileListingException());
 
@@ -248,8 +283,6 @@ public class FilterFilesWorkflowStepTest {
         schedule.setConnection(mockConnection);
 
         workflowStep.runStep(schedule);
-
-        assertThat(config.getLastRun()).isEqualTo(new DateTime(0));
 
         verify(mockNextStep, never()).runStep(schedule);
         verify(mockBackupStep).runStep(schedule);

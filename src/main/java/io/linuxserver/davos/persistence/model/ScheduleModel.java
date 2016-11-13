@@ -39,6 +39,9 @@ public class ScheduleModel {
 
     @Column
     public String localFilePath;
+    
+    @Column
+    public String moveFileTo;
 
     @Column
     public FileTransferType transferType = FileTransferType.FILE;
@@ -54,6 +57,10 @@ public class ScheduleModel {
     @OneToMany(orphanRemoval = true, mappedBy = "schedule", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     public List<ActionModel> actions = new ArrayList<ActionModel>();
+    
+    @OneToMany(orphanRemoval = true, mappedBy = "schedule", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    public List<ScannedFileModel> scannedFiles = new ArrayList<ScannedFileModel>();
 
     @Override
     public String toString() {

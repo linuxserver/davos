@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import io.linuxserver.davos.converters.HostConverter;
 import io.linuxserver.davos.persistence.dao.HostDAO;
+import io.linuxserver.davos.persistence.dao.ScheduleDAO;
 import io.linuxserver.davos.persistence.model.HostModel;
 import io.linuxserver.davos.web.Host;
 
@@ -17,6 +18,9 @@ public class HostServiceImpl implements HostService {
 
     @Resource
     private HostDAO hostDAO;
+    
+    @Resource
+    private ScheduleDAO scheduleDAO;
     
     @Resource
     private HostConverter hostConverter;
@@ -45,5 +49,10 @@ public class HostServiceImpl implements HostService {
     
     private Host toHost(HostModel model) {
         return hostConverter.convertTo(model);
+    }
+
+    @Override
+    public List<Long> fetchSchedulesUsingHost(Long id) {
+        return scheduleDAO.fetchSchedulesUsingHost(id).stream().map(s -> s.id).collect(Collectors.toList());
     }
 }

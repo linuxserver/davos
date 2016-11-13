@@ -1,5 +1,7 @@
 package io.linuxserver.davos.converters;
 
+import static java.util.stream.Collectors.toList;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -30,13 +32,12 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
         schedule.setAutomatic(source.startAutomatically);
         schedule.setHost(source.host.id);
         schedule.setTransferType(TransferSelector.valueOf(source.transferType.toString()));
-
+        schedule.setMoveFileTo(source.moveFileTo);
+        schedule.getLastScannedFiles().addAll(source.scannedFiles.stream().map(f -> f.file).collect(toList()));
+        
         for (ActionModel action : source.actions) {
 
-            if ("move".equals(action.actionType))
-                schedule.setMoveFileTo(action.f1);
-
-            else if ("api".equals(action.actionType)) {
+            if ("api".equals(action.actionType)) {
 
                 API api = new API();
                 api.setId(action.id);
@@ -82,7 +83,8 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
         model.remoteFilePath = source.getHostDirectory();
         model.startAutomatically = source.isAutomatic();
         model.transferType = FileTransferType.valueOf(source.getTransferType().toString());
-
+        model.moveFileTo = source.getMoveFileTo();
+        
         if (StringUtils.isNotBlank(source.getMoveFileTo())) {
 
             ActionModel moveTo = new ActionModel();

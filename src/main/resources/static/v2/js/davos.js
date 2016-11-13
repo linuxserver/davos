@@ -103,7 +103,7 @@ var schedule = (function ($) {
 
             var postData = {
 
-                id: "",
+                id: cleanId($('#id').val()),
                 name: $('#name').val(),
                 interval: parseInt($('#interval option:checked').attr('value'), 10),
                 host: parseInt($('#host option:checked').attr('value'), 10),
@@ -169,6 +169,16 @@ var schedule = (function ($) {
 
             }).done(success).fail(error);
         });
+
+        $('#deleteSchedule').on('click', function () {
+
+            $.ajax({
+                method: 'DELETE',
+                url: '/api/v2/schedule/' + $('#id').val()
+            }).done(function (msg) {
+                window.location.replace('/v2/schedules');
+            }).fail(error);
+        });
     };
 
     cleanId = function (id) {
@@ -204,7 +214,7 @@ var schedule = (function ($) {
 
         $.notify({
             icon: 'glyphicon glyphicon-warning-sign',
-            message: 'There was an error: ' + JSON.stringify(msg)
+            message: 'There was an error: ' + msg.status
         },{
             // settings
             type: 'danger',
@@ -222,6 +232,122 @@ var schedule = (function ($) {
 
 }(jQuery));
 
+var host = (function ($) {
+
+    'use strict';
+
+    var initialise, cleanId, success, error;
+
+    initialise = function () {
+
+        $('#saveHost').on('click', function () {
+
+            $.notify({
+                icon: 'glyphicon glyphicon-info-sign',
+                message: 'Saving...'
+            },{
+                // settings
+                type: 'info',
+                placement: {
+                    from: "top",
+                    align: "right"
+                },
+                delay: 3000
+            });
+
+            var postData = {
+                id: cleanId($('#id').val()),
+                name: $('#name').val(),
+                address: $('#address').val(),
+                port: parseInt($('#port').val(), 10),
+                protocol: $('input[name="protocol"]:checked').val(),
+                username: $('#username').val(),
+                password: $('#password').val()
+            };
+
+            var url = "/api/v2/host";
+            var method = "POST";
+
+            if (null !== cleanId($('#id').val())) {
+
+                url += "/" + cleanId($('#id').val());
+                method = "PUT";
+            }
+
+            $.ajax({
+
+                method: method,
+                url: url,
+                dataType: "json",
+                contentType: 'application/json',
+                data: JSON.stringify(postData)
+
+            }).done(success).fail(error);
+        });
+
+        $('#deleteHost').on('click', function () {
+
+            $.ajax({
+                method: 'DELETE',
+                url: '/api/v2/host/' + $('#id').val()
+            }).done(function (msg) {
+                window.location.replace('/v2/hosts');
+            }).fail(error);
+        });
+    };
+
+    success = function (msg) {
+
+        $.notify({
+            icon: 'glyphicon glyphicon-ok-sign',
+            message: 'Host Saved!'
+        },{
+            // settings
+            type: 'success',
+            placement: {
+                from: "top",
+                align: "right"
+            },
+            delay: 3000
+        });
+
+        if (window.location.pathname === '/v2/hosts/new') {
+            window.location.replace('/v2/hosts/' + msg.body.id);
+        }
+    };
+
+    error = function (msg) {
+
+        $.notify({
+            icon: 'glyphicon glyphicon-warning-sign',
+            message: 'There was an error: ' + msg.status
+        },{
+            // settings
+            type: 'danger',
+            placement: {
+                from: "top",
+                align: "right"
+            },
+            delay: 3000
+        });
+    };
+
+    cleanId = function (id) {
+
+        if (id && $.trim(id).length > 0) {
+            return parseInt(id, 10);
+        }
+
+        return null;
+    };
+
+    return {
+        init: initialise
+    }
+
+}(jQuery))
+
+jQuery(document).ready(host.init);
 jQuery(document).ready(schedule.init);
 jQuery(document).ready(fragments.init);
 jQuery(document).ready(edit.init);

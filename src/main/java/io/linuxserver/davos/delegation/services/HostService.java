@@ -13,4 +13,6 @@ public interface HostService {
     Host saveHost(Host host);
     
     void deleteHost(Long id);
+    
+    List<Long> fetchSchedulesUsingHost(Long id);
 }

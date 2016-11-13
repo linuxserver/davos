@@ -1,8 +1,5 @@
 package io.linuxserver.davos.schedule.workflow;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +13,6 @@ public class DownloadFilesWorkflowStep extends WorkflowStep {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DownloadFilesWorkflowStep.class);
 
-    private List<FTPFile> filesToDownload = new ArrayList<FTPFile>();
     private TransferStrategyFactory transferStrategyFactory = new TransferStrategyFactory();
 
     public DownloadFilesWorkflowStep() {
@@ -35,7 +31,10 @@ public class DownloadFilesWorkflowStep extends WorkflowStep {
 
         try {
 
-            for (FTPFile file : filesToDownload)
+            if (schedule.getFilesToDownload().isEmpty())
+                LOGGER.info("There are no files to download in this run");
+            
+            for (FTPFile file : schedule.getFilesToDownload())
                 strategyToUse.transferFile(file, config.getLocalFilePath());
 
             LOGGER.info("Download step complete. Moving onto next step");
@@ -48,9 +47,5 @@ public class DownloadFilesWorkflowStep extends WorkflowStep {
         }
 
         nextStep.runStep(schedule);
-    }
-
-    public void setFilesToDownload(List<FTPFile> filesToDownload) {
-        this.filesToDownload = filesToDownload;
     }
 }

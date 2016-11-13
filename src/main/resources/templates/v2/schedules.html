@@ -75,6 +75,7 @@
                             </span>
                             <span th:if="not ${schedule.running}" class="glyphicon glyphicon-play" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Start"></span>
                             &nbsp;&nbsp;<a class="link" th:href="@{/v2/schedules/} + ${schedule.id}"><span class="glyphicon glyphicon-wrench" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Edit"></span></a>
+                            &nbsp;&nbsp;<span class="glyphicon glyphicon-time" data-toggle="modal" th:attr="data-target='#lastScanned' + ${schedule.id}"></span>
                         </div>
                         <div class="panel-body">
                             <div class="downloads">
@@ -83,6 +84,30 @@
                         </div>
                     </div>
 
+                </div>
+
+                <div th:attr="id='lastScanned' + ${schedule.id},aria-labelledby='lastScanned' + ${schedule.id}" class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Files on the host during the last scan</h4>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="file : ${schedule.lastScannedFiles}">
+                                            <td th:text="${file}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -95,9 +120,7 @@
     <script type="text/javascript" th:src="@{/v2/js/bootstrap.min.js}"></script>
 
     <script>
-        $(document).ready(function(){
-            $('[data-toggle="popover"]').popover();
-        });
+        $('body').popover({ container: 'body', selector: '[data-toggle="popover"]', trigger: 'hover' });
     </script>
 
 </body>

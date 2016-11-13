@@ -5,6 +5,6 @@ public class ScheduleAlreadyRunningException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public ScheduleAlreadyRunningException() {
-        super();
+        super("The schedule is already running");
     }
 }

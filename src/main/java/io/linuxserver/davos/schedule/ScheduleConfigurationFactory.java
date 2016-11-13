@@ -1,5 +1,7 @@
 package io.linuxserver.davos.schedule;
 
+import org.apache.commons.lang3.StringUtils;
+
 import io.linuxserver.davos.persistence.model.ActionModel;
 import io.linuxserver.davos.persistence.model.FilterModel;
 import io.linuxserver.davos.persistence.model.ScheduleModel;
@@ -16,6 +18,9 @@ public class ScheduleConfigurationFactory {
                 model.host.port, new UserCredentials(model.host.username, model.host.password), model.remoteFilePath,
                 model.localFilePath, model.transferType);
 
+        if (StringUtils.isNotBlank(model.moveFileTo))
+            config.getActions().add(new MoveFileAction(config.getLocalFilePath(), model.moveFileTo));
+        
         if (null != model.filters)
             addFilters(model, config);
 
@@ -28,9 +33,6 @@ public class ScheduleConfigurationFactory {
     private static void addActions(ScheduleModel model, ScheduleConfiguration config) {
 
         for (ActionModel action : model.actions) {
-
-            if ("move".equals(action.actionType))
-                config.getActions().add(new MoveFileAction(config.getLocalFilePath(), action.f1));
 
             if ("pushbullet".equals(action.actionType))
                 config.getActions().add(new PushbulletNotifyAction(action.f1));

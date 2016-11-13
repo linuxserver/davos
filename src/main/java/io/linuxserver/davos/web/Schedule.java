@@ -21,6 +21,7 @@ public class Schedule {
     private String moveFileTo;
     private boolean running;
 
+    private List<String> lastScannedFiles = new ArrayList<>();
     private List<Filter> filters = new ArrayList<>();
     private List<Notification> notifications = new ArrayList<>();
     private List<API> apis = new ArrayList<>();
@@ -122,4 +123,7 @@ public class Schedule {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 
+    public List<String> getLastScannedFiles() {
+        return lastScannedFiles;
+    }
 }

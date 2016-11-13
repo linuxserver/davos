@@ -1,13 +1,15 @@
 package io.linuxserver.davos.schedule.workflow;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.linuxserver.davos.schedule.workflow.filter.TemporalFileFilter;
+import io.linuxserver.davos.schedule.workflow.filter.ReferentialFileFilter;
 import io.linuxserver.davos.transfer.ftp.FTPFile;
 import io.linuxserver.davos.transfer.ftp.exception.FTPException;
 import io.linuxserver.davos.util.PatternBuilder;
@@ -17,7 +19,7 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
     private static final Logger LOGGER = LoggerFactory.getLogger(FilterFilesWorkflowStep.class);
 
     public FilterFilesWorkflowStep() {
-        
+
         this.nextStep = new DownloadFilesWorkflowStep();
         this.backoutStep = new DisconnectWorkflowStep();
     }
@@ -27,28 +29,36 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
 
         try {
 
-            DateTime lastRun = schedule.getConfig().getLastRun();
             List<String> filters = schedule.getConfig().getFilters();
 
             List<FTPFile> allFiles = schedule.getConnection().listFiles(schedule.getConfig().getRemoteFilePath());
-            List<FTPFile> filesToFilter = new TemporalFileFilter(lastRun).filter(allFiles);
+            List<FTPFile> filesToFilter = new ReferentialFileFilter(schedule.getFilesFromLastScan()).filter(allFiles);
             List<FTPFile> filteredFiles = new ArrayList<FTPFile>();
+
+            LOGGER.debug("Clearing pending download list");
+            schedule.getFilesToDownload().clear();
 
             if (filters.isEmpty()) {
 
                 LOGGER.info("Filter list was empty. Adding all found files to list");
-                ((DownloadFilesWorkflowStep) nextStep).setFilesToDownload(filesToFilter);
-                
+                LOGGER.debug("All files: {}", filesToFilter.stream().map(f -> f.getName()).collect(Collectors.toList()));
+                schedule.getFilesToDownload().addAll(filesToFilter);
+
             } else {
 
+                LOGGER.debug("Filters used {}", filters);
+                LOGGER.debug("Files to filter against {}", filteredFiles.stream().map(f -> f.getName()).collect(toList()));
+                
                 for (FTPFile file : filesToFilter)
                     filterFilesByName(filters, filteredFiles, file);
 
-                ((DownloadFilesWorkflowStep) nextStep).setFilesToDownload(filteredFiles);
+                schedule.getFilesToDownload().addAll(filteredFiles);
             }
-
-            LOGGER.info("Updating lastRun to {}", DateTime.now());
-            schedule.getConfig().setLastRun(DateTime.now());
+            
+            LOGGER.debug("Resetting files from scan to files in this scan");
+            schedule.getFilesFromLastScan().clear();
+            schedule.getFilesFromLastScan().addAll(allFiles.stream().map(f -> f.getName()).collect(toList()));
+            LOGGER.debug("Files from last scan set to {}", schedule.getFilesFromLastScan());
             
             LOGGER.info("Filtered files. Moving onto next step");
             nextStep.runStep(schedule);
@@ -57,7 +67,7 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
 
             LOGGER.error("Unable to filter files. Error message was: {}", e.getMessage());
             LOGGER.debug("Stacktrace", e);
-            
+
             LOGGER.info("Backing out of this run.");
             backoutStep.runStep(schedule);
         }
@@ -73,9 +83,9 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
 
                 LOGGER.debug("Matched {} to {}. Adding to final filter list.", file.getName().toLowerCase(),
                         expression.toLowerCase());
-                
+
                 filteredFiles.add(file);
-                
+
                 return;
             }
         }

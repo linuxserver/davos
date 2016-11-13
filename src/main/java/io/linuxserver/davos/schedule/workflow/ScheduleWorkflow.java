@@ -1,13 +1,15 @@
 package io.linuxserver.davos.schedule.workflow;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.linuxserver.davos.schedule.ScheduleConfiguration;
+import io.linuxserver.davos.transfer.ftp.FTPFile;
 import io.linuxserver.davos.transfer.ftp.client.Client;
 import io.linuxserver.davos.transfer.ftp.connection.Connection;
-import io.linuxserver.davos.transfer.ftp.connection.progress.ListenerFactory;
-import io.linuxserver.davos.transfer.ftp.connection.progress.ProgressListener;
 
 public class ScheduleWorkflow {
 
@@ -17,32 +19,26 @@ public class ScheduleWorkflow {
     
     private Client client;
     private Connection connection;
-    private ProgressListener listener;
+    private List<String> filesFromLastScan = new ArrayList<>();
+    private List<FTPFile> filesToDownload = new ArrayList<>();
     
     public ScheduleWorkflow(ScheduleConfiguration config) {
         this.config = config;
     }
     
-    public Client getClient() {
+    protected Client getClient() {
         return client;
     }
 
-    public ScheduleConfiguration getConfig() {
+    protected ScheduleConfiguration getConfig() {
         return config;
     }
 
-    public Connection getConnection() {
+    protected Connection getConnection() {
         return connection;
     }
     
-    public ProgressListener getListener() {
-        return listener;
-    }
-
     public void start() {
-        
-        LOGGER.debug("Assigning listener to workflow");
-        listener = new ListenerFactory().createListener(config.getConnectionType());
         
         LOGGER.info("Running schedule: {}", config.getScheduleName());
         new ConnectWorkflowStep().runStep(this);
@@ -55,5 +51,13 @@ public class ScheduleWorkflow {
 
     protected void setClient(Client client) {
         this.client = client;
+    }
+
+    public List<String> getFilesFromLastScan() {
+        return filesFromLastScan;
+    }
+
+    public List<FTPFile> getFilesToDownload() {
+        return filesToDownload;
     }
 }

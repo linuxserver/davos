@@ -18,6 +18,6 @@ public class ScannedFileModel {
     public String file;
     
     @ManyToOne
-    @JoinColumn(name = "scanned_file_id")
-    public ScannedFilesModel scannedFiles;
+    @JoinColumn(name = "scanned_file_schedule_id")
+    public ScheduleModel schedule;
 }

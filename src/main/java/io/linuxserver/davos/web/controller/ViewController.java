@@ -28,7 +28,7 @@ public class ViewController {
     private ScheduleService scheduleService;
 
     @Resource
-    private HostService hostFacade;
+    private HostService hostService;
 
     @ModelAttribute("allIntervals")
     public List<IntervalSelector> populateIntervals() {
@@ -52,7 +52,7 @@ public class ViewController {
 
     @ModelAttribute("allHosts")
     public List<Host> allHosts() {
-        return hostFacade.fetchAllHosts();
+        return hostService.fetchAllHosts();
     }
 
     @RequestMapping
@@ -101,7 +101,9 @@ public class ViewController {
     @RequestMapping("/hosts/{id}")
     public String hosts(@PathVariable Long id, Model model) {
 
-        model.addAttribute("host", hostFacade.fetchHost(id));
+        model.addAttribute("host", hostService.fetchHost(id));
+        model.addAttribute("usedBy", hostService.fetchSchedulesUsingHost(id));
+        
         return "v2/edit-host";
     }
 }

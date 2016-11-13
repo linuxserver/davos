@@ -75,7 +75,7 @@
                             <div class="form-group">
                                 <label for="host-name" class="col-lg-2 control-label">Name <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="What you want to refer to this host as" class="help glyphicon glyphicon-question-sign"></span></label>
                                 <div class="col-lg-10">
-                                    <input type="hidden" th:field="*{id}" />
+                                    <input type="hidden" th:if="*{id}" th:field="*{id}" />
                                     <input type="text" class="form-control" th:field="*{name}" autocomplete="off" />
                                 </div>
                             </div>
@@ -127,10 +127,15 @@
 
                             <div class="form-group last">
                                 <div class="col-lg-6">
-                                    <button type="button" th:if="${host.id}" class="btn btn-danger">Delete</button>
+                                    <div th:if="${host.id}">
+                                        <div th:unless="${#lists.isEmpty(usedBy)}">
+                                            <button type="button" class="btn btn-danger" title="You can't delete a host that is in use by a schedule" disabled="disabled">Delete</button>
+                                        </div>
+                                        <button type="button" th:if="${#lists.isEmpty(usedBy)}" class="btn btn-danger" data-toggle="modal" data-target="#deleteHostModal">Delete</button>
+                                    </div>
                                 </div>
                                 <div class="col-lg-6 align-right">
-                                    <button type="button" class="btn btn-primary">Save</button>
+                                    <button type="button" class="btn btn-primary" id="saveHost">Save</button>
                                 </div>
                             </div>
 
@@ -145,8 +150,28 @@
 
     </div>
 
+    <div id="deleteHostModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteHostModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete this host</h4>
+                </div>
+                <div class="modal-body" th:if="${#lists.isEmpty(usedBy)}">
+                    <p>Are you sure?</p>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="deleteHost">Yes, delete this host</button>
+                </div>
+                <div class="modal-body" th:unless="${#lists.isEmpty(usedBy)}">
+                    <p>This host is being used by active schedules. Please check them before attempting to delete this host.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="text/javascript" th:src="@{/v2/js/jquery-2.1.4.min.js}"></script>
     <script type="text/javascript" th:src="@{/v2/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/v2/js/bootstrap-notify.min.js}"></script>
+    <script type="text/javascript" th:src="@{/v2/js/davos.js}"></script>
 
     <script>
         $('body').popover({ container: 'body', selector: '[data-toggle="popover"]', trigger: 'hover' });

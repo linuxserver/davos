@@ -17,6 +17,7 @@ import io.linuxserver.davos.delegation.services.HostService;
 import io.linuxserver.davos.delegation.services.ScheduleService;
 import io.linuxserver.davos.web.Host;
 import io.linuxserver.davos.web.Schedule;
+import io.linuxserver.davos.web.ScheduleCommand;
 import io.linuxserver.davos.web.controller.response.APIResponse;
 import io.linuxserver.davos.web.controller.response.APIResponseBuilder;
 
@@ -27,7 +28,7 @@ public class APIController {
     private static final Logger LOGGER = LoggerFactory.getLogger(APIController.class);
 
     @Resource
-    private ScheduleService scheduleFacade;
+    private ScheduleService scheduleService;
 
     @Resource
     private HostService hostFacade;
@@ -37,18 +38,18 @@ public class APIController {
 
         LOGGER.info("Creating new schedule");
         LOGGER.debug("Schedule values are {}", schedule);
-        Schedule createdSchedule = scheduleFacade.saveSchedule(schedule);
+        Schedule createdSchedule = scheduleService.saveSchedule(schedule);
         LOGGER.info("New schedule has been created");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(APIResponseBuilder.create().withBody(createdSchedule));
     }
-    
+
     @RequestMapping(value = "/schedule/{id}", method = RequestMethod.GET)
     public ResponseEntity<APIResponse> fetchSchedule(@PathVariable("id") Long id) {
-        
-        Schedule schedule = scheduleFacade.fetchSchedule(id);
+
+        Schedule schedule = scheduleService.fetchSchedule(id);
         LOGGER.debug("Fetched schedule: {}", schedule);
-        
+
         return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create().withBody(schedule));
     }
 
@@ -60,7 +61,7 @@ public class APIController {
         LOGGER.debug("Imposing id from URL into body");
         schedule.setId(id);
 
-        Schedule updatedSchedule = scheduleFacade.saveSchedule(schedule);
+        Schedule updatedSchedule = scheduleService.saveSchedule(schedule);
         LOGGER.debug("Schedule has been updated");
 
         return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create().withBody(updatedSchedule));
@@ -70,7 +71,19 @@ public class APIController {
     public ResponseEntity<APIResponse> deleteSchedule(@PathVariable("id") Long id) {
 
         LOGGER.info("Deleting schedule with id {}", id);
-        scheduleFacade.deleteSchedule(id);
+        scheduleService.deleteSchedule(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create());
+    }
+
+    @RequestMapping(value = "/schedule/{id}/execute", method = RequestMethod.POST)
+    public ResponseEntity<APIResponse> executeSchedule(@PathVariable("id") Long id, @RequestBody ScheduleCommand command) {
+
+        if (command.command == ScheduleCommand.Command.START)
+            scheduleService.startSchedule(id);
+
+        if (command.command == ScheduleCommand.Command.STOP)
+            scheduleService.stopSchedule(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create());
     }
@@ -82,7 +95,7 @@ public class APIController {
         LOGGER.debug("Host values are {}", host);
         Host createdHost = hostFacade.saveHost(host);
         LOGGER.info("Host has been created");
-        
+
         return ResponseEntity.status(HttpStatus.CREATED).body(APIResponseBuilder.create().withBody(createdHost));
     }
 
