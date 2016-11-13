@@ -15,7 +15,7 @@ public class ProgressListener {
 
     public double getProgress() {
         double progress = ((double) totalBytesWritten / (double) totalBytes) * 100;
-        LOGGER.trace("Progress downloaded: {}%", progress);
+        LOGGER.debug("Progress downloaded: {}%", progress);
         return progress;
     }
 
@@ -25,6 +25,10 @@ public class ProgressListener {
 
     public void reset() {
         totalBytes = 0;
+    }
+    
+    public void updateBytesWritten(long bytes) {
+        setBytesWritten(totalBytesWritten + bytes);
     }
 
     public void setBytesWritten(long bytesWritten) {

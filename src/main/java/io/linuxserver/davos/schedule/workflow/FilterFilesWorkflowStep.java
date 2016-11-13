@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.linuxserver.davos.schedule.workflow.filter.ReferentialFileFilter;
+import io.linuxserver.davos.schedule.workflow.transfer.FTPTransfer;
 import io.linuxserver.davos.transfer.ftp.FTPFile;
 import io.linuxserver.davos.transfer.ftp.exception.FTPException;
 import io.linuxserver.davos.util.PatternBuilder;
@@ -42,7 +43,7 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
 
                 LOGGER.info("Filter list was empty. Adding all found files to list");
                 LOGGER.debug("All files: {}", filesToFilter.stream().map(f -> f.getName()).collect(Collectors.toList()));
-                schedule.getFilesToDownload().addAll(filesToFilter);
+                schedule.getFilesToDownload().addAll(filesToFilter.stream().map(f -> new FTPTransfer(f)).collect(toList()));
 
             } else {
 
@@ -52,7 +53,7 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
                 for (FTPFile file : filesToFilter)
                     filterFilesByName(filters, filteredFiles, file);
 
-                schedule.getFilesToDownload().addAll(filteredFiles);
+                schedule.getFilesToDownload().addAll(filteredFiles.stream().map(f -> new FTPTransfer(f)).collect(toList()));
             }
             
             LOGGER.debug("Resetting files from scan to files in this scan");

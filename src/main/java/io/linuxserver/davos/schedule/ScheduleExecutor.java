@@ -38,6 +38,10 @@ public class ScheduleExecutor {
     public boolean isScheduleRunning(Long id) {
         return runningSchedules.containsKey(id);
     }
+    
+    public RunningSchedule getRunningSchedule(Long id) {
+        return runningSchedules.get(id);
+    }
 
     @PostConstruct
     public void runAutomaticStartupSchedules() {

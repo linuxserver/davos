@@ -79,7 +79,42 @@
                         </div>
                         <div class="panel-body">
                             <div class="downloads">
-                                
+                                <table class="table" th:if="${not #lists.isEmpty(schedule.transfers)}">
+                                    <thead>
+                                        <tr>
+                                            <th>File</th>
+                                            <th>Size</th>
+                                            <th>Status</th>
+                                            <th>Progress</th>
+                                            <th>Speed</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="transfer : ${schedule.transfers}">
+                                            <td th:text="${transfer.fileName}"></td>
+                                            <td th:text="${(transfer.fileSize / 1000000) + 'MB'}"></td>
+                                            <td th:if="${transfer.progress}">
+                                                <span th:if="${transfer.progress.percentageComplete &lt; 100}">Downloading</span>
+                                                <span th:if="${transfer.progress.percentageComplete == 100}">Complete</span>
+                                            </td>
+                                            <td th:unless="${transfer.progress}">Pending</td>
+                                            <td th:if="${transfer.progress}">
+                                                <div class="progress">
+                                                    <div class="progress-bar" th:style="'width:' + ${transfer.progress.percentageComplete} + '%'"></div>
+                                                </div>
+                                            </td>
+                                            <td th:unless="${transfer.progress}">
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-bar-striped active" style="width: 100%;"></div>
+                                                </div>
+                                            </td>
+                                            <td th:if="${transfer.progress}">
+                                                <span th:if="${transfer.progress.percentageComplete &lt; 100}" th:text="${#numbers.formatDecimal(transfer.progress.transferSpeed, 0, 2, 'POINT') + 'MB/s'}"></span>
+                                            </td>
+                                            <td th:unless="${transfer.progress}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

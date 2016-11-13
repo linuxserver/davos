@@ -6,18 +6,19 @@ public class SFTPProgressListener extends ProgressListener implements SftpProgre
   
     @Override
     public void init(int op, String src, String dest, long max) {
+        
         setTotalBytes(max);
         start();
     }
 
     @Override
     public boolean count(long count) {
-        setBytesWritten(count);
+        updateBytesWritten(count);
         return true;
     }
 
     @Override
     public void end() {
-        reset();
+        // reset();
     }
 }

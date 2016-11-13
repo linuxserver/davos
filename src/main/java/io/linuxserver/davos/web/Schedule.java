@@ -24,6 +24,7 @@ public class Schedule {
     private List<String> lastScannedFiles = new ArrayList<>();
     private List<Filter> filters = new ArrayList<>();
     private List<Notification> notifications = new ArrayList<>();
+    private List<Transfer> transfers = new ArrayList<>();
     private List<API> apis = new ArrayList<>();
 
     public Long getId() {
@@ -125,5 +126,9 @@ public class Schedule {
 
     public List<String> getLastScannedFiles() {
         return lastScannedFiles;
+    }
+
+    public List<Transfer> getTransfers() {
+        return transfers;
     }
 }

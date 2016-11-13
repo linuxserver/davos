@@ -1,5 +1,6 @@
 package io.linuxserver.davos.schedule.workflow;
 
+import static java.util.stream.Collectors.toList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
@@ -20,6 +21,7 @@ import org.mockito.Mockito;
 import io.linuxserver.davos.schedule.ScheduleConfiguration;
 import io.linuxserver.davos.schedule.workflow.actions.MoveFileAction;
 import io.linuxserver.davos.schedule.workflow.actions.PostDownloadAction;
+import io.linuxserver.davos.schedule.workflow.transfer.FTPTransfer;
 import io.linuxserver.davos.schedule.workflow.transfer.TransferStrategy;
 import io.linuxserver.davos.schedule.workflow.transfer.TransferStrategyFactory;
 import io.linuxserver.davos.transfer.ftp.FTPFile;
@@ -84,7 +86,7 @@ public class DownloadFilesWorkflowStepTest {
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.setConnection(mockConnection);
-        schedule.getFilesToDownload().addAll(filesToDownload);
+        schedule.getFilesToDownload().addAll(filesToDownload.stream().map(f -> new FTPTransfer(f)).collect(toList()));
         
         workflowStep.runStep(schedule);
 
@@ -106,7 +108,7 @@ public class DownloadFilesWorkflowStepTest {
                 "", "local/", FileTransferType.FILE);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
-        schedule.getFilesToDownload().addAll(filesToDownload);
+        schedule.getFilesToDownload().addAll(filesToDownload.stream().map(f -> new FTPTransfer(f)).collect(toList()));
         schedule.setConnection(mockConnection);
         workflowStep.runStep(schedule);
         
@@ -127,7 +129,7 @@ public class DownloadFilesWorkflowStepTest {
                 "", "local/", FileTransferType.FILE);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
-        schedule.getFilesToDownload().addAll(filesToDownload);
+        schedule.getFilesToDownload().addAll(filesToDownload.stream().map(f -> new FTPTransfer(f)).collect(toList()));
         schedule.setConnection(mockConnection);
 
         doThrow(new DownloadFailedException()).when(mockTransferStrategy).transferFile(file, "local/");

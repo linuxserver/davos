@@ -1,5 +1,6 @@
 package io.linuxserver.davos.schedule.workflow;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -80,7 +81,7 @@ public class FilterFilesWorkflowStepTest {
         when(mockConnection.listFiles("remote/")).thenReturn(files);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
-        
+
         schedule.getFilesFromLastScan().addAll(Arrays.asList("some", "old", "files"));
         schedule.setConnection(mockConnection);
 
@@ -117,7 +118,8 @@ public class FilterFilesWorkflowStepTest {
 
         workflowStep.runStep(schedule);
 
-        assertThat(schedule.getFilesToDownload()).isEqualTo(Arrays.asList(file1, file2, file4));
+        assertThat(schedule.getFilesToDownload().stream().map(t -> t.getFile()).collect(toList()))
+                .isEqualTo(Arrays.asList(file1, file2, file4));
     }
 
     @Test
@@ -150,7 +152,8 @@ public class FilterFilesWorkflowStepTest {
 
         workflowStep.runStep(schedule);
 
-        assertThat(schedule.getFilesToDownload()).isEqualTo(Arrays.asList(file2));
+        assertThat(schedule.getFilesToDownload().stream().map(t -> t.getFile()).collect(toList()))
+                .isEqualTo(Arrays.asList(file2));
     }
 
     @Test
@@ -181,7 +184,8 @@ public class FilterFilesWorkflowStepTest {
 
         workflowStep.runStep(schedule);
 
-        assertThat(schedule.getFilesToDownload()).isEqualTo(Arrays.asList(file1, file2));
+        assertThat(schedule.getFilesToDownload().stream().map(t -> t.getFile()).collect(toList()))
+                .isEqualTo(Arrays.asList(file1, file2));
     }
 
     @Test
@@ -212,7 +216,8 @@ public class FilterFilesWorkflowStepTest {
 
         workflowStep.runStep(schedule);
 
-        assertThat(schedule.getFilesToDownload()).isEqualTo(Arrays.asList(file1, file2, file4));
+        assertThat(schedule.getFilesToDownload().stream().map(t -> t.getFile()).collect(toList()))
+                .isEqualTo(Arrays.asList(file1, file2, file4));
     }
 
     @Test
@@ -237,7 +242,8 @@ public class FilterFilesWorkflowStepTest {
 
         InOrder inOrder = Mockito.inOrder(mockNextStep);
 
-        assertThat(schedule.getFilesToDownload()).isEqualTo(Arrays.asList(file1));
+        assertThat(schedule.getFilesToDownload().stream().map(t -> t.getFile()).collect(toList()))
+                .isEqualTo(Arrays.asList(file1));
         inOrder.verify(mockNextStep).runStep(schedule);
     }
 
@@ -268,7 +274,8 @@ public class FilterFilesWorkflowStepTest {
 
         workflowStep.runStep(schedule);
 
-        assertThat(schedule.getFilesToDownload()).isEqualTo(Arrays.asList(file1, file2, file3, file4, file5));
+        assertThat(schedule.getFilesToDownload().stream().map(t -> t.getFile()).collect(toList()))
+                .isEqualTo(Arrays.asList(file1, file2, file3, file4, file5));
     }
 
     @Test

@@ -4,9 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.linuxserver.davos.schedule.ScheduleConfiguration;
+import io.linuxserver.davos.schedule.workflow.transfer.FTPTransfer;
 import io.linuxserver.davos.schedule.workflow.transfer.TransferStrategy;
 import io.linuxserver.davos.schedule.workflow.transfer.TransferStrategyFactory;
-import io.linuxserver.davos.transfer.ftp.FTPFile;
+import io.linuxserver.davos.transfer.ftp.connection.progress.ListenerFactory;
+import io.linuxserver.davos.transfer.ftp.connection.progress.ProgressListener;
 import io.linuxserver.davos.transfer.ftp.exception.FTPException;
 
 public class DownloadFilesWorkflowStep extends WorkflowStep {
@@ -34,10 +36,18 @@ public class DownloadFilesWorkflowStep extends WorkflowStep {
             if (schedule.getFilesToDownload().isEmpty())
                 LOGGER.info("There are no files to download in this run");
             
-            for (FTPFile file : schedule.getFilesToDownload())
-                strategyToUse.transferFile(file, config.getLocalFilePath());
+            for (FTPTransfer transfer : schedule.getFilesToDownload()) {
+
+                LOGGER.debug("Generating listener for transfer");
+                ProgressListener listener = new ListenerFactory().createListener(config.getConnectionType());
+                schedule.getConnection().setProgressListener(listener);
+                transfer.setListener(listener);
+                
+                strategyToUse.transferFile(transfer.getFile(), config.getLocalFilePath());
+            }
 
             LOGGER.info("Download step complete. Moving onto next step");
+            schedule.getFilesToDownload().clear();
 
         } catch (FTPException e) {
 

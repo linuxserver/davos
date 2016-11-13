@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.linuxserver.davos.schedule.ScheduleConfiguration;
-import io.linuxserver.davos.transfer.ftp.FTPFile;
+import io.linuxserver.davos.schedule.workflow.transfer.FTPTransfer;
 import io.linuxserver.davos.transfer.ftp.client.Client;
 import io.linuxserver.davos.transfer.ftp.connection.Connection;
 
@@ -20,7 +20,7 @@ public class ScheduleWorkflow {
     private Client client;
     private Connection connection;
     private List<String> filesFromLastScan = new ArrayList<>();
-    private List<FTPFile> filesToDownload = new ArrayList<>();
+    private List<FTPTransfer> filesToDownload = new ArrayList<>();
     
     public ScheduleWorkflow(ScheduleConfiguration config) {
         this.config = config;
@@ -57,7 +57,7 @@ public class ScheduleWorkflow {
         return filesFromLastScan;
     }
 
-    public List<FTPFile> getFilesToDownload() {
+    public List<FTPTransfer> getFilesToDownload() {
         return filesToDownload;
     }
 }

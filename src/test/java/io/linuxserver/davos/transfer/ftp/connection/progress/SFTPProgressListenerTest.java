@@ -19,9 +19,9 @@ public class SFTPProgressListenerTest {
         assertThat(listener.getProgress()).isEqualTo(20);
         
         listener.count(250);
-        assertThat(listener.getProgress()).isEqualTo(50);
+        assertThat(listener.getProgress()).isEqualTo(70);
         
-        listener.count(500);
+        listener.count(150);
         assertThat(listener.getProgress()).isEqualTo(100);
     }
 }
