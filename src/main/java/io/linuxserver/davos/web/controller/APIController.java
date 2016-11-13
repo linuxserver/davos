@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.linuxserver.davos.delegation.services.HostService;
 import io.linuxserver.davos.delegation.services.ScheduleService;
+import io.linuxserver.davos.delegation.services.SettingsService;
 import io.linuxserver.davos.web.Host;
 import io.linuxserver.davos.web.Schedule;
 import io.linuxserver.davos.web.ScheduleCommand;
 import io.linuxserver.davos.web.controller.response.APIResponse;
 import io.linuxserver.davos.web.controller.response.APIResponseBuilder;
+import io.linuxserver.davos.web.selectors.LogLevelSelector;
 
 @RestController
 @RequestMapping("/api/v2")
@@ -31,7 +33,10 @@ public class APIController {
     private ScheduleService scheduleService;
 
     @Resource
-    private HostService hostFacade;
+    private HostService hostService;
+    
+    @Resource
+    private SettingsService settingsService;
 
     @RequestMapping(value = "/schedule", method = RequestMethod.POST)
     public ResponseEntity<APIResponse> createSchedule(@RequestBody Schedule schedule) {
@@ -93,7 +98,7 @@ public class APIController {
 
         LOGGER.info("Saving new host");
         LOGGER.debug("Host values are {}", host);
-        Host createdHost = hostFacade.saveHost(host);
+        Host createdHost = hostService.saveHost(host);
         LOGGER.info("Host has been created");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(APIResponseBuilder.create().withBody(createdHost));
@@ -107,7 +112,7 @@ public class APIController {
         LOGGER.debug("Imposing id from URL into body");
         host.setId(id);
 
-        Host updatedHost = hostFacade.saveHost(host);
+        Host updatedHost = hostService.saveHost(host);
         LOGGER.debug("Host has been updated");
 
         return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create().withBody(updatedHost));
@@ -117,13 +122,16 @@ public class APIController {
     public ResponseEntity<APIResponse> deleteHost(@PathVariable("id") Long id) {
 
         LOGGER.info("Deleting host with id {}", id);
-        hostFacade.deleteHost(id);
+        hostService.deleteHost(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create());
     }
 
     @RequestMapping(value = "/settings/log", method = RequestMethod.POST)
-    public ResponseEntity<APIResponse> setLogLevel(@RequestParam("level") String level) {
-        return null;
+    public ResponseEntity<APIResponse> setLogLevel(@RequestParam("level") LogLevelSelector level) {
+        
+        settingsService.setLoggingLevel(level);
+        
+        return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create());
     }
 }

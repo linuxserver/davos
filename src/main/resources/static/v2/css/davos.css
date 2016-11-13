@@ -65,3 +65,7 @@ a.link {
 .popover {
     max-width: 600px;
 }
+
+.hide {
+    display: none;
+}

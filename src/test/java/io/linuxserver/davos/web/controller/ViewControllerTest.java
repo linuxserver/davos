@@ -17,8 +17,10 @@ import org.springframework.ui.Model;
 
 import io.linuxserver.davos.delegation.services.HostService;
 import io.linuxserver.davos.delegation.services.ScheduleService;
+import io.linuxserver.davos.delegation.services.SettingsService;
 import io.linuxserver.davos.web.Host;
 import io.linuxserver.davos.web.Schedule;
+import io.linuxserver.davos.web.selectors.LogLevelSelector;
 
 public class ViewControllerTest {
 
@@ -32,18 +34,23 @@ public class ViewControllerTest {
     private ScheduleService mockScheduleFacade;
     
     @Mock
+    private SettingsService mockSettingsService;
+    
+    @Mock
     private Model mockModel;
     
     @Before
     public void before() {
         initMocks(this);
+        
+        when(mockSettingsService.getCurrentLoggingLevel()).thenReturn(LogLevelSelector.DEBUG);
     }
     
     @Test
     public void viewsShouldResolveCorrectly() {
         
         assertThat(controller.index()).isEqualTo("v2/index");
-        assertThat(controller.settings()).isEqualTo("v2/settings");
+        assertThat(controller.settings(mockModel)).isEqualTo("v2/settings");
         assertThat(controller.schedules(mockModel)).isEqualTo("v2/schedules");
         assertThat(controller.schedules(1L, mockModel)).isEqualTo("v2/edit-schedule");
         assertThat(controller.newSchedule(mockModel)).isEqualTo("v2/edit-schedule");

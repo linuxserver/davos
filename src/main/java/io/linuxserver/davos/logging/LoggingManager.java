@@ -20,7 +20,7 @@ public class LoggingManager {
     }
     
     public static void setLogLevel(Level level) {
-        Configurator.setLevel("io.linuxserver", level);
         LOGGER.info("Logging level now set at {}", level);
+        Configurator.setLevel("io.linuxserver", level);
     }
 }

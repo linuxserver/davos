@@ -69,17 +69,17 @@
 
                     <div class="panel panel-default">
                         <div class="panel-heading" th:inline="text">[[${schedule.name}]] &nbsp;&nbsp;
-                            <span th:if="${schedule.running}">
+                            <span th:classappend="${not schedule.running} ? 'hide'">
                                 <span class="label label-default label-title">Running</span>&nbsp;&nbsp;
-                                <span class="glyphicon glyphicon-stop" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Stop"></span>
+                                <span class="glyphicon glyphicon-stop stop-schedule" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Stop" th:attr="data-schedule-id=${schedule.id},data-schedule-name=${schedule.name}"></span>
                             </span>
-                            <span th:if="not ${schedule.running}" class="glyphicon glyphicon-play" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Start"></span>
+                            <span th:classappend="${schedule.running} ? 'hide'" class="glyphicon glyphicon-play start-schedule" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Start" th:attr="data-schedule-id=${schedule.id},data-schedule-name=${schedule.name}"></span>
                             &nbsp;&nbsp;<a class="link" th:href="@{/v2/schedules/} + ${schedule.id}"><span class="glyphicon glyphicon-wrench" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Edit"></span></a>
                             &nbsp;&nbsp;<span class="glyphicon glyphicon-time" data-toggle="modal" th:attr="data-target='#lastScanned' + ${schedule.id}"></span>
                         </div>
                         <div class="panel-body">
                             <div class="downloads">
-                                <span th:unless="${schedule.running}">Not running</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -118,6 +118,8 @@
 
     <script type="text/javascript" th:src="@{/v2/js/jquery-2.1.4.min.js}"></script>
     <script type="text/javascript" th:src="@{/v2/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/v2/js/bootstrap-notify.min.js}"></script>
+    <script type="text/javascript" th:src="@{/v2/js/davos.js}"></script>
 
     <script>
         $('body').popover({ container: 'body', selector: '[data-toggle="popover"]', trigger: 'hover' });

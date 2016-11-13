@@ -16,6 +16,74 @@ var edit = (function($) {
 
 }(jQuery));
 
+var settings = (function ($) {
+
+    'use strict';
+
+    var initialise;
+
+    initialise = function () {
+
+        $('#logLevel').on('change', function() {
+
+            var logLevel = $(this).find('option:selected').val();
+
+            $.notify({
+                icon: 'glyphicon glyphicon-info-sign',
+            	message: 'Changing logging level to ' + logLevel
+            },{
+            	// settings
+            	type: 'info',
+                placement: {
+                	from: "top",
+                	align: "right"
+                },
+                delay: 3000
+            });
+
+            $.ajax({
+                method: 'POST',
+                url: '/api/v2/settings/log?level=' + logLevel
+            }).done(function (msg) {
+
+                $.notify({
+                    icon: 'glyphicon glyphicon-ok-sign',
+                    message: 'Settings saved!'
+                },{
+                    // settings
+                    type: 'success',
+                    placement: {
+                        from: "top",
+                        align: "right"
+                    },
+                    delay: 3000
+                });
+
+            }).fail(function (msg) {
+
+                $.notify({
+                    icon: 'glyphicon glyphicon-warning-sign',
+                    message: 'There was an error: ' + msg.status
+                },{
+                    // settings
+                    type: 'danger',
+                    placement: {
+                        from: "top",
+                        align: "right"
+                    },
+                    delay: 3000
+                });
+
+            });
+        });
+    };
+
+    return {
+        init: initialise
+    }
+
+}(jQuery));
+
 var fragments = (function ($) {
 
     'use strict';
@@ -179,6 +247,105 @@ var schedule = (function ($) {
                 window.location.replace('/v2/schedules');
             }).fail(error);
         });
+
+        $('.start-schedule').on('click', function () {
+
+            var id = $(this).attr('data-schedule-id'), name = $(this).attr('data-schedule-name');
+
+            $.notify({
+                icon: 'glyphicon glyphicon-info-sign',
+                message: 'Starting schedule "' + name + '"'
+            },{
+                // settings
+                type: 'info',
+                placement: {
+                    from: "top",
+                    align: "right"
+                },
+                delay: 3000
+            });
+
+            $.ajax({
+
+                method: 'POST',
+                url: '/api/v2/schedule/' + id + '/execute' ,
+                dataType: "json",
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    command: 'START'
+                })
+
+            }).done(function (msg) {
+
+                $.notify({
+                    icon: 'glyphicon glyphicon-ok-sign',
+                    message: 'Schedule Started'
+                },{
+                    // settings
+                    type: 'success',
+                    placement: {
+                        from: "top",
+                        align: "right"
+                    },
+                    delay: 3000
+                });
+
+                $('span[data-schedule-id="' + id +'"].start-schedule').toggleClass('hide');
+                $('span[data-schedule-id="' + id +'"].stop-schedule').parents('span').toggleClass('hide');
+
+            }).fail(error);
+
+        });
+
+        $('.stop-schedule').on('click', function () {
+
+            var id = $(this).attr('data-schedule-id'), name = $(this).attr('data-schedule-name');
+
+            $.notify({
+                icon: 'glyphicon glyphicon-info-sign',
+                message: 'Stopping schedule "' + name + '"'
+            },{
+                // settings
+                type: 'info',
+                placement: {
+                    from: "top",
+                    align: "right"
+                },
+                delay: 3000
+            });
+
+            $.ajax({
+
+                method: 'POST',
+                url: '/api/v2/schedule/' + id + '/execute' ,
+                dataType: "json",
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    command: 'STOP'
+                })
+
+            }).done(function (msg) {
+
+                $.notify({
+                    icon: 'glyphicon glyphicon-ok-sign',
+                    message: 'Schedule Stopped'
+                },{
+                    // settings
+                    type: 'success',
+                    placement: {
+                        from: "top",
+                        align: "right"
+                    },
+                    delay: 3000
+                });
+
+                $('span[data-schedule-id="' + id +'"].start-schedule').toggleClass('hide');
+                $('span[data-schedule-id="' + id +'"].stop-schedule').parents('span').toggleClass('hide');
+
+            }).fail(error);
+
+        });
+
     };
 
     cleanId = function (id) {
@@ -351,3 +518,4 @@ jQuery(document).ready(host.init);
 jQuery(document).ready(schedule.init);
 jQuery(document).ready(fragments.init);
 jQuery(document).ready(edit.init);
+jQuery(document).ready(settings.init);

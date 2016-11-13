@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import io.linuxserver.davos.delegation.services.HostService;
 import io.linuxserver.davos.delegation.services.ScheduleService;
+import io.linuxserver.davos.delegation.services.SettingsService;
 import io.linuxserver.davos.web.Host;
 import io.linuxserver.davos.web.Schedule;
+import io.linuxserver.davos.web.Settings;
 import io.linuxserver.davos.web.selectors.IntervalSelector;
+import io.linuxserver.davos.web.selectors.LogLevelSelector;
 import io.linuxserver.davos.web.selectors.MethodSelector;
 import io.linuxserver.davos.web.selectors.ProtocolSelector;
 import io.linuxserver.davos.web.selectors.TransferSelector;
@@ -29,6 +32,9 @@ public class ViewController {
 
     @Resource
     private HostService hostService;
+    
+    @Resource
+    private SettingsService settingsService;
 
     @ModelAttribute("allIntervals")
     public List<IntervalSelector> populateIntervals() {
@@ -54,6 +60,11 @@ public class ViewController {
     public List<Host> allHosts() {
         return hostService.fetchAllHosts();
     }
+    
+    @ModelAttribute("allLogLevels")
+    public List<LogLevelSelector> allLogLevels() {
+        return Arrays.asList(LogLevelSelector.ALL);
+    }
 
     @RequestMapping
     public String index() {
@@ -61,7 +72,13 @@ public class ViewController {
     }
 
     @RequestMapping("/settings")
-    public String settings() {
+    public String settings(Model model) {
+        
+        Settings settings = new Settings();
+        settings.setLogLevel(settingsService.getCurrentLoggingLevel());
+        
+        model.addAttribute("settings", settings);
+        
         return "v2/settings";
     }
 
