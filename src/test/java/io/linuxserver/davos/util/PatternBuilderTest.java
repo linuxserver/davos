@@ -41,4 +41,14 @@ public class PatternBuilderTest {
 
         assertThat(anotherValue.matches(PatternBuilder.buildFromFilterString(slightlyMoreComplicated))).isTrue();
     }
+    
+    @Test
+    public void dotsShouldBeTreatedVerbatim() {
+        
+        String normalValue = "Clean Code.pdf";
+        String filteredValue = "Clean Code.pdf";
+        
+        assertThat(normalValue.matches(PatternBuilder.buildFromFilterString(filteredValue))).isTrue();
+        assertThat("Clean Code_pdf".matches(PatternBuilder.buildFromFilterString(filteredValue))).isFalse();
+    }
 }
