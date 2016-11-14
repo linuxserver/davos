@@ -108,8 +108,11 @@ var fragments = (function ($) {
         });
 
         $('#addFilter').on('click', function() {
-            $('#filters').append($("<span />").load("/fragments/filter?value=" + $('#newFilter').val()));
-            $('#newFilter').val('');
+
+            if ($.trim($('#newFilter').val()).length > 0) {
+                $('#filters').append($("<span />").load("/fragments/filter?value=" + $('#newFilter').val()));
+                $('#newFilter').val('');
+            }
         });
     };
 
@@ -119,8 +122,10 @@ var fragments = (function ($) {
 
             if (e.keyCode == 13) {
 
-                $('#filters').append($("<span />").load("/fragments/filter?value=" + $('#newFilter').val()));
-                $('#newFilter').val('');
+                if ($.trim($('#newFilter').val()).length > 0) {
+                    $('#filters').append($("<span />").load("/fragments/filter?value=" + $('#newFilter').val()));
+                    $('#newFilter').val('');
+                }
             }
         });
     };
