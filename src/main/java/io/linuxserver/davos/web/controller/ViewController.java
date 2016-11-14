@@ -24,7 +24,6 @@ import io.linuxserver.davos.web.selectors.ProtocolSelector;
 import io.linuxserver.davos.web.selectors.TransferSelector;
 
 @Controller
-@RequestMapping("/v2")
 public class ViewController {
 
     @Resource
@@ -66,9 +65,9 @@ public class ViewController {
         return Arrays.asList(LogLevelSelector.ALL);
     }
 
-    @RequestMapping
+    @RequestMapping("/")
     public String index() {
-        return "v2/index";
+        return "redirect:/schedules";
     }
 
     @RequestMapping("/settings")
