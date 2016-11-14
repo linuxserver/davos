@@ -7,7 +7,7 @@ public enum IntervalSelector {
     EVERY_HOUR(60, "Every hour"),
     EVERY_2_HOURS(120, "Every two hours"), 
     TWICE_A_DAY(720, "Twice a day"), 
-    EVERY_DAY(1440, "Every day");
+    EVERY_DAY(1440, "Once a day");
     
     public static final IntervalSelector[] ALL = { MINS_15, MINS_30, EVERY_HOUR, EVERY_2_HOURS, TWICE_A_DAY, EVERY_DAY};
     
