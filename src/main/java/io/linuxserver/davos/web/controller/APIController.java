@@ -35,7 +35,7 @@ public class APIController {
 
     @Resource
     private HostService hostService;
-    
+
     @Resource
     private SettingsService settingsService;
 
@@ -130,14 +130,15 @@ public class APIController {
 
     @RequestMapping(value = "/settings/log", method = RequestMethod.POST)
     public ResponseEntity<APIResponse> setLogLevel(@RequestParam("level") LogLevelSelector level) {
-        
+
         settingsService.setLoggingLevel(level);
-        
+
         return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create());
     }
-    
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<APIResponse> handleException(Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponseBuilder.create().withBody(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(APIResponseBuilder.create().withBody(e.getMessage()).withStatus(e.getMessage()));
     }
 }

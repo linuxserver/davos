@@ -69,3 +69,8 @@ a.link {
 .hide {
     display: none;
 }
+
+.navbar-brand small {
+    color: #cdcdcd;
+    font-size: 14px;
+}

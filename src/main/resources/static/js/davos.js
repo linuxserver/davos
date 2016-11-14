@@ -377,8 +377,6 @@ var schedule = (function ($) {
             delay: 3000
         });
 
-        if (window.location.pathname === '/v2/schedules/new') {
-            window.location.replace('/v2/schedules/' + msg.body.id);
         }
     };
 
@@ -483,8 +481,6 @@ var host = (function ($) {
             delay: 3000
         });
 
-        if (window.location.pathname === '/v2/hosts/new') {
-            window.location.replace('/v2/hosts/' + msg.body.id);
         }
     };
 

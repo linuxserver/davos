@@ -49,7 +49,7 @@ public class ViewControllerTest {
     @Test
     public void viewsShouldResolveCorrectly() {
         
-        assertThat(controller.index()).isEqualTo("v2/index");
+        assertThat(controller.index()).isEqualTo("redirect:/schedules");
         assertThat(controller.settings(mockModel)).isEqualTo("v2/settings");
         assertThat(controller.schedules(mockModel)).isEqualTo("v2/schedules");
         assertThat(controller.schedules(1L, mockModel)).isEqualTo("v2/edit-schedule");

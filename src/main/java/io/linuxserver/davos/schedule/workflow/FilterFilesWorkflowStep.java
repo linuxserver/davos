@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -32,7 +33,8 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
 
             List<String> filters = schedule.getConfig().getFilters();
 
-            List<FTPFile> allFiles = schedule.getConnection().listFiles(schedule.getConfig().getRemoteFilePath());
+            List<FTPFile> allFiles = schedule.getConnection().listFiles(schedule.getConfig().getRemoteFilePath()).stream()
+                    .filter(removeCurrentAndParentDirs()).collect(toList());
             List<FTPFile> filesToFilter = new ReferentialFileFilter(schedule.getFilesFromLastScan()).filter(allFiles);
             List<FTPFile> filteredFiles = new ArrayList<FTPFile>();
 
@@ -49,18 +51,18 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
 
                 LOGGER.debug("Filters used {}", filters);
                 LOGGER.debug("Files to filter against {}", filteredFiles.stream().map(f -> f.getName()).collect(toList()));
-                
+
                 for (FTPFile file : filesToFilter)
                     filterFilesByName(filters, filteredFiles, file);
 
                 schedule.getFilesToDownload().addAll(filteredFiles.stream().map(f -> new FTPTransfer(f)).collect(toList()));
             }
-            
+
             LOGGER.debug("Resetting files from scan to files in this scan");
             schedule.getFilesFromLastScan().clear();
             schedule.getFilesFromLastScan().addAll(allFiles.stream().map(f -> f.getName()).collect(toList()));
             LOGGER.debug("Files from last scan set to {}", schedule.getFilesFromLastScan());
-            
+
             LOGGER.info("Filtered files. Moving onto next step");
             nextStep.runStep(schedule);
 
@@ -90,5 +92,9 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
                 return;
             }
         }
+    }
+
+    private Predicate<? super FTPFile> removeCurrentAndParentDirs() {
+        return file -> !file.getName().equals(".") && !file.getName().equals("..");
     }
 }
