@@ -249,7 +249,7 @@ var schedule = (function ($) {
                 method: 'DELETE',
                 url: '/api/v2/schedule/' + $('#id').val()
             }).done(function (msg) {
-                window.location.replace('/v2/schedules');
+                window.location.replace('/schedules');
             }).fail(error);
         });
 
@@ -463,7 +463,7 @@ var host = (function ($) {
                 method: 'DELETE',
                 url: '/api/v2/host/' + $('#id').val()
             }).done(function (msg) {
-                window.location.replace('/v2/hosts');
+                window.location.replace('/hosts');
             }).fail(error);
         });
     };
