@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -133,5 +134,10 @@ public class APIController {
         settingsService.setLoggingLevel(level);
         
         return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create());
+    }
+    
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<APIResponse> handleException(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponseBuilder.create().withBody(e.getMessage()));
     }
 }
