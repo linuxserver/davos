@@ -132,11 +132,11 @@ var fragments = (function ($) {
 
     removes = function() {
 
-        $('#notifications').on('click', '.remove', function() {
+        $('#notifications').on('click', '.remove-notification', function() {
             $(this).parents('.notification').remove();
         });
 
-        $('#apis').on('click', '.remove', function() {
+        $('#apis').on('click', '.remove-api', function() {
             $(this).parents('.api').remove();
         });
 
@@ -158,6 +158,11 @@ var schedule = (function ($) {
     var initialise, cleanId, success, error;
 
     initialise = function () {
+
+        $('#schedule-form').on('submit', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        });
 
         $('#saveSchedule').on('click', function () {
 
