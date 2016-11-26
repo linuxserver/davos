@@ -42,6 +42,9 @@ public class ScheduleModel {
     
     @Column
     public String moveFileTo;
+    
+    @Column
+    public boolean filtersMandatory;
 
     @Column
     public FileTransferType transferType = FileTransferType.FILE;

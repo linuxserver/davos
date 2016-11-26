@@ -77,7 +77,7 @@ public class DownloadFilesWorkflowStepTest {
         filesToDownload.add(file2);
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "local/", FileTransferType.FILE);
+                "", "local/", FileTransferType.FILE, false);
         
         ArrayList<PostDownloadAction> actions = new ArrayList<PostDownloadAction>();
         actions.add(new MoveFileAction("", ""));
@@ -105,7 +105,7 @@ public class DownloadFilesWorkflowStepTest {
         filesToDownload.add(file);
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "local/", FileTransferType.FILE);
+                "", "local/", FileTransferType.FILE, false);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.getFilesToDownload().addAll(filesToDownload.stream().map(f -> new FTPTransfer(f)).collect(toList()));
@@ -126,7 +126,7 @@ public class DownloadFilesWorkflowStepTest {
         filesToDownload.add(file);
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "local/", FileTransferType.FILE);
+                "", "local/", FileTransferType.FILE, false);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.getFilesToDownload().addAll(filesToDownload.stream().map(f -> new FTPTransfer(f)).collect(toList()));

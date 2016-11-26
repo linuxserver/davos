@@ -47,7 +47,7 @@ public class FilterFilesWorkflowStepTest {
     public void workflowStepShouldListFilesInTheRemoteDirectory() {
 
         ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
-                FileTransferType.FILE);
+                FileTransferType.FILE, false);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.setConnection(mockConnection);
@@ -61,7 +61,7 @@ public class FilterFilesWorkflowStepTest {
     public void workflowStepShouldSetTheFilesFromLastScanToThisScanAtEnd() {
 
         ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
-                FileTransferType.FILE);
+                FileTransferType.FILE, false);
         config.setFilters(Arrays.asList("file1", "file2", "file4"));
 
         ArrayList<FTPFile> files = new ArrayList<FTPFile>();
@@ -94,7 +94,7 @@ public class FilterFilesWorkflowStepTest {
     public void workflowStepShouldFilterOutAnyFilesThatAreNotInTheGivenConfigList() {
 
         ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
-                FileTransferType.FILE);
+                FileTransferType.FILE, false);
         config.setFilters(Arrays.asList("file1", "file2", "file4"));
 
         ArrayList<FTPFile> files = new ArrayList<FTPFile>();
@@ -126,7 +126,7 @@ public class FilterFilesWorkflowStepTest {
     public void workflowStepShouldFilterOutAnyFilesThatAreNotInTheGivenConfigListAndWereNotScannedInLastRun() {
 
         ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
-                FileTransferType.FILE);
+                FileTransferType.FILE, false);
         config.setFilters(Arrays.asList("file1", "file2", "file4"));
 
         ArrayList<FTPFile> files = new ArrayList<FTPFile>();
@@ -160,7 +160,7 @@ public class FilterFilesWorkflowStepTest {
     public void shouldOnlyAddOneInstanceOfAFileEvenIfTwoFiltersMatch() {
 
         ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
-                FileTransferType.FILE);
+                FileTransferType.FILE, false);
         config.setFilters(Arrays.asList("file1", "file2", "file2"));
 
         ArrayList<FTPFile> files = new ArrayList<FTPFile>();
@@ -192,7 +192,7 @@ public class FilterFilesWorkflowStepTest {
     public void workflowStepShouldFilterOutAnyFilesThatDoNotMatchTheWildcards() {
 
         ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
-                FileTransferType.FILE);
+                FileTransferType.FILE, false);
         config.setFilters(Arrays.asList("file1?and?Stuff", "file2*something", "file4*", "file5"));
 
         ArrayList<FTPFile> files = new ArrayList<FTPFile>();
@@ -224,7 +224,7 @@ public class FilterFilesWorkflowStepTest {
     public void workflowStepShouldCallNextStepRunMethodOnceSettingFilters() {
 
         ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
-                FileTransferType.FILE);
+                FileTransferType.FILE, false);
         config.setFilters(Arrays.asList("file1", "file2", "file4"));
 
         ArrayList<FTPFile> files = new ArrayList<FTPFile>();
@@ -251,7 +251,7 @@ public class FilterFilesWorkflowStepTest {
     public void ifFilterListIsInitiallyEmptyThenAssumeThatAllFilesShouldBeDownloaded() {
 
         ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
-                FileTransferType.FILE);
+                FileTransferType.FILE, false);
 
         ArrayList<FTPFile> files = new ArrayList<FTPFile>();
 
@@ -279,10 +279,40 @@ public class FilterFilesWorkflowStepTest {
     }
 
     @Test
+    public void ifFilterListIsInitiallyEmptyButFiltersAreMandatoryThenNoFilesShouldBeDownloaded() {
+
+        ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
+                FileTransferType.FILE, true);
+
+        ArrayList<FTPFile> files = new ArrayList<FTPFile>();
+
+        FTPFile file1 = new FTPFile("file1", 0, "remote/", DateTime.now().minusDays(2).getMillis(), false);
+        FTPFile file2 = new FTPFile("file2", 0, "remote/", DateTime.now().getMillis(), false);
+        FTPFile file3 = new FTPFile("file3", 0, "remote/", DateTime.now().minusDays(2).getMillis(), false);
+        FTPFile file4 = new FTPFile("file4", 0, "remote/", DateTime.now().minusDays(2).getMillis(), false);
+        FTPFile file5 = new FTPFile("file5", 0, "remote/", DateTime.now().getMillis(), false);
+
+        files.add(file1);
+        files.add(file2);
+        files.add(file3);
+        files.add(file4);
+        files.add(file5);
+
+        when(mockConnection.listFiles("remote/")).thenReturn(files);
+
+        ScheduleWorkflow schedule = new ScheduleWorkflow(config);
+        schedule.setConnection(mockConnection);
+
+        workflowStep.runStep(schedule);
+
+        assertThat(schedule.getFilesToDownload().stream().map(t -> t.getFile()).collect(toList())).isEmpty();
+    }
+
+    @Test
     public void ifListingFilesIsUnsuccessfulThenDoNotCallNextStepAndCallBackupStepInstead() {
 
         ScheduleConfiguration config = new ScheduleConfiguration(null, null, null, 0, null, "remote/", "local/",
-                FileTransferType.FILE);
+                FileTransferType.FILE, false);
 
         when(mockConnection.listFiles("remote/")).thenThrow(new FileListingException());
 

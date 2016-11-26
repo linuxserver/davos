@@ -41,7 +41,7 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
             LOGGER.debug("Clearing pending download list");
             schedule.getFilesToDownload().clear();
 
-            if (filters.isEmpty()) {
+            if (filters.isEmpty() && !schedule.getConfig().isFiltersMandatory()) {
 
                 LOGGER.info("Filter list was empty. Adding all found files to list");
                 LOGGER.debug("All files: {}", filesToFilter.stream().map(f -> f.getName()).collect(Collectors.toList()));

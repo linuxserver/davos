@@ -20,6 +20,7 @@ public class Schedule {
     private boolean automatic;
     private String moveFileTo;
     private boolean running;
+    private boolean filtersMandatory;
 
     private List<String> lastScannedFiles = new ArrayList<>();
     private List<Filter> filters = new ArrayList<>();
@@ -130,5 +131,13 @@ public class Schedule {
 
     public List<Transfer> getTransfers() {
         return transfers;
+    }
+
+    public boolean isFiltersMandatory() {
+        return filtersMandatory;
+    }
+
+    public void setFiltersMandatory(boolean filtersMandatory) {
+        this.filtersMandatory = filtersMandatory;
     }
 }

@@ -16,7 +16,7 @@ public class ScheduleConfigurationFactory {
 
         ScheduleConfiguration config = new ScheduleConfiguration(model.name, model.host.protocol, model.host.address,
                 model.host.port, new UserCredentials(model.host.username, model.host.password), model.remoteFilePath,
-                model.localFilePath, model.transferType);
+                model.localFilePath, model.transferType, model.filtersMandatory);
 
         if (StringUtils.isNotBlank(model.moveFileTo))
             config.getActions().add(new MoveFileAction(config.getLocalFilePath(), model.moveFileTo));

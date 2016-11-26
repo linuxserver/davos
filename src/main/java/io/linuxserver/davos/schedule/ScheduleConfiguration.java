@@ -20,9 +20,11 @@ public class ScheduleConfiguration {
     private List<String> filters = new ArrayList<String>();
     private List<PostDownloadAction> actions = new ArrayList<PostDownloadAction>();
     private FileTransferType transferType;
+    private boolean filtersMandatory;
 
     public ScheduleConfiguration(final String scheduleName, final TransferProtocol protocol, final String hostname,
-            final int port, final UserCredentials credentials, final String remoteFilePath, final String localFilePath, FileTransferType transferType) {
+            final int port, final UserCredentials credentials, final String remoteFilePath, final String localFilePath,
+            FileTransferType transferType, boolean filtersMandatory) {
 
         this.scheduleName = scheduleName;
         this.connectionType = protocol;
@@ -32,6 +34,7 @@ public class ScheduleConfiguration {
         this.localFilePath = localFilePath;
         this.remoteFilePath = remoteFilePath;
         this.transferType = transferType;
+        this.filtersMandatory = filtersMandatory;
     }
 
     public TransferProtocol getConnectionType() {
@@ -80,5 +83,9 @@ public class ScheduleConfiguration {
 
     public FileTransferType getTransferType() {
         return transferType;
+    }
+    
+    public boolean isFiltersMandatory() {
+        return filtersMandatory;
     }
 }

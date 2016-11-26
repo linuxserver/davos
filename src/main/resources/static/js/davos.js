@@ -189,6 +189,7 @@ var schedule = (function ($) {
                 localDirectory: $('#localDirectory').val(),
                 transferType: $('input[name="transferType"]:checked').val(),
                 automatic: $('input[name="automatic"]').prop('checked'),
+                filtersMandatory: $('input[name="filtersMandatory"]').prop('checked'),
                 moveFileTo: $('#moveFileTo').val(),
                 filters: [],
                 notifications: [],
