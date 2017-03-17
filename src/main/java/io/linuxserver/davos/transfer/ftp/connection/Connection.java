@@ -12,6 +12,8 @@ public interface Connection {
     
     void download(FTPFile remoteFilePath, String localFilePath) throws FTPException;
     
+    void deleteRemoteFile(FTPFile file) throws FTPException;
+    
     List<FTPFile> listFiles() throws FTPException;
     
     List<FTPFile> listFiles(String remoteDirectory) throws FTPException;

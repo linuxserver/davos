@@ -17,6 +17,7 @@ import io.linuxserver.davos.transfer.ftp.FTPFile;
 import io.linuxserver.davos.transfer.ftp.connection.progress.ProgressListener;
 import io.linuxserver.davos.transfer.ftp.connection.progress.SFTPProgressListener;
 import io.linuxserver.davos.transfer.ftp.exception.DownloadFailedException;
+import io.linuxserver.davos.transfer.ftp.exception.FTPException;
 import io.linuxserver.davos.transfer.ftp.exception.FileListingException;
 import io.linuxserver.davos.util.FileUtils;
 
@@ -147,5 +148,30 @@ public class SFTPConnection implements Connection {
         boolean directory = lsEntry.getAttrs().isDir();
 
         return new FTPFile(name, fileSize, filePath, (long) mTime * 1000, directory);
+    }
+
+    @Override
+    public void deleteRemoteFile(FTPFile file) throws FTPException {
+
+        String path = FileUtils.ensureTrailingSlash(file.getPath()) + file.getName();
+        LOGGER.info("Deleting remote file at path: {}", path);
+
+        try {
+
+            if (file.isDirectory()) {
+                
+                LOGGER.debug("Path is for a directory, so calling channel#rmdir()");
+                channel.rmdir(path);
+            } else {
+                
+                LOGGER.debug("Path is for a file, so calling channel#rm()");
+                channel.rm(path);
+            }
+            
+        } catch (SftpException e) {
+
+            LOGGER.debug("channel threw exception. Assuming file not deleted");
+            throw new DownloadFailedException("Unable to delete file on remote server", e);
+        }
     }
 }

@@ -31,6 +31,7 @@ import com.jcraft.jsch.SftpException;
 import io.linuxserver.davos.transfer.ftp.FTPFile;
 import io.linuxserver.davos.transfer.ftp.connection.progress.SFTPProgressListener;
 import io.linuxserver.davos.transfer.ftp.exception.DownloadFailedException;
+import io.linuxserver.davos.transfer.ftp.exception.FTPException;
 import io.linuxserver.davos.transfer.ftp.exception.FileListingException;
 import io.linuxserver.davos.util.FileUtils;
 
@@ -153,7 +154,7 @@ public class SFTPConnectionTest {
 
         verify(mockChannel).get("path/name", "some/directory/");
     }
-    
+
     @Test
     public void downloadMethodShouldCallChannelGetMethodWithListenerIfSet() throws SftpException {
 
@@ -186,7 +187,7 @@ public class SFTPConnectionTest {
         FTPFile directory = new FTPFile("folder", 0, "path/to", 0, true);
 
         sftpConnection.download(directory, "some/directory");
-        
+
         verify(mockFileUtils).createLocalDirectory("some/directory/folder/");
         verify(mockChannel).ls("path/to/folder/");
 
@@ -201,9 +202,43 @@ public class SFTPConnectionTest {
         inOrder.verify(mockChannel).get("path/to/folder/file1.txt", "some/directory/folder/");
         inOrder.verify(mockChannel).get("path/to/folder/file2.txt", "some/directory/folder/");
         inOrder.verify(mockChannel).get("path/to/folder/directory1/file3.txt", "some/directory/folder/directory1/");
-        inOrder.verify(mockChannel).get("path/to/folder/directory1/directory2/file5.txt", "some/directory/folder/directory1/directory2/");
-        inOrder.verify(mockChannel).get("path/to/folder/directory1/directory2/file6.txt", "some/directory/folder/directory1/directory2/");
+        inOrder.verify(mockChannel).get("path/to/folder/directory1/directory2/file5.txt",
+                "some/directory/folder/directory1/directory2/");
+        inOrder.verify(mockChannel).get("path/to/folder/directory1/directory2/file6.txt",
+                "some/directory/folder/directory1/directory2/");
         inOrder.verify(mockChannel).get("path/to/folder/directory1/file4.txt", "some/directory/folder/directory1/");
+    }
+
+    @Test
+    public void shouldDeleteRemoteFile() throws SftpException {
+
+        FTPFile file = new FTPFile("file.name", 0, "/some/directory", 0, false);
+
+        sftpConnection.deleteRemoteFile(file);
+
+        verify(mockChannel).rm("/some/directory/file.name");
+    }
+
+    @Test
+    public void shouldDeleteRemoteDirectory() throws SftpException {
+
+        FTPFile file = new FTPFile("file.name", 0, "/some/directory", 0, true);
+
+        sftpConnection.deleteRemoteFile(file);
+
+        verify(mockChannel).rmdir("/some/directory/file.name");
+    }
+
+    @Test
+    public void shouldCatchAndRethrowExceptionIfCaught() throws SftpException {
+
+        expectedException.expect(FTPException.class);
+        expectedException.expectMessage(equalTo("Unable to delete file on remote server"));
+        
+        FTPFile file = new FTPFile("file.name", 0, "/some/directory", 0, true);
+
+        doThrow(new SftpException(0, "")).when(mockChannel).rmdir("/some/directory/file.name");
+        sftpConnection.deleteRemoteFile(file);
     }
 
     private void initRecursiveListings() throws SftpException {
