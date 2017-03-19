@@ -52,7 +52,7 @@ public class ConnectWorkflowStepTest {
     public void runStepShouldCreateNewClient() {
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "", FileTransferType.FILE, false);
+                "", "", FileTransferType.FILE, false, false, false);
 
         workflowStep.runStep(new ScheduleWorkflow(config));
 
@@ -63,7 +63,7 @@ public class ConnectWorkflowStepTest {
     public void runStepShouldSetClientIntoWorkflow() {
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "", FileTransferType.FILE, false);
+                "", "", FileTransferType.FILE, false, false, false);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         workflowStep.runStep(schedule);
@@ -75,7 +75,7 @@ public class ConnectWorkflowStepTest {
     public void runStepShouldConnectToNewlyCreatedClient() {
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "", FileTransferType.FILE, false);
+                "", "", FileTransferType.FILE, false, false, false);
 
         workflowStep.runStep(new ScheduleWorkflow(config));
 
@@ -90,7 +90,7 @@ public class ConnectWorkflowStepTest {
         UserCredentials credentials = new UserCredentials(hostIP, hostIP);
 
         ScheduleConfiguration config = new ScheduleConfiguration("scheduleName", TransferProtocol.SFTP, hostIP, port, credentials,
-                "remotePath", "localPath", FileTransferType.FILE, false);
+                "remotePath", "localPath", FileTransferType.FILE, false, false, false);
 
         workflowStep.runStep(new ScheduleWorkflow(config));
 
@@ -109,7 +109,7 @@ public class ConnectWorkflowStepTest {
         when(mockClient.connect()).thenReturn(mockConnection);
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "", FileTransferType.FILE, false);
+                "", "", FileTransferType.FILE, false, false, false);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         workflowStep.runStep(schedule);
@@ -121,7 +121,7 @@ public class ConnectWorkflowStepTest {
     public void runStepShouldCallOnNextStepWhenComplete() {
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "", FileTransferType.FILE, false);
+                "", "", FileTransferType.FILE, false, false, false);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         workflowStep.runStep(schedule);
@@ -136,7 +136,7 @@ public class ConnectWorkflowStepTest {
     public void ifClientCannotConnectThenDoNotCallNextStep() {
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "", FileTransferType.FILE, false);
+                "", "", FileTransferType.FILE, false, false, false);
 
         when(mockClient.connect()).thenThrow(new ClientConnectionException());
 

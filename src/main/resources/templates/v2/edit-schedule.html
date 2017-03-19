@@ -169,6 +169,16 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="col-lg-2 control-label">Invert <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Inverting filters will cause davos to download any files that DO NOT match the filters defined for this schedule. This is the opposite of its default behaviour" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <div class="checkbox">
+                                      <label></label>
+                                      <input type="checkbox" th:field="*{invertFilters}" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label class="col-lg-2 control-label">Filters <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Define which files to download based on file name" class="help glyphicon glyphicon-question-sign"></span></label>
                                 <div class="col-lg-10">
                                     <div class="input-group">
@@ -203,7 +213,25 @@
                         <div class="col-md-12">
 
                             <div class="form-group">
-                                <label for="sch-move-file" class="col-lg-2 control-label">Move File <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Move the file to the given directory once the download has completed" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <label for="sch-move-file" class="col-lg-2 control-label">Delete Host File <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Delete the originating file on the host once the download has completed" class="help glyphicon glyphicon-question-sign"></span></label>
+                                <div class="col-lg-10">
+                                    <div class="checkbox">
+                                      <label></label>
+                                      <input type="checkbox" th:field="*{deleteHostFile}" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <label for="sch-move-file" class="col-lg-2 control-label">Move Downloaded File <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Move the file to the given directory once the download has completed" class="help glyphicon glyphicon-question-sign"></span></label>
                                 <div class="col-lg-10">
                                     <input type="text" class="form-control" th:field="*{moveFileTo}" autocomplete="off" />
                                 </div>

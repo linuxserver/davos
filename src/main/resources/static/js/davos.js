@@ -190,6 +190,8 @@ var schedule = (function ($) {
                 transferType: $('input[name="transferType"]:checked').val(),
                 automatic: $('input[name="automatic"]').prop('checked'),
                 filtersMandatory: $('input[name="filtersMandatory"]').prop('checked'),
+                invertFilters: $('input[name="invertFilters"]').prop('checked'),
+                deleteHostFile: $('input[name="deleteHostFile"]').prop('checked'),
                 moveFileTo: $('#moveFileTo').val(),
                 filters: [],
                 notifications: [],

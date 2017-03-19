@@ -77,7 +77,7 @@ public class DownloadFilesWorkflowStepTest {
         filesToDownload.add(file2);
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "local/", FileTransferType.FILE, false);
+                "", "local/", FileTransferType.FILE, false, false, false);
         
         ArrayList<PostDownloadAction> actions = new ArrayList<PostDownloadAction>();
         actions.add(new MoveFileAction("", ""));
@@ -105,7 +105,7 @@ public class DownloadFilesWorkflowStepTest {
         filesToDownload.add(file);
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "local/", FileTransferType.FILE, false);
+                "", "local/", FileTransferType.FILE, false, false, false);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.getFilesToDownload().addAll(filesToDownload.stream().map(f -> new FTPTransfer(f)).collect(toList()));
@@ -126,7 +126,7 @@ public class DownloadFilesWorkflowStepTest {
         filesToDownload.add(file);
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "local/", FileTransferType.FILE, false);
+                "", "local/", FileTransferType.FILE, false, false, false);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.getFilesToDownload().addAll(filesToDownload.stream().map(f -> new FTPTransfer(f)).collect(toList()));
@@ -137,5 +137,23 @@ public class DownloadFilesWorkflowStepTest {
         workflowStep.runStep(schedule);
         
         verify(mockNextStep).runStep(schedule);
+    }
+    
+    @Test
+    public void shouldDeleteHostFileIfOptionSet() {
+        
+        ArrayList<FTPFile> filesToDownload = new ArrayList<FTPFile>();
+        FTPFile file = new FTPFile("", 0, "", 0, false);
+        filesToDownload.add(file);
+
+        ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
+                "", "local/", FileTransferType.FILE, false, false, true);
+
+        ScheduleWorkflow schedule = new ScheduleWorkflow(config);
+        schedule.getFilesToDownload().addAll(filesToDownload.stream().map(f -> new FTPTransfer(f)).collect(toList()));
+        schedule.setConnection(mockConnection);
+        workflowStep.runStep(schedule);
+        
+        verify(mockConnection).deleteRemoteFile(file);
     }
 }

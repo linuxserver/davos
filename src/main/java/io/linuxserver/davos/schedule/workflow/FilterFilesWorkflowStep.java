@@ -41,7 +41,7 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
             LOGGER.debug("Clearing pending download list");
             schedule.getFilesToDownload().clear();
 
-            if (filters.isEmpty() && !schedule.getConfig().isFiltersMandatory()) {
+            if (noFilteringRequired(schedule, filters)) {
 
                 LOGGER.info("Filter list was empty. Adding all found files to list");
                 LOGGER.debug("All files: {}", filesToFilter.stream().map(f -> f.getName()).collect(Collectors.toList()));
@@ -52,8 +52,10 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
                 LOGGER.debug("Filters used {}", filters);
                 LOGGER.debug("Files to filter against {}", filteredFiles.stream().map(f -> f.getName()).collect(toList()));
 
+                boolean invertFilters = schedule.getConfig().isInvertFilters();
+
                 for (FTPFile file : filesToFilter)
-                    filterFilesByName(filters, filteredFiles, file);
+                    filterFilesByName(invertFilters, filters, filteredFiles, file);
 
                 schedule.getFilesToDownload().addAll(filteredFiles.stream().map(f -> new FTPTransfer(f)).collect(toList()));
             }
@@ -76,20 +78,45 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
         }
     }
 
-    private void filterFilesByName(List<String> filters, List<FTPFile> filteredFiles, FTPFile file) {
+    private boolean noFilteringRequired(ScheduleWorkflow schedule, List<String> filters) {
+        return filters.isEmpty() && !schedule.getConfig().isFiltersMandatory();
+    }
 
-        for (String filter : filters) {
+    private void filterFilesByName(boolean invertFilters, List<String> filters, List<FTPFile> filteredFiles, FTPFile file) {
 
-            String expression = PatternBuilder.buildFromFilterString(filter);
+        if (invertFilters) {
 
-            if (file.getName().toLowerCase().matches(expression.toLowerCase())) {
+            boolean filterForFileFound = false;
 
-                LOGGER.debug("Matched {} to {}. Adding to final filter list.", file.getName().toLowerCase(),
-                        expression.toLowerCase());
+            for (String filter : filters) {
 
+                String expression = PatternBuilder.buildFromFilterString(filter);
+
+                if (file.getName().toLowerCase().matches(expression.toLowerCase()))
+                    filterForFileFound = true;
+            }
+
+            if (!filterForFileFound) {
+
+                LOGGER.debug("Inverting enabled - no matching filter found for file {}, so adding to download list.", file.getName());
                 filteredFiles.add(file);
+            }
 
-                return;
+        } else {
+
+            for (String filter : filters) {
+
+                String expression = PatternBuilder.buildFromFilterString(filter);
+
+                if (file.getName().toLowerCase().matches(expression.toLowerCase())) {
+
+                    LOGGER.debug("Matched {} to {}. Adding to final filter list.", file.getName().toLowerCase(),
+                            expression.toLowerCase());
+
+                    filteredFiles.add(file);
+
+                    return;
+                }
             }
         }
     }
