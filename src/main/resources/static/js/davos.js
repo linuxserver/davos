@@ -420,6 +420,59 @@ var host = (function ($) {
 
     initialise = function () {
 
+        $('#testConnection').on('click', function () {
+
+            $.notify({
+                icon: 'glyphicon glyphicon-info-sign',
+                message: 'Testing connection...'
+            },{
+                // settings
+                type: 'info',
+                placement: {
+                    from: "top",
+                    align: "right"
+                },
+                delay: 3000
+            });
+
+            var postData = {
+                address: $('#address').val(),
+                port: parseInt($('#port').val(), 10),
+                protocol: $('input[name="protocol"]:checked').val(),
+                username: $('#username').val(),
+                password: $('#password').val()
+            };
+
+            var url = "/api/v2/testConnection";
+            var method = "POST";
+
+            $.ajax({
+
+                method: method,
+                url: url,
+                dataType: "json",
+                contentType: 'application/json',
+                data: JSON.stringify(postData)
+
+            }).done(function (msg) {
+
+                $.notify({
+                    icon: 'glyphicon glyphicon-ok-sign',
+                    message: 'Connection successful!'
+                },{
+                    // settings
+                    type: 'success',
+                    placement: {
+                        from: "top",
+                        align: "right"
+                    },
+                    delay: 3000
+                });
+
+            }).fail(error);
+
+        });
+
         $('#saveHost').on('click', function () {
 
             $.notify({
@@ -500,7 +553,7 @@ var host = (function ($) {
 
         $.notify({
             icon: 'glyphicon glyphicon-warning-sign',
-            message: 'There was an error: ' + msg.status
+            message: 'There was an error: ' + msg.responseJSON.body
         },{
             // settings
             type: 'danger',
