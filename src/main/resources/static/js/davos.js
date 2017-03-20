@@ -416,24 +416,13 @@ var host = (function ($) {
 
     'use strict';
 
-    var initialise, cleanId, success, error;
+    var initialise, cleanId, makeRequest, success, error, makeNotify;
 
     initialise = function () {
 
         $('#testConnection').on('click', function () {
 
-            $.notify({
-                icon: 'glyphicon glyphicon-info-sign',
-                message: 'Testing connection...'
-            },{
-                // settings
-                type: 'info',
-                placement: {
-                    from: "top",
-                    align: "right"
-                },
-                delay: 3000
-            });
+            makeNotify('info', 'Testing connection...', 'glyphicon-info-sign');
 
             var postData = {
                 address: $('#address').val(),
@@ -446,47 +435,15 @@ var host = (function ($) {
             var url = "/api/v2/testConnection";
             var method = "POST";
 
-            $.ajax({
-
-                method: method,
-                url: url,
-                dataType: "json",
-                contentType: 'application/json',
-                data: JSON.stringify(postData)
-
-            }).done(function (msg) {
-
-                $.notify({
-                    icon: 'glyphicon glyphicon-ok-sign',
-                    message: 'Connection successful!'
-                },{
-                    // settings
-                    type: 'success',
-                    placement: {
-                        from: "top",
-                        align: "right"
-                    },
-                    delay: 3000
-                });
-
-            }).fail(error);
+            makeRequest(url, method, postData, function (msg) {
+                makeNotify('success', 'Connection successful!', 'glyphicon-ok-sign');
+            }, error);
 
         });
 
         $('#saveHost').on('click', function () {
 
-            $.notify({
-                icon: 'glyphicon glyphicon-info-sign',
-                message: 'Saving...'
-            },{
-                // settings
-                type: 'info',
-                placement: {
-                    from: "top",
-                    align: "right"
-                },
-                delay: 3000
-            });
+            makeNotify('info', 'Saving...', 'glyphicon-info-sign');
 
             var postData = {
                 id: cleanId($('#id').val()),
@@ -507,15 +464,7 @@ var host = (function ($) {
                 method = "PUT";
             }
 
-            $.ajax({
-
-                method: method,
-                url: url,
-                dataType: "json",
-                contentType: 'application/json',
-                data: JSON.stringify(postData)
-
-            }).done(success).fail(error);
+            makeRequest(url, method, postData, success, error);
         });
 
         $('#deleteHost').on('click', function () {
@@ -529,20 +478,39 @@ var host = (function ($) {
         });
     };
 
-    success = function (msg) {
+    makeRequest = function (url, method, postData, successCallback, errorCallback) {
+
+        $.ajax({
+
+            method: method,
+            url: url,
+            dataType: "json",
+            contentType: 'application/json',
+            data: JSON.stringify(postData)
+
+        }).done(successCallback).fail(errorCallback);
+
+    };
+
+    makeNotify = function(notificationType, messageText, icon) {
 
         $.notify({
-            icon: 'glyphicon glyphicon-ok-sign',
-            message: 'Host Saved!'
+            icon: 'glyphicon ' + icon,
+            message: messageText
         },{
             // settings
-            type: 'success',
+            type: notificationType,
             placement: {
                 from: "top",
                 align: "right"
             },
             delay: 3000
         });
+    };
+
+    success = function (msg) {
+
+        makeNotify('success', 'Host Saved!', 'glyphicon-ok-sign');
 
         if (window.location.pathname === '/hosts/new') {
             window.location.replace('/hosts/' + msg.body.id);
@@ -550,19 +518,7 @@ var host = (function ($) {
     };
 
     error = function (msg) {
-
-        $.notify({
-            icon: 'glyphicon glyphicon-warning-sign',
-            message: 'There was an error: ' + msg.responseJSON.body
-        },{
-            // settings
-            type: 'danger',
-            placement: {
-                from: "top",
-                align: "right"
-            },
-            delay: 3000
-        });
+        makeNotify('danger', 'There was an error: ' + msg.responseJSON.body, 'glyphicon-warning-sign');
     };
 
     cleanId = function (id) {
