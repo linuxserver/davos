@@ -18,41 +18,9 @@
 
 <body>
 
-    <div class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <a th:href="@{/}" class="navbar-brand">davos<small>v2</small></a>
-                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-            </div>
-            <div class="navbar-collapse collapse" id="navbar-main">
-                <ul class="nav navbar-nav">
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="scheduling">Scheduling <span class="caret" /></a>
-                        <ul class="dropdown-menu" aria-labelledby="scheduling">
-                            <li><a th:href="@{/schedules}"><span class="glyphicon glyphicon-time"></span>&nbsp;&nbsp; Schedules</a></li>
-                            <li><a th:href="@{/hosts}"><span class="glyphicon glyphicon-cloud"></span>&nbsp;&nbsp; Hosts</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="settings">Settings <span class="caret" /></a>
-                        <ul class="dropdown-menu" aria-labelledby="settings">
-                            <li><a th:href="@{/schedules/new}"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp; New Schedule</a></li>
-                            <li><a th:href="@{/hosts/new}"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp; New Host</a></li>
-                            <li class="divider"></li>
-                            <li><a th:href="@{/settings}"><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp; App Settings</a></li>
-                        </ul>
-                    </li>
-
-                </ul>
-
-            </div>
-        </div>
+    <div class="navbar navbar-default navbar-fixed-top" th:replace="fragments/header :: header">
     </div>
-
+    
     <div class="container">
 
         <div class="schedules-section">

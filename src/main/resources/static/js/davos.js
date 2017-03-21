@@ -20,60 +20,39 @@ var settings = (function ($) {
 
     'use strict';
 
-    var initialise;
+    var initialise, makeNotify;
 
+    makeNotify = function(notificationType, messageText, icon) {
+
+        $.notify({
+            icon: 'glyphicon ' + icon,
+            message: messageText
+        },{
+            // settings
+            type: notificationType,
+            placement: {
+                from: "top",
+                align: "right"
+            },
+            delay: 3000
+        });
+    };
+    
     initialise = function () {
-
+    	
         $('#logLevel').on('change', function() {
 
             var logLevel = $(this).find('option:selected').val();
 
-            $.notify({
-                icon: 'glyphicon glyphicon-info-sign',
-            	message: 'Changing logging level to ' + logLevel
-            },{
-            	// settings
-            	type: 'info',
-                placement: {
-                	from: "top",
-                	align: "right"
-                },
-                delay: 3000
-            });
+            makeNotify('info', 'Changing logging level to ' + logLevel, 'info');
 
             $.ajax({
                 method: 'POST',
                 url: '/api/v2/settings/log?level=' + logLevel
             }).done(function (msg) {
-
-                $.notify({
-                    icon: 'glyphicon glyphicon-ok-sign',
-                    message: 'Settings saved!'
-                },{
-                    // settings
-                    type: 'success',
-                    placement: {
-                        from: "top",
-                        align: "right"
-                    },
-                    delay: 3000
-                });
-
+            	makeNotify('success', 'Settings saved!' + theme, 'ok');
             }).fail(function (msg) {
-
-                $.notify({
-                    icon: 'glyphicon glyphicon-warning-sign',
-                    message: 'There was an error: ' + msg.status
-                },{
-                    // settings
-                    type: 'danger',
-                    placement: {
-                        from: "top",
-                        align: "right"
-                    },
-                    delay: 3000
-                });
-
+            	makeNotify('danger', 'There was an error: ' + msg.responseJSON.status, 'warning');
             });
         });
     };

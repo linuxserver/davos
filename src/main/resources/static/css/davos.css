@@ -51,7 +51,7 @@ td .progress {
 }
 
 .label-title {
-    background-color: #98978b;
+    background-color: #333333;
 }
 
 .dropdown-menu li a {
@@ -59,7 +59,7 @@ td .progress {
 }
 
 a.link {
-    color: #98978b
+    color: #333333
 }
 
 .popover {

@@ -18,39 +18,7 @@
 
 <body>
 
-    <div class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <a th:href="@{/}" class="navbar-brand">davos<small>v2</small></a>
-                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-            </div>
-            <div class="navbar-collapse collapse" id="navbar-main">
-                <ul class="nav navbar-nav">
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="scheduling">Scheduling <span class="caret" /></a>
-                        <ul class="dropdown-menu" aria-labelledby="scheduling">
-                            <li><a th:href="@{/schedules}"><span class="glyphicon glyphicon-time"></span>&nbsp;&nbsp; Schedules</a></li>
-                            <li><a th:href="@{/hosts}"><span class="glyphicon glyphicon-cloud"></span>&nbsp;&nbsp; Hosts</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="settings">Settings <span class="caret" /></a>
-                        <ul class="dropdown-menu" aria-labelledby="settings">
-                            <li><a th:href="@{/schedules/new}"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp; New Schedule</a></li>
-                            <li><a th:href="@{/hosts/new}"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp; New Host</a></li>
-                            <li class="divider"></li>
-                            <li><a th:href="@{/settings}"><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp; App Settings</a></li>
-                        </ul>
-                    </li>
-
-                </ul>
-
-            </div>
-        </div>
+    <div class="navbar navbar-default navbar-fixed-top" th:replace="fragments/header :: header">
     </div>
 
     <div class="container">
@@ -65,6 +33,7 @@
                 </div>
             </div>
 
+			
             <form class="form-horizontal" id="schedule-form" action="#" th:object="${schedule}">
                 <fieldset>
 
@@ -76,73 +45,75 @@
                         </div>
                     </div>
 
-                    <div class="row">
-
-                        <div class="col-md-12">
-
-                            <div class="form-group">
-                                <label for="sch-name" class="col-lg-2 control-label">Name <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="What you want to refer to this schedule as" class="help glyphicon glyphicon-question-sign"></span></label>
-                                <div class="col-lg-10">
-                                    <input type="hidden" class="form-control" th:if="*{id}" th:field="*{id}" />
-                                    <input type="text" class="form-control" th:field="*{name}" autocomplete="off" />
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="select" class="col-lg-2 control-label">Interval <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="How often this schedule should run" class="help glyphicon glyphicon-question-sign"></span></label>
-                                <div class="col-lg-10">
-                                    <select class="form-control" th:field="*{interval}">
-                                        <option th:each="interval : ${allIntervals}" th:value="${interval.minutes}" th:text="${interval.text}"></option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="select" class="col-lg-2 control-label">Host <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Which host to connect to" class="help glyphicon glyphicon-question-sign"></span></label>
-                                <div class="col-lg-10">
-                                    <select class="form-control" th:field="*{host}">
-                                        <option th:each="host: ${allHosts}" th:value="${host.id}" th:text="${host.name}"></option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="sch-name" class="col-lg-2 control-label">Host Directory <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Remote directory containing files to download" class="help glyphicon glyphicon-question-sign"></span></label>
-                                <div class="col-lg-10">
-                                    <input type="text" class="form-control" th:field="*{hostDirectory}" autocomplete="off" />
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="sch-name" class="col-lg-2 control-label">Local Directory <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Where files should be downloaded" class="help glyphicon glyphicon-question-sign"></span></label>
-                                <div class="col-lg-10">
-                                    <input type="text" class="form-control" th:field="*{localDirectory}" autocomplete="off" />
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-lg-2 control-label">Transfer Type <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Should it download only files, or get nested folders too" class="help glyphicon glyphicon-question-sign"></span></label>
-                                <div class="col-lg-10">
-                                    <div class="radio" th:each="type : ${allTransferTypes}">
-                                        <label th:inline="text">
-                                            <input type="radio" th:field="*{transferType}" th:value="${type}" /> [[${type}]]
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-lg-2 control-label">Start Automatically <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Should this schedule run automatically when davos starts" class="help glyphicon glyphicon-question-sign"></span></label>
-                                <div class="col-lg-10">
-                                    <div class="checkbox">
-                                      <label></label>
-                                      <input type="checkbox" th:field="*{automatic}" />
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
+					<div class="well">
+	                    <div class="row">
+	
+	                        <div class="col-md-12">
+	
+	                            <div class="form-group">
+	                                <label for="sch-name" class="col-lg-2 control-label">Name <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="What you want to refer to this schedule as" class="help glyphicon glyphicon-question-sign"></span></label>
+	                                <div class="col-lg-10">
+	                                    <input type="hidden" class="form-control" th:if="*{id}" th:field="*{id}" />
+	                                    <input type="text" class="form-control" th:field="*{name}" autocomplete="off" />
+	                                </div>
+	                            </div>
+	
+	                            <div class="form-group">
+	                                <label for="select" class="col-lg-2 control-label">Interval <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="How often this schedule should run" class="help glyphicon glyphicon-question-sign"></span></label>
+	                                <div class="col-lg-10">
+	                                    <select class="form-control" th:field="*{interval}">
+	                                        <option th:each="interval : ${allIntervals}" th:value="${interval.minutes}" th:text="${interval.text}"></option>
+	                                    </select>
+	                                </div>
+	                            </div>
+	
+	                            <div class="form-group">
+	                                <label for="select" class="col-lg-2 control-label">Host <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Which host to connect to" class="help glyphicon glyphicon-question-sign"></span></label>
+	                                <div class="col-lg-10">
+	                                    <select class="form-control" th:field="*{host}">
+	                                        <option th:each="host: ${allHosts}" th:value="${host.id}" th:text="${host.name}"></option>
+	                                    </select>
+	                                </div>
+	                            </div>
+	
+	                            <div class="form-group">
+	                                <label for="sch-name" class="col-lg-2 control-label">Host Directory <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Remote directory containing files to download" class="help glyphicon glyphicon-question-sign"></span></label>
+	                                <div class="col-lg-10">
+	                                    <input type="text" class="form-control" th:field="*{hostDirectory}" autocomplete="off" />
+	                                </div>
+	                            </div>
+	
+	                            <div class="form-group">
+	                                <label for="sch-name" class="col-lg-2 control-label">Local Directory <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Where files should be downloaded" class="help glyphicon glyphicon-question-sign"></span></label>
+	                                <div class="col-lg-10">
+	                                    <input type="text" class="form-control" th:field="*{localDirectory}" autocomplete="off" />
+	                                </div>
+	                            </div>
+	
+	                            <div class="form-group">
+	                                <label class="col-lg-2 control-label">Transfer Type <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Should it download only files, or get nested folders too" class="help glyphicon glyphicon-question-sign"></span></label>
+	                                <div class="col-lg-10">
+	                                    <div class="radio" th:each="type : ${allTransferTypes}">
+	                                        <label th:inline="text">
+	                                            <input type="radio" th:field="*{transferType}" th:value="${type}" /> [[${type}]]
+	                                        </label>
+	                                    </div>
+	                                </div>
+	                            </div>
+	
+	                            <div class="form-group">
+	                                <label class="col-lg-2 control-label">Start Automatically <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Should this schedule run automatically when davos starts" class="help glyphicon glyphicon-question-sign"></span></label>
+	                                <div class="col-lg-10">
+	                                    <div class="checkbox">
+	                                      <label></label>
+	                                      <input type="checkbox" th:field="*{automatic}" />
+	                                    </div>
+	                                </div>
+	
+	                            </div>
+	
+	                        </div>
+	                    </div>
                     </div>
 
                     <div class="row">
@@ -153,51 +124,53 @@
                         </div>
                     </div>
 
-                    <div class="row">
-
-                        <div class="col-md-12">
-
-                            <div class="form-group">
-                                <label class="col-lg-2 control-label">Mandatory <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Leave unchecked if you want all new files to be downloaded in each run. Checking this will mean davos only downloads files when at least one filter has been defined." class="help glyphicon glyphicon-question-sign"></span></label>
-                                <div class="col-lg-10">
-                                    <div class="checkbox">
-                                      <label></label>
-                                      <input type="checkbox" th:field="*{filtersMandatory}" />
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-lg-2 control-label">Invert <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Inverting filters will cause davos to download any files that DO NOT match the filters defined for this schedule. This is the opposite of its default behaviour" class="help glyphicon glyphicon-question-sign"></span></label>
-                                <div class="col-lg-10">
-                                    <div class="checkbox">
-                                      <label></label>
-                                      <input type="checkbox" th:field="*{invertFilters}" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-lg-2 control-label">Filters <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Define which files to download based on file name" class="help glyphicon glyphicon-question-sign"></span></label>
-                                <div class="col-lg-10">
-                                    <div class="input-group">
-                                        <input type="text" id="newFilter" class="form-control" placeholder="Add a filter (? = single char wildcard. * = multi char wildcard)" autocomplete="off" />
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn btn-primary" id="addFilter">Add</button>
-                                          </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-lg-2"></div>
-                                <div class="col-lg-10" id="filters">
-                                    <span th:each="filter : *{filters}" th:inline="text" class="label label-default filter-label" th:attr="data-filter-value=${filter.value},data-filter-id=${filter.id}">[[${filter.value}]] <span class="filter-close">&times;</span></span>
-                                </div>
-                            </div>
-
-                        </div>
+					<div class="well">
+	                    <div class="row">
+	
+	                        <div class="col-md-12">
+	
+	                            <div class="form-group">
+	                                <label class="col-lg-2 control-label">Mandatory <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Leave unchecked if you want all new files to be downloaded in each run. Checking this will mean davos only downloads files when at least one filter has been defined." class="help glyphicon glyphicon-question-sign"></span></label>
+	                                <div class="col-lg-10">
+	                                    <div class="checkbox">
+	                                      <label></label>
+	                                      <input type="checkbox" th:field="*{filtersMandatory}" />
+	                                    </div>
+	                                </div>
+	
+	                            </div>
+	
+	                            <div class="form-group">
+	                                <label class="col-lg-2 control-label">Invert <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Inverting filters will cause davos to download any files that DO NOT match the filters defined for this schedule. This is the opposite of its default behaviour" class="help glyphicon glyphicon-question-sign"></span></label>
+	                                <div class="col-lg-10">
+	                                    <div class="checkbox">
+	                                      <label></label>
+	                                      <input type="checkbox" th:field="*{invertFilters}" />
+	                                    </div>
+	                                </div>
+	                            </div>
+	
+	                            <div class="form-group">
+	                                <label class="col-lg-2 control-label">Filters <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Define which files to download based on file name" class="help glyphicon glyphicon-question-sign"></span></label>
+	                                <div class="col-lg-10">
+	                                    <div class="input-group">
+	                                        <input type="text" id="newFilter" class="form-control" placeholder="Add a filter (? = single char wildcard. * = multi char wildcard)" autocomplete="off" />
+	                                        <span class="input-group-btn">
+	                                            <button type="button" class="btn btn-primary" id="addFilter">Add</button>
+	                                          </span>
+	                                    </div>
+	                                </div>
+	                            </div>
+	
+	                            <div class="form-group">
+	                                <div class="col-lg-2"></div>
+	                                <div class="col-lg-10" id="filters">
+	                                    <span th:each="filter : *{filters}" th:inline="text" class="label label-default filter-label" th:attr="data-filter-value=${filter.value},data-filter-id=${filter.id}">[[${filter.value}]] <span class="filter-close">&times;</span></span>
+	                                </div>
+	                            </div>
+	
+	                        </div>
+	                    </div>
                     </div>
 
                     <div class="row">
@@ -208,37 +181,29 @@
                         </div>
                     </div>
 
-                    <div class="row">
-
-                        <div class="col-md-12">
-
-                            <div class="form-group">
-                                <label for="sch-move-file" class="col-lg-2 control-label">Delete Host File <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Delete the originating file on the host FTP server once the download has completed" class="help glyphicon glyphicon-question-sign"></span></label>
-                                <div class="col-lg-10">
-                                    <div class="checkbox">
-                                      <label></label>
-                                      <input type="checkbox" th:field="*{deleteHostFile}" />
-                                    </div>
-                                </div>
-                            </div>
-
+					<div class="well">
+	                    <div class="row">				
+	                        <div class="col-md-12">
+	
+	                            <div class="form-group">
+	                                <label for="sch-move-file" class="col-lg-2 control-label">Delete Host File <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Delete the originating file on the host FTP server once the download has completed" class="help glyphicon glyphicon-question-sign"></span></label>
+	                                <div class="col-lg-10">
+	                                    <div class="checkbox">
+	                                      <label></label>
+	                                      <input type="checkbox" th:field="*{deleteHostFile}" />
+	                                    </div>
+	                                </div>
+	                            </div>
+	
+	                            <div class="form-group">
+	                                <label for="sch-move-file" class="col-lg-2 control-label">Move Downloaded File <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Move the file to the given directory once the download has completed" class="help glyphicon glyphicon-question-sign"></span></label>
+	                                <div class="col-lg-10">
+	                                    <input type="text" class="form-control" th:field="*{moveFileTo}" autocomplete="off" />
+	                                </div>
+	                            </div>
+	
+	                        </div>	
                         </div>
-
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-md-12">
-
-                            <div class="form-group">
-                                <label for="sch-move-file" class="col-lg-2 control-label">Move Downloaded File <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Move the file to the given directory once the download has completed" class="help glyphicon glyphicon-question-sign"></span></label>
-                                <div class="col-lg-10">
-                                    <input type="text" class="form-control" th:field="*{moveFileTo}" autocomplete="off" />
-                                </div>
-                            </div>
-
-                        </div>
-
                     </div>
 
                     <div class="row">
