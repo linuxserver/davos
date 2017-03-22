@@ -114,6 +114,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         transfer.setFileName(ftpTransfer.getFile().getName());
         transfer.setFileSize(ftpTransfer.getFile().getSize());
         transfer.setDirectory(ftpTransfer.getFile().isDirectory());
+        transfer.setStatus(ftpTransfer.getState().toString());
         
         if (null != ftpTransfer.getListener()) {
             

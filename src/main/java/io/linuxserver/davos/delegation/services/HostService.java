@@ -15,4 +15,6 @@ public interface HostService {
     void deleteHost(Long id);
     
     List<Long> fetchSchedulesUsingHost(Long id);
+    
+    void testConnection(Host host);
 }

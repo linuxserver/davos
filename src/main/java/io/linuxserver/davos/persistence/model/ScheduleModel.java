@@ -42,7 +42,16 @@ public class ScheduleModel {
     
     @Column
     public String moveFileTo;
+    
+    @Column
+    public boolean filtersMandatory;
 
+    @Column
+    public boolean deleteHostFile;
+    
+    @Column
+    public boolean invertFilters;
+    
     @Column
     public FileTransferType transferType = FileTransferType.FILE;
     
@@ -61,6 +70,7 @@ public class ScheduleModel {
     @OneToMany(orphanRemoval = true, mappedBy = "schedule", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     public List<ScannedFileModel> scannedFiles = new ArrayList<ScannedFileModel>();
+
 
     @Override
     public String toString() {

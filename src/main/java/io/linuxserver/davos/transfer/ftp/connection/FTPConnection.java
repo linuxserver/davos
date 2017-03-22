@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import io.linuxserver.davos.transfer.ftp.FTPFile;
 import io.linuxserver.davos.transfer.ftp.connection.progress.ProgressListener;
 import io.linuxserver.davos.transfer.ftp.exception.DownloadFailedException;
+import io.linuxserver.davos.transfer.ftp.exception.FTPException;
 import io.linuxserver.davos.transfer.ftp.exception.FileListingException;
 import io.linuxserver.davos.util.FileStreamFactory;
 import io.linuxserver.davos.util.FileUtils;
@@ -178,5 +179,27 @@ public class FTPConnection implements Connection {
         boolean isDirectory = ftpFile.isDirectory();
 
         return new FTPFile(name, fileSize, filePath, mTime, isDirectory);
+    }
+
+    @Override
+    public void deleteRemoteFile(FTPFile file) throws FTPException {
+        
+        String cleanRemotePath = FileUtils.ensureTrailingSlash(file.getPath()) + file.getName();
+        
+        try {
+            
+            LOGGER.debug("About to delete file on remote path: {}", cleanRemotePath);
+            boolean deleted = client.deleteFile(cleanRemotePath);
+
+            if (!deleted) {
+                LOGGER.debug("client#deleteFile() returned 'false'. Assuming file not deleted");
+                throw new DownloadFailedException("Unable to delete file on remote server");
+            }
+            
+        } catch (IOException e) {
+            
+            LOGGER.debug("client#deleteFile() threw exception. Assuming file not deleted");
+            throw new DownloadFailedException("Unable to delete file on remote server");
+        }
     }
 }

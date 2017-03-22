@@ -33,6 +33,10 @@ public class FakeFTPServerFactory {
         return server;
     }
     
+    public static boolean checkFileExists(String filePath) {
+        return server.getFileSystem().exists(filePath);
+    }
+    
     public static void stop() {
         server.stop();
     }

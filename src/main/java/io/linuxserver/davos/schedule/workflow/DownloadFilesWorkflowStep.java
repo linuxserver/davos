@@ -7,6 +7,7 @@ import io.linuxserver.davos.schedule.ScheduleConfiguration;
 import io.linuxserver.davos.schedule.workflow.transfer.FTPTransfer;
 import io.linuxserver.davos.schedule.workflow.transfer.TransferStrategy;
 import io.linuxserver.davos.schedule.workflow.transfer.TransferStrategyFactory;
+import io.linuxserver.davos.transfer.ftp.FTPFile;
 import io.linuxserver.davos.transfer.ftp.connection.progress.ListenerFactory;
 import io.linuxserver.davos.transfer.ftp.connection.progress.ProgressListener;
 import io.linuxserver.davos.transfer.ftp.exception.FTPException;
@@ -39,11 +40,17 @@ public class DownloadFilesWorkflowStep extends WorkflowStep {
             for (FTPTransfer transfer : schedule.getFilesToDownload()) {
 
                 LOGGER.debug("Generating listener for transfer");
+
+                FTPFile file = transfer.getFile();
+                
                 ProgressListener listener = new ListenerFactory().createListener(config.getConnectionType());
                 schedule.getConnection().setProgressListener(listener);
                 transfer.setListener(listener);
                 
-                strategyToUse.transferFile(transfer.getFile(), config.getLocalFilePath());
+                strategyToUse.transferFile(transfer, config.getLocalFilePath());
+                
+                if (config.isDeleteHostFile())
+                    schedule.getConnection().deleteRemoteFile(file);
             }
 
             LOGGER.info("Download step complete. Moving onto next step");
@@ -53,7 +60,8 @@ public class DownloadFilesWorkflowStep extends WorkflowStep {
 
             LOGGER.error("Unable to complete download. Error was: {}", e.getMessage());
             LOGGER.debug("Stacktrace", e);
-            LOGGER.info("Will still continue to next step");
+            LOGGER.info("Clearing current queue and will still continue to next step");
+            schedule.getFilesToDownload().clear();
         }
 
         nextStep.runStep(schedule);

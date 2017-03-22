@@ -20,6 +20,9 @@ public class Schedule {
     private boolean automatic;
     private String moveFileTo;
     private boolean running;
+    private boolean filtersMandatory;
+    private boolean invertFilters;
+    private boolean deleteHostFile;
 
     private List<String> lastScannedFiles = new ArrayList<>();
     private List<Filter> filters = new ArrayList<>();
@@ -130,5 +133,29 @@ public class Schedule {
 
     public List<Transfer> getTransfers() {
         return transfers;
+    }
+
+    public boolean isFiltersMandatory() {
+        return filtersMandatory;
+    }
+
+    public void setFiltersMandatory(boolean filtersMandatory) {
+        this.filtersMandatory = filtersMandatory;
+    }
+
+    public boolean isInvertFilters() {
+        return invertFilters;
+    }
+
+    public void setInvertFilters(boolean invertFilters) {
+        this.invertFilters = invertFilters;
+    }
+
+    public boolean isDeleteHostFile() {
+        return deleteHostFile;
+    }
+
+    public void setDeleteHostFile(boolean deleteHostFile) {
+        this.deleteHostFile = deleteHostFile;
     }
 }

@@ -29,7 +29,7 @@ public class ScheduleConfigurationFactoryTest {
         model.host.password = "password";
         model.host.port = 8;
         model.host.username = "username";
-
+        model.filtersMandatory = true;
         model.localFilePath = "local/";
         model.name = "schedulename";
         model.remoteFilePath = "thing/";
@@ -47,6 +47,7 @@ public class ScheduleConfigurationFactoryTest {
         assertThat(config.getRemoteFilePath()).isEqualTo(model.remoteFilePath);
         assertThat(config.getTransferType()).isEqualTo(model.transferType);
         assertThat(config.getCredentials().getUsername()).isEqualTo(model.host.username);
+        assertThat(config.isFiltersMandatory()).isTrue();
     }
 
     @Test

@@ -1,10 +1,12 @@
 package io.linuxserver.davos.schedule.workflow;
 
 import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -13,6 +15,8 @@ import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -52,6 +56,9 @@ public class DownloadFilesWorkflowStepTest {
     @Mock
     private FileUtils mockFileUtils;
     
+    @Captor
+    private ArgumentCaptor<FTPTransfer> transferCaptor;
+    
     private TransferStrategy mockTransferStrategy;
 
     @Before
@@ -77,7 +84,7 @@ public class DownloadFilesWorkflowStepTest {
         filesToDownload.add(file2);
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "local/", FileTransferType.FILE);
+                "", "local/", FileTransferType.FILE, false, false, false);
         
         ArrayList<PostDownloadAction> actions = new ArrayList<PostDownloadAction>();
         actions.add(new MoveFileAction("", ""));
@@ -93,8 +100,10 @@ public class DownloadFilesWorkflowStepTest {
         verify(mockTransferStrategyFactory).getStrategy(FileTransferType.FILE, mockConnection);
         
         verify(mockTransferStrategy).setPostDownloadActions(actions);
-        verify(mockTransferStrategy).transferFile(file, "local/");
-        verify(mockTransferStrategy).transferFile(file2, "local/");
+        verify(mockTransferStrategy, times(2)).transferFile(transferCaptor.capture(), eq("local/"));
+        
+        assertThat(transferCaptor.getAllValues().get(0).getFile()).isEqualTo(file);
+        assertThat(transferCaptor.getAllValues().get(1).getFile()).isEqualTo(file2);
     }
     
     @Test
@@ -105,7 +114,7 @@ public class DownloadFilesWorkflowStepTest {
         filesToDownload.add(file);
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "local/", FileTransferType.FILE);
+                "", "local/", FileTransferType.FILE, false, false, false);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.getFilesToDownload().addAll(filesToDownload.stream().map(f -> new FTPTransfer(f)).collect(toList()));
@@ -114,7 +123,7 @@ public class DownloadFilesWorkflowStepTest {
         
         InOrder inOrder = Mockito.inOrder(mockTransferStrategy, mockNextStep);
         
-        inOrder.verify(mockTransferStrategy).transferFile(file, "local/");
+        inOrder.verify(mockTransferStrategy).transferFile(any(FTPTransfer.class), eq("local/"));
         inOrder.verify(mockNextStep).runStep(schedule);
     }
     
@@ -126,16 +135,34 @@ public class DownloadFilesWorkflowStepTest {
         filesToDownload.add(file);
 
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "local/", FileTransferType.FILE);
+                "", "local/", FileTransferType.FILE, false, false, false);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.getFilesToDownload().addAll(filesToDownload.stream().map(f -> new FTPTransfer(f)).collect(toList()));
         schedule.setConnection(mockConnection);
 
-        doThrow(new DownloadFailedException()).when(mockTransferStrategy).transferFile(file, "local/");
+        doThrow(new DownloadFailedException()).when(mockTransferStrategy).transferFile(any(FTPTransfer.class), eq("local/"));
         
         workflowStep.runStep(schedule);
         
         verify(mockNextStep).runStep(schedule);
+    }
+    
+    @Test
+    public void shouldDeleteHostFileIfOptionSet() {
+        
+        ArrayList<FTPFile> filesToDownload = new ArrayList<FTPFile>();
+        FTPFile file = new FTPFile("", 0, "", 0, false);
+        filesToDownload.add(file);
+
+        ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
+                "", "local/", FileTransferType.FILE, false, false, true);
+
+        ScheduleWorkflow schedule = new ScheduleWorkflow(config);
+        schedule.getFilesToDownload().addAll(filesToDownload.stream().map(f -> new FTPTransfer(f)).collect(toList()));
+        schedule.setConnection(mockConnection);
+        workflowStep.runStep(schedule);
+        
+        verify(mockConnection).deleteRemoteFile(file);
     }
 }

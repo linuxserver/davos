@@ -35,7 +35,7 @@ public class DisconnectWorkflowStepTest {
     public void runStepShouldCloseTheConnection() {
         
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "", FileTransferType.FILE);
+                "", "", FileTransferType.FILE, false, false, false);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.setConnection(mockConnection);
@@ -50,7 +50,7 @@ public class DisconnectWorkflowStepTest {
     public void ifDisconnectingFailsThenDoNothing() {
         
         ScheduleConfiguration config = new ScheduleConfiguration("", TransferProtocol.SFTP, "", 0, new UserCredentials("", ""),
-                "", "", FileTransferType.FILE);
+                "", "", FileTransferType.FILE, false, false, false);
 
         ScheduleWorkflow schedule = new ScheduleWorkflow(config);
         schedule.setConnection(mockConnection);

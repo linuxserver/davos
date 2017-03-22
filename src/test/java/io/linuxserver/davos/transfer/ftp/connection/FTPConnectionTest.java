@@ -32,6 +32,7 @@ import org.mockito.Mockito;
 import io.linuxserver.davos.transfer.ftp.FTPFile;
 import io.linuxserver.davos.transfer.ftp.connection.progress.ProgressListener;
 import io.linuxserver.davos.transfer.ftp.exception.DownloadFailedException;
+import io.linuxserver.davos.transfer.ftp.exception.FTPException;
 import io.linuxserver.davos.transfer.ftp.exception.FileListingException;
 import io.linuxserver.davos.util.FileStreamFactory;
 import io.linuxserver.davos.util.FileUtils;
@@ -66,6 +67,7 @@ public class FTPConnectionTest {
         when(mockFtpClient.changeWorkingDirectory(anyString())).thenReturn(true);
         when(mockFtpClient.printWorkingDirectory()).thenReturn(DIRECTORY_PATH);
         when(mockFtpClient.retrieveFile(anyString(), any(OutputStream.class))).thenReturn(true);
+        when(mockFtpClient.deleteFile(any(String.class))).thenReturn(true);
 
         org.apache.commons.net.ftp.FTPFile[] files = createRemoteFTPFiles();
 
@@ -144,12 +146,12 @@ public class FTPConnectionTest {
 
         verify(mockFileStreamFactory).createOutputStream(LOCAL_DIRECTORY + "/remote.file");
     }
-    
+
     @Test
     public void downloadMethodShouldCreateLocalFileStreamContainingProgressListener() throws IOException {
 
         FTPFile file = new FTPFile("remote.file", 0l, "path/to", 0, false);
-        
+
         ftpConnection.setProgressListener(new ProgressListener());
         ftpConnection.download(file, LOCAL_DIRECTORY);
 
@@ -228,6 +230,40 @@ public class FTPConnectionTest {
     }
 
     @Test
+    public void shouldDeleteRemoteFile() throws IOException {
+
+        FTPFile file = new FTPFile("file.name", 0, "/some/directory", 0, false);
+
+        ftpConnection.deleteRemoteFile(file);
+
+        verify(mockFtpClient).deleteFile("/some/directory/file.name");
+    }
+
+    @Test
+    public void ifDeleteFailsThenExceptionShouldBeThrown() throws IOException {
+
+        expectedException.expect(FTPException.class);
+        expectedException.expectMessage(equalTo("Unable to delete file on remote server"));
+        
+        FTPFile file = new FTPFile("file.name", 0, "/some/directory", 0, false);
+
+        when(mockFtpClient.deleteFile(anyString())).thenReturn(false);
+        ftpConnection.deleteRemoteFile(file);
+    }
+    
+    @Test
+    public void ifDeleteThrowsExceptionItShouldBeCaughtAndRethrown() throws IOException {
+        
+        expectedException.expect(FTPException.class);
+        expectedException.expectMessage(equalTo("Unable to delete file on remote server"));
+        
+        FTPFile file = new FTPFile("file.name", 0, "/some/directory", 0, false);
+
+        when(mockFtpClient.deleteFile(anyString())).thenThrow(new IOException());
+        ftpConnection.deleteRemoteFile(file);
+    }
+
+    @Test
     public void downloadShouldRecursivelyCheckFileIfFolderThenLsThatAndGetOnlyFiles() throws IOException {
 
         initRecursiveListings();
@@ -247,7 +283,7 @@ public class FTPConnectionTest {
         when(mockFileStreamFactory.createOutputStream("some/directory/folder/directory1/directory2/file6.txt"))
                 .thenReturn(stream5);
         when(mockFileStreamFactory.createOutputStream("some/directory/folder/directory1/file4.txt")).thenReturn(stream6);
-        
+
         FTPFile directory = new FTPFile("folder", 0, "path/to", 0, true);
         ftpConnection.download(directory, "some/directory");
 
@@ -261,7 +297,7 @@ public class FTPConnectionTest {
         verify(mockFtpClient).listFiles("path/to/folder/directory1/directory2/");
 
         InOrder inOrder = Mockito.inOrder(mockFtpClient, stream1, stream2, stream3, stream4, stream5, stream6);
-        
+
         inOrder.verify(mockFtpClient).retrieveFile("path/to/folder/file1.txt", stream1);
         inOrder.verify(stream1).close();
         inOrder.verify(mockFtpClient).retrieveFile("path/to/folder/file2.txt", stream2);

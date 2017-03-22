@@ -5,6 +5,7 @@ import io.linuxserver.davos.transfer.ftp.connection.progress.ProgressListener;
 
 public class FTPTransfer {
 
+    private State state = State.PENDING;
     private final FTPFile file;
     private ProgressListener listener;
 
@@ -22,5 +23,17 @@ public class FTPTransfer {
 
     public void setListener(ProgressListener listener) {
         this.listener = listener;
+    }
+    
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public enum State {
+        PENDING, DOWNLOADING, SKIPPED, FINISHED
     }
 }

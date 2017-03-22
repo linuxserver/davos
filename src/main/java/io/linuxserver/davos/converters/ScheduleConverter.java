@@ -34,6 +34,9 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
         schedule.setTransferType(TransferSelector.valueOf(source.transferType.toString()));
         schedule.setMoveFileTo(source.moveFileTo);
         schedule.getLastScannedFiles().addAll(source.scannedFiles.stream().map(f -> f.file).collect(toList()));
+        schedule.setFiltersMandatory(source.filtersMandatory);
+        schedule.setDeleteHostFile(source.deleteHostFile);
+        schedule.setInvertFilters(source.invertFilters);
         
         for (ActionModel action : source.actions) {
 
@@ -84,6 +87,9 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
         model.startAutomatically = source.isAutomatic();
         model.transferType = FileTransferType.valueOf(source.getTransferType().toString());
         model.moveFileTo = source.getMoveFileTo();
+        model.filtersMandatory = source.isFiltersMandatory();
+        model.invertFilters = source.isInvertFilters();
+        model.deleteHostFile = source.isDeleteHostFile();
         
         if (StringUtils.isNotBlank(source.getMoveFileTo())) {
 

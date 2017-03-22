@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.linuxserver.davos.delegation.services.HostService;
 import io.linuxserver.davos.delegation.services.ScheduleService;
 import io.linuxserver.davos.delegation.services.SettingsService;
+import io.linuxserver.davos.transfer.ftp.exception.FTPException;
 import io.linuxserver.davos.web.Host;
 import io.linuxserver.davos.web.Schedule;
 import io.linuxserver.davos.web.ScheduleCommand;
@@ -126,6 +127,26 @@ public class APIController {
         hostService.deleteHost(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create());
+    }
+
+    @RequestMapping(value = "/testConnection", method = RequestMethod.POST)
+    public ResponseEntity<APIResponse> testConnection(@RequestBody Host host) {
+
+        APIResponse response = APIResponseBuilder.create();
+        HttpStatus status = HttpStatus.OK;
+        
+        try {
+            hostService.testConnection(host);
+        } catch (FTPException e) {
+
+            LOGGER.error("Failed to connect to host");
+            LOGGER.debug("Exception: ", e);
+
+            response.withBody(e.getCause().getMessage()).withStatus("Failed");
+            status = HttpStatus.BAD_REQUEST;
+        }
+        
+        return ResponseEntity.status(status).body(response);
     }
 
     @RequestMapping(value = "/settings/log", method = RequestMethod.POST)

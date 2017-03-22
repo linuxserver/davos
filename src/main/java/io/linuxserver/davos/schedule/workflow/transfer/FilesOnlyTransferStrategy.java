@@ -16,20 +16,28 @@ public class FilesOnlyTransferStrategy extends TransferStrategy {
     }
 
     @Override
-    public void transferFile(FTPFile fileToTransfer, String destination) {
+    public void transferFile(FTPTransfer transfer, String destination) {
 
-        String filename = fileToTransfer.getName();
-        String cleanFilePath = FileUtils.ensureTrailingSlash(fileToTransfer.getPath());
+        FTPFile file = transfer.getFile();
+        String filename = file.getName();
+        String cleanFilePath = FileUtils.ensureTrailingSlash(file.getPath());
         String cleanDestination = FileUtils.ensureTrailingSlash(destination);
 
-        if (!fileToTransfer.isDirectory()) {
+        if (!file.isDirectory()) {
          
             LOGGER.info("Downloading {} to {}", cleanFilePath + filename, cleanDestination);
-            connection.download(fileToTransfer, cleanDestination);
+            transfer.setState(FTPTransfer.State.DOWNLOADING);
+            connection.download(file, cleanDestination);
+            transfer.setState(FTPTransfer.State.FINISHED);
             LOGGER.info("Successfully downloaded file.");
             
             LOGGER.info("Running post download actions on {}", filename);
-            runPostDownloadAction(fileToTransfer);
+            runPostDownloadAction(file);
+        } else {
+            
+            LOGGER.debug("Nullifying listener as it will never get used");
+            transfer.setState(FTPTransfer.State.SKIPPED);
+            transfer.setListener(null);
         }
     }
 }
