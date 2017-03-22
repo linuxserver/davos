@@ -27,6 +27,8 @@ public class ScheduleStepDefs {
     @Given("^a schedule exists for that server, with filters$")
     public void a_schedule_exists_for_that_server_with_filters() throws Throwable {
 
+        System.out.println(TMP);
+        
         createBasicSchedule();
 
         FilterModel filter1 = new FilterModel();
@@ -40,17 +42,17 @@ public class ScheduleStepDefs {
     
     @Given("^the schedule is set to delete host files$")
     public void the_schedule_is_set_to_delete_host_files() throws Throwable {
-        scheduleModel.deleteHostFile = true;
+        scheduleModel.setDeleteHostFile(true);
     }
     
     @Given("^the schedule is set to invert filters$")
     public void the_schedule_is_set_to_invert_filters() throws Throwable {
-        scheduleModel.invertFilters = true;
+        scheduleModel.setInvertFilters(true);
     }
     
     @Given("^the schedule is set to have mandatory filters$")
     public void the_schedule_is_set_to_have_mandatory_filters() throws Throwable {
-        scheduleModel.filtersMandatory = true;
+        scheduleModel.setFiltersMandatory(true);
     }
     
     @Given("^a schedule exists for that server, without filters$")

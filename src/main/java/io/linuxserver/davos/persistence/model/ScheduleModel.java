@@ -29,7 +29,7 @@ public class ScheduleModel {
     public String name;
 
     @Column
-    public boolean startAutomatically;
+    private Boolean startAutomatically;
 
     @Column
     public int interval;
@@ -39,22 +39,70 @@ public class ScheduleModel {
 
     @Column
     public String localFilePath;
-    
-    @Column
-    public String moveFileTo;
-    
-    @Column
-    public boolean filtersMandatory;
 
     @Column
-    public boolean deleteHostFile;
-    
+    public String moveFileTo;
+
     @Column
-    public boolean invertFilters;
-    
+    private Boolean filtersMandatory;
+
+    @Column
+    private Boolean deleteHostFile;
+
+    @Column
+    private Boolean invertFilters;
+
+    public Boolean getFiltersMandatory() {
+
+        if (null != filtersMandatory)
+            return filtersMandatory;
+
+        return false;
+    }
+
+    public void setFiltersMandatory(boolean filtersMandatory) {
+        this.filtersMandatory = filtersMandatory;
+    }
+
+    public Boolean getDeleteHostFile() {
+
+        if (null != deleteHostFile)
+            return deleteHostFile;
+
+        return false;
+    }
+
+    public void setDeleteHostFile(boolean deleteHostFile) {
+        this.deleteHostFile = deleteHostFile;
+    }
+
+    public Boolean getStartAutomatically() {
+
+        if (null != startAutomatically)
+            return startAutomatically;
+
+        return false;
+    }
+
+    public void setStartAutomatically(boolean startAutomatically) {
+        this.startAutomatically = startAutomatically;
+    }
+
+    public Boolean getInvertFilters() {
+
+        if (null != invertFilters)
+            return invertFilters;
+
+        return false;
+    }
+
+    public void setInvertFilters(boolean invertFilters) {
+        this.invertFilters = invertFilters;
+    }
+
     @Column
     public FileTransferType transferType = FileTransferType.FILE;
-    
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "schedule_host_id")
     public HostModel host;
@@ -66,11 +114,10 @@ public class ScheduleModel {
     @OneToMany(orphanRemoval = true, mappedBy = "schedule", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     public List<ActionModel> actions = new ArrayList<ActionModel>();
-    
+
     @OneToMany(orphanRemoval = true, mappedBy = "schedule", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     public List<ScannedFileModel> scannedFiles = new ArrayList<ScannedFileModel>();
-
 
     @Override
     public String toString() {

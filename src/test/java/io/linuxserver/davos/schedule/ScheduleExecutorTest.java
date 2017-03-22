@@ -47,10 +47,10 @@ public class ScheduleExecutorTest {
         List<ScheduleModel> models = new ArrayList<ScheduleModel>();
 
         ScheduleModel nonAutoModel = new ScheduleModel();
-        nonAutoModel.startAutomatically = false;
+        nonAutoModel.setStartAutomatically(false);
 
         ScheduleModel autoModel = new ScheduleModel();
-        autoModel.startAutomatically = true;
+        autoModel.setStartAutomatically(true);
         autoModel.interval = 50;
 
         models.add(nonAutoModel);

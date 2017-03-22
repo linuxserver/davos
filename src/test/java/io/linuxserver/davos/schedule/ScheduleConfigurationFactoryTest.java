@@ -29,11 +29,11 @@ public class ScheduleConfigurationFactoryTest {
         model.host.password = "password";
         model.host.port = 8;
         model.host.username = "username";
-        model.filtersMandatory = true;
+        model.setFiltersMandatory(true);
         model.localFilePath = "local/";
         model.name = "schedulename";
         model.remoteFilePath = "thing/";
-        model.startAutomatically = true;
+        model.setStartAutomatically(true);
         model.transferType = FileTransferType.FILE;
 
         ScheduleConfiguration config = ScheduleConfigurationFactory.createConfig(model);

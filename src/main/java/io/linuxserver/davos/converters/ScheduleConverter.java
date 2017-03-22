@@ -29,14 +29,14 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
         schedule.setLocalDirectory(source.localFilePath);
         schedule.setName(source.name);
         schedule.setHostDirectory(source.remoteFilePath);
-        schedule.setAutomatic(source.startAutomatically);
+        schedule.setAutomatic(source.getStartAutomatically());
         schedule.setHost(source.host.id);
         schedule.setTransferType(TransferSelector.valueOf(source.transferType.toString()));
         schedule.setMoveFileTo(source.moveFileTo);
         schedule.getLastScannedFiles().addAll(source.scannedFiles.stream().map(f -> f.file).collect(toList()));
-        schedule.setFiltersMandatory(source.filtersMandatory);
-        schedule.setDeleteHostFile(source.deleteHostFile);
-        schedule.setInvertFilters(source.invertFilters);
+        schedule.setFiltersMandatory(source.getFiltersMandatory());
+        schedule.setDeleteHostFile(source.getDeleteHostFile());
+        schedule.setInvertFilters(source.getInvertFilters());
         
         for (ActionModel action : source.actions) {
 
@@ -84,12 +84,12 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
         model.interval = source.getInterval();
         model.localFilePath = source.getLocalDirectory();
         model.remoteFilePath = source.getHostDirectory();
-        model.startAutomatically = source.isAutomatic();
+        model.setStartAutomatically(source.isAutomatic());
         model.transferType = FileTransferType.valueOf(source.getTransferType().toString());
         model.moveFileTo = source.getMoveFileTo();
-        model.filtersMandatory = source.isFiltersMandatory();
-        model.invertFilters = source.isInvertFilters();
-        model.deleteHostFile = source.isDeleteHostFile();
+        model.setFiltersMandatory(source.isFiltersMandatory());
+        model.setInvertFilters(source.isInvertFilters());
+        model.setDeleteHostFile(source.isDeleteHostFile());
         
         if (StringUtils.isNotBlank(source.getMoveFileTo())) {
 

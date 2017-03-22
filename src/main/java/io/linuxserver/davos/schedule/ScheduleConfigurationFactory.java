@@ -16,11 +16,12 @@ public class ScheduleConfigurationFactory {
 
         ScheduleConfiguration config = new ScheduleConfiguration(model.name, model.host.protocol, model.host.address,
                 model.host.port, new UserCredentials(model.host.username, model.host.password), model.remoteFilePath,
-                model.localFilePath, model.transferType, model.filtersMandatory, model.invertFilters, model.deleteHostFile);
+                model.localFilePath, model.transferType, model.getFiltersMandatory(), model.getInvertFilters(),
+                model.getDeleteHostFile());
 
         if (StringUtils.isNotBlank(model.moveFileTo))
             config.getActions().add(new MoveFileAction(config.getLocalFilePath(), model.moveFileTo));
-        
+
         if (null != model.filters)
             addFilters(model, config);
 

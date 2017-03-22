@@ -50,7 +50,7 @@ public class ScheduleExecutor {
 
         for (ScheduleModel model : scheduleConfigurationDAO.getAll()) {
 
-            if (model.startAutomatically) {
+            if (model.getStartAutomatically()) {
 
                 RunnableSchedule runnable = new RunnableSchedule(model.id, scheduleConfigurationDAO);
                 ScheduledFuture<?> runningSchedule = scheduledExecutorService.scheduleAtFixedRate(runnable, 0, model.interval,
