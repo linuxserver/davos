@@ -46,3 +46,4 @@ Finally, schedules can be started or stopped at any point, using the schedules l
   - Inverse filtering allows schedules to download files that DO NOT match provided filters.
   - "Test Connection" button added to Hosts page
   - Schedules can now delete the remote copy of each file once the download has completed. This is separate to the Post-download actions.
+  - New intervals: "Every minute" and "Every 5 minutes"
