@@ -36,3 +36,13 @@ Finally, schedules can be started or stopped at any point, using the schedules l
 
 
 ![https://raw.githubusercontent.com/linuxserver/davos/master/docs/list.PNG](https://raw.githubusercontent.com/linuxserver/davos/master/docs/list.PNG)
+
+# Changelog
+
+- **2.1.0**
+  - Mandatory filtering allows schedules to only download files when at least one filter has been set.
+  - Form validation on Hosts and Schedule pages
+  - New theme
+  - Inverse filtering allows schedules to download files that DO NOT match provided filters.
+  - "Test Connection" button added to Hosts page
+  - Schedules can now delete the remote copy of each file once the download has completed. This is separate to the Post-download actions.
