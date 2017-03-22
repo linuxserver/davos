@@ -31,7 +31,7 @@ public abstract class TransferStrategy {
         return getClass().getSimpleName();
     }
 
-    public abstract void transferFile(FTPFile fileToTransfer, String destination);
+    public abstract void transferFile(FTPTransfer fileToTransfer, String destination);
 
     protected void runPostDownloadAction(FTPFile file) {
 

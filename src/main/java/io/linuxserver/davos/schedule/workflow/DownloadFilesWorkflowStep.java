@@ -47,7 +47,7 @@ public class DownloadFilesWorkflowStep extends WorkflowStep {
                 schedule.getConnection().setProgressListener(listener);
                 transfer.setListener(listener);
                 
-                strategyToUse.transferFile(transfer.getFile(), config.getLocalFilePath());
+                strategyToUse.transferFile(transfer, config.getLocalFilePath());
                 
                 if (config.isDeleteHostFile())
                     schedule.getConnection().deleteRemoteFile(file);

@@ -30,7 +30,7 @@ public class FilesAndFoldersTranferStrategyTest {
         
         FTPFile file = new FTPFile("file1", 0, "remotePath/", 0, false);
         
-        strategy.transferFile(file, "destination");
+        strategy.transferFile(new FTPTransfer(file), "destination");
         
         verify(mockConnection).download(file, "destination/");
     }
@@ -40,7 +40,7 @@ public class FilesAndFoldersTranferStrategyTest {
         
         FTPFile file = new FTPFile("file1", 0, "remotePath/", 0, true);
         
-        strategy.transferFile(file, "destination");
+        strategy.transferFile(new FTPTransfer(file), "destination");
         
         verify(mockConnection).download(file, "destination/");
     }

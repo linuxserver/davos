@@ -34,7 +34,7 @@ public class TransferStrategyTest {
 
         strategy.setPostDownloadActions(Arrays.asList(mockAction1, mockAction2));
 
-        strategy.transferFile(new FTPFile("file1", 0, null, 0, false), "destination/");
+        strategy.transferFile(new FTPTransfer(new FTPFile("file1", 0, null, 0, false)), "destination/");
 
         verify(mockAction1).execute(captor.capture());
         verify(mockAction2).execute(captor.capture());
@@ -48,7 +48,7 @@ public class TransferStrategyTest {
         
         DownloadActionImplTestTransferStrategy strategy = new DownloadActionImplTestTransferStrategy(null);
         strategy.setPostDownloadActions(null);
-        strategy.transferFile(new FTPFile("file1", 0, null, 0, false), "destination/");
+        strategy.transferFile(new FTPTransfer(new FTPFile("file1", 0, null, 0, false)), "destination/");
     }
 
     class TestTransferStrategy extends TransferStrategy {
@@ -58,7 +58,7 @@ public class TransferStrategyTest {
         }
 
         @Override
-        public void transferFile(FTPFile fileToTransfer, String destination) {
+        public void transferFile(FTPTransfer fileToTransfer, String destination) {
         }
     }
 
@@ -69,7 +69,7 @@ public class TransferStrategyTest {
         }
 
         @Override
-        public void transferFile(FTPFile fileToTransfer, String destination) {
+        public void transferFile(FTPTransfer fileToTransfer, String destination) {
         }
     }
 
@@ -80,8 +80,8 @@ public class TransferStrategyTest {
         }
 
         @Override
-        public void transferFile(FTPFile fileToTransfer, String destination) {
-            runPostDownloadAction(fileToTransfer);
+        public void transferFile(FTPTransfer fileToTransfer, String destination) {
+            runPostDownloadAction(fileToTransfer.getFile());
         }
     }
 }

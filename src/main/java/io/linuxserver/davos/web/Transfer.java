@@ -6,6 +6,7 @@ public class Transfer {
     private long fileSize;
     private boolean directory;
     private Progress progress;
+    private String status;
 
     public String getFileName() {
         return fileName;
@@ -37,6 +38,14 @@ public class Transfer {
 
     public void setProgress(Progress progress) {
         this.progress = progress;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public static class Progress {
