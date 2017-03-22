@@ -44,15 +44,15 @@ var settings = (function($) {
 
             var logLevel = $(this).find('option:selected').val();
 
-            makeNotify('info', 'Changing logging level to ' + logLevel, 'info');
+            makeNotify('info', 'Changing logging level to ' + logLevel, 'glyphicon-info-sign');
 
             $.ajax({
                 method: 'POST',
                 url: '/api/v2/settings/log?level=' + logLevel
             }).done(function(msg) {
-                makeNotify('success', 'Settings saved!' + theme, 'ok');
+                makeNotify('success', 'Settings saved!', 'glyphicon-ok-sign');
             }).fail(function(msg) {
-                makeNotify('danger', 'There was an error: ' + msg.responseJSON.status, 'warning');
+                makeNotify('danger', 'There was an error: ' + msg.responseJSON.status, 'glyphicon-warning-sign');
             });
         });
     };
