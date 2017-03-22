@@ -1,22 +1,5 @@
 /*global $, jQuery, base, Materialize */
-
-var edit = (function($) {
-
-    'use strict';
-
-    var initialise;
-
-    initialise = function() {
-
-    };
-
-    return {
-        init: initialise
-    }
-
-}(jQuery));
-
-var settings = (function ($) {
+var settings = (function($) {
 
     'use strict';
 
@@ -27,7 +10,7 @@ var settings = (function ($) {
         $.notify({
             icon: 'glyphicon ' + icon,
             message: messageText
-        },{
+        }, {
             // settings
             type: notificationType,
             placement: {
@@ -37,9 +20,9 @@ var settings = (function ($) {
             delay: 3000
         });
     };
-    
-    initialise = function () {
-    	
+
+    initialise = function() {
+
         $('#logLevel').on('change', function() {
 
             var logLevel = $(this).find('option:selected').val();
@@ -49,21 +32,22 @@ var settings = (function ($) {
             $.ajax({
                 method: 'POST',
                 url: '/api/v2/settings/log?level=' + logLevel
-            }).done(function (msg) {
-            	makeNotify('success', 'Settings saved!' + theme, 'ok');
-            }).fail(function (msg) {
-            	makeNotify('danger', 'There was an error: ' + msg.responseJSON.status, 'warning');
+            }).done(function(msg) {
+                makeNotify('success', 'Settings saved!' + theme, 'ok');
+            }).fail(function(msg) {
+                makeNotify('danger', 'There was an error: ' + msg.responseJSON.status, 'warning');
             });
         });
     };
 
     return {
-        init: initialise
+        init: initialise,
+        notify: makeNotify
     }
 
 }(jQuery));
 
-var fragments = (function ($) {
+var fragments = (function($) {
 
     'use strict';
 
@@ -97,7 +81,7 @@ var fragments = (function ($) {
 
     keypresses = function() {
 
-        $('#newFilter').on('keypress', function (e) {
+        $('#newFilter').on('keypress', function(e) {
 
             if (e.keyCode == 13) {
 
@@ -130,30 +114,30 @@ var fragments = (function ($) {
 
 }(jQuery));
 
-var schedule = (function ($) {
+var schedule = (function($) {
 
     'use strict';
 
     var initialise, cleanId, success, error;
 
-    initialise = function () {
+    initialise = function() {
 
         $('#schedule-form').on('submit', function(e) {
             e.preventDefault();
             e.stopPropagation();
         });
 
-        $('#saveSchedule').on('click', function () {
+        $('#saveSchedule').on('click', function() {
 
             $.notify({
                 icon: 'glyphicon glyphicon-info-sign',
-            	message: 'Saving...'
-            },{
-            	// settings
-            	type: 'info',
+                message: 'Saving...'
+            }, {
+                // settings
+                type: 'info',
                 placement: {
-                	from: "top",
-                	align: "right"
+                    from: "top",
+                    align: "right"
                 },
                 delay: 3000
             });
@@ -179,35 +163,29 @@ var schedule = (function ($) {
 
             $('.filter-label').each(function() {
 
-                postData.filters.push(
-                    {
-                        "id": cleanId($(this).attr('data-filter-id')),
-                        "value": $(this).attr('data-filter-value')
-                    }
-                );
+                postData.filters.push({
+                    "id": cleanId($(this).attr('data-filter-id')),
+                    "value": $(this).attr('data-filter-value')
+                });
             });
 
             $('#notifications .notification').each(function() {
 
-                postData.notifications.push(
-                    {
-                        "id": cleanId($(this).attr('data-notification-id')),
-                        "apiKey": $(this).find('.apiKey').val()
-                    }
-                );
+                postData.notifications.push({
+                    "id": cleanId($(this).attr('data-notification-id')),
+                    "apiKey": $(this).find('.apiKey').val()
+                });
             });
 
             $('#apis .api').each(function() {
 
-                postData.apis.push(
-                    {
-                        "id": cleanId($(this).attr('data-api-id')),
-                        "url": $(this).find('.url').val(),
-                        "method": $(this).find('.method option:checked').attr('value'),
-                        "contentType": $(this).find('.contentType').val(),
-                        "body": $(this).find('.body').val()
-                    }
-                );
+                postData.apis.push({
+                    "id": cleanId($(this).attr('data-api-id')),
+                    "url": $(this).find('.url').val(),
+                    "method": $(this).find('.method option:checked').attr('value'),
+                    "contentType": $(this).find('.contentType').val(),
+                    "body": $(this).find('.body').val()
+                });
             });
 
             var url = "/api/v2/schedule";
@@ -230,24 +208,25 @@ var schedule = (function ($) {
             }).done(success).fail(error);
         });
 
-        $('#deleteSchedule').on('click', function () {
+        $('#deleteSchedule').on('click', function() {
 
             $.ajax({
                 method: 'DELETE',
                 url: '/api/v2/schedule/' + $('#id').val()
-            }).done(function (msg) {
+            }).done(function(msg) {
                 window.location.replace('/schedules');
             }).fail(error);
         });
 
-        $('.start-schedule').on('click', function () {
+        $('.start-schedule').on('click', function() {
 
-            var id = $(this).attr('data-schedule-id'), name = $(this).attr('data-schedule-name');
+            var id = $(this).attr('data-schedule-id'),
+                name = $(this).attr('data-schedule-name');
 
             $.notify({
                 icon: 'glyphicon glyphicon-info-sign',
                 message: 'Starting schedule "' + name + '"'
-            },{
+            }, {
                 // settings
                 type: 'info',
                 placement: {
@@ -260,19 +239,19 @@ var schedule = (function ($) {
             $.ajax({
 
                 method: 'POST',
-                url: '/api/v2/schedule/' + id + '/execute' ,
+                url: '/api/v2/schedule/' + id + '/execute',
                 dataType: "json",
                 contentType: 'application/json',
                 data: JSON.stringify({
                     command: 'START'
                 })
 
-            }).done(function (msg) {
+            }).done(function(msg) {
 
                 $.notify({
                     icon: 'glyphicon glyphicon-ok-sign',
                     message: 'Schedule Started'
-                },{
+                }, {
                     // settings
                     type: 'success',
                     placement: {
@@ -282,21 +261,22 @@ var schedule = (function ($) {
                     delay: 3000
                 });
 
-                $('span[data-schedule-id="' + id +'"].start-schedule').toggleClass('hide');
-                $('span[data-schedule-id="' + id +'"].stop-schedule').parents('span').toggleClass('hide');
+                $('span[data-schedule-id="' + id + '"].start-schedule').toggleClass('hide');
+                $('span[data-schedule-id="' + id + '"].stop-schedule').parents('span').toggleClass('hide');
 
             }).fail(error);
 
         });
 
-        $('.stop-schedule').on('click', function () {
+        $('.stop-schedule').on('click', function() {
 
-            var id = $(this).attr('data-schedule-id'), name = $(this).attr('data-schedule-name');
+            var id = $(this).attr('data-schedule-id'),
+                name = $(this).attr('data-schedule-name');
 
             $.notify({
                 icon: 'glyphicon glyphicon-info-sign',
                 message: 'Stopping schedule "' + name + '"'
-            },{
+            }, {
                 // settings
                 type: 'info',
                 placement: {
@@ -309,19 +289,19 @@ var schedule = (function ($) {
             $.ajax({
 
                 method: 'POST',
-                url: '/api/v2/schedule/' + id + '/execute' ,
+                url: '/api/v2/schedule/' + id + '/execute',
                 dataType: "json",
                 contentType: 'application/json',
                 data: JSON.stringify({
                     command: 'STOP'
                 })
 
-            }).done(function (msg) {
+            }).done(function(msg) {
 
                 $.notify({
                     icon: 'glyphicon glyphicon-ok-sign',
                     message: 'Schedule Stopped'
-                },{
+                }, {
                     // settings
                     type: 'success',
                     placement: {
@@ -331,8 +311,8 @@ var schedule = (function ($) {
                     delay: 3000
                 });
 
-                $('span[data-schedule-id="' + id +'"].start-schedule').toggleClass('hide');
-                $('span[data-schedule-id="' + id +'"].stop-schedule').parents('span').toggleClass('hide');
+                $('span[data-schedule-id="' + id + '"].start-schedule').toggleClass('hide');
+                $('span[data-schedule-id="' + id + '"].stop-schedule').parents('span').toggleClass('hide');
 
             }).fail(error);
 
@@ -340,7 +320,7 @@ var schedule = (function ($) {
 
     };
 
-    cleanId = function (id) {
+    cleanId = function(id) {
 
         if (id && $.trim(id).length > 0) {
             return parseInt(id, 10);
@@ -349,12 +329,12 @@ var schedule = (function ($) {
         return null;
     };
 
-    success = function (msg) {
+    success = function(msg) {
 
         $.notify({
             icon: 'glyphicon glyphicon-ok-sign',
             message: 'Schedule Saved!'
-        },{
+        }, {
             // settings
             type: 'success',
             placement: {
@@ -369,12 +349,12 @@ var schedule = (function ($) {
         }
     };
 
-    error = function (msg) {
+    error = function(msg) {
 
         $.notify({
             icon: 'glyphicon glyphicon-warning-sign',
             message: 'There was an error: ' + msg.status
-        },{
+        }, {
             // settings
             type: 'danger',
             placement: {
@@ -391,17 +371,17 @@ var schedule = (function ($) {
 
 }(jQuery));
 
-var host = (function ($) {
+var host = (function($, settings) {
 
     'use strict';
 
-    var initialise, cleanId, makeRequest, success, error, makeNotify;
+    var initialise, cleanId, makeRequest, success, error, validate;
 
-    initialise = function () {
+    initialise = function() {
 
-        $('#testConnection').on('click', function () {
+        $('#testConnection').on('click', function() {
 
-            makeNotify('info', 'Testing connection...', 'glyphicon-info-sign');
+            settings.notify('info', 'Testing connection...', 'glyphicon-info-sign');
 
             var postData = {
                 address: $('#address').val(),
@@ -414,50 +394,55 @@ var host = (function ($) {
             var url = "/api/v2/testConnection";
             var method = "POST";
 
-            makeRequest(url, method, postData, function (msg) {
-                makeNotify('success', 'Connection successful!', 'glyphicon-ok-sign');
+            makeRequest(url, method, postData, function(msg) {
+                settings.notify('success', 'Connection successful!', 'glyphicon-ok-sign');
             }, error);
 
         });
 
-        $('#saveHost').on('click', function () {
+        $('#saveHost').on('click', function() {
 
-            makeNotify('info', 'Saving...', 'glyphicon-info-sign');
+            settings.notify('info', 'Saving...', 'glyphicon-info-sign');
 
-            var postData = {
-                id: cleanId($('#id').val()),
-                name: $('#name').val(),
-                address: $('#address').val(),
-                port: parseInt($('#port').val(), 10),
-                protocol: $('input[name="protocol"]:checked').val(),
-                username: $('#username').val(),
-                password: $('#password').val()
-            };
+            if (validate()) {
 
-            var url = "/api/v2/host";
-            var method = "POST";
+                var postData = {
+                    id: cleanId($('#id').val()),
+                    name: $('#name').val(),
+                    address: $('#address').val(),
+                    port: parseInt($('#port').val(), 10),
+                    protocol: $('input[name="protocol"]:checked').val(),
+                    username: $('#username').val(),
+                    password: $('#password').val()
+                };
 
-            if (null !== cleanId($('#id').val())) {
+                var url = "/api/v2/host";
+                var method = "POST";
 
-                url += "/" + cleanId($('#id').val());
-                method = "PUT";
+                if (null !== cleanId($('#id').val())) {
+
+                    url += "/" + cleanId($('#id').val());
+                    method = "PUT";
+                }
+
+                makeRequest(url, method, postData, success, error);
+            } else {
+                settings.notify('danger', 'Required fields are missing', 'glyphicon-warning-sign');
             }
-
-            makeRequest(url, method, postData, success, error);
         });
 
-        $('#deleteHost').on('click', function () {
+        $('#deleteHost').on('click', function() {
 
             $.ajax({
                 method: 'DELETE',
                 url: '/api/v2/host/' + $('#id').val()
-            }).done(function (msg) {
+            }).done(function(msg) {
                 window.location.replace('/hosts');
             }).fail(error);
         });
     };
 
-    makeRequest = function (url, method, postData, successCallback, errorCallback) {
+    makeRequest = function(url, method, postData, successCallback, errorCallback) {
 
         $.ajax({
 
@@ -471,36 +456,20 @@ var host = (function ($) {
 
     };
 
-    makeNotify = function(notificationType, messageText, icon) {
+    success = function(msg) {
 
-        $.notify({
-            icon: 'glyphicon ' + icon,
-            message: messageText
-        },{
-            // settings
-            type: notificationType,
-            placement: {
-                from: "top",
-                align: "right"
-            },
-            delay: 3000
-        });
-    };
-
-    success = function (msg) {
-
-        makeNotify('success', 'Host Saved!', 'glyphicon-ok-sign');
+        settings.notify('success', 'Host Saved!', 'glyphicon-ok-sign');
 
         if (window.location.pathname === '/hosts/new') {
             window.location.replace('/hosts/' + msg.body.id);
         }
     };
 
-    error = function (msg) {
-        makeNotify('danger', 'There was an error: ' + msg.responseJSON.body, 'glyphicon-warning-sign');
+    error = function(msg) {
+        settings.notify('danger', 'There was an error: ' + msg.responseJSON.body, 'glyphicon-warning-sign');
     };
 
-    cleanId = function (id) {
+    cleanId = function(id) {
 
         if (id && $.trim(id).length > 0) {
             return parseInt(id, 10);
@@ -509,14 +478,30 @@ var host = (function ($) {
         return null;
     };
 
+    validate = function() {
+
+        var validationPassed = true;
+
+        $('input[type="text"].validate, input[type="number"].validate').each(function() {
+
+            if ($.trim($(this).val()).length === 0) {
+                $(this).parents('.form-group').addClass('has-error');
+                validationPassed = false;
+            } else {
+                $(this).parents('.form-group').removeClass('has-error');
+            }
+        });
+
+        return validationPassed;
+    };
+
     return {
         init: initialise
     }
 
-}(jQuery))
+}(jQuery, settings))
 
 jQuery(document).ready(host.init);
 jQuery(document).ready(schedule.init);
 jQuery(document).ready(fragments.init);
-jQuery(document).ready(edit.init);
 jQuery(document).ready(settings.init);

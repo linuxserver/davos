@@ -36,19 +36,19 @@
 			<div class="well">
 	            <form class="form-horizontal" onsubmit="return false;" action="#" th:object="${host}">
 	                <fieldset>
-	
+
 	                    <div class="row">
-	
+
 	                        <div class="col-md-12">
-	
+
 	                            <div class="form-group">
 	                                <label for="host-name" class="col-lg-2 control-label">Name <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="What you want to refer to this host as" class="help glyphicon glyphicon-question-sign"></span></label>
 	                                <div class="col-lg-10">
 	                                    <input type="hidden" th:if="*{id}" th:field="*{id}" />
-	                                    <input type="text" class="form-control" th:field="*{name}" autocomplete="off" />
+	                                    <input type="text" class="form-control validate" th:field="*{name}" autocomplete="off" />
 	                                </div>
 	                            </div>
-	
+
 	                            <div class="form-group">
 	                                <label class="col-lg-2 control-label">Protocol <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="What kind of server is this?" class="help glyphicon glyphicon-question-sign"></span></label>
 	                                <div class="col-lg-10">
@@ -59,48 +59,50 @@
 	                                    </div>
 	                                </div>
 	                            </div>
-	
+
 	                            <div class="form-group">
 	                                <label class="col-lg-2 control-label">Host Address <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Name or IP address of the host" class="help glyphicon glyphicon-question-sign"></span></label>
-	                                <div class="col-lg-4">
-	                                    <input type="text" class="form-control" th:field="*{address}" autocomplete="off" />
+	                                <div class="col-lg-10">
+	                                    <input type="text" class="form-control validate" th:field="*{address}" autocomplete="off" />
 	                                </div>
-	
+                                </div>
+
+                                <div class="form-group">
 	                                <label class="col-lg-2 control-label">Port <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="The port used by the host for this protocol" class="help glyphicon glyphicon-question-sign"></span></label>
 	                                <div class="col-lg-4">
-	                                    <input type="number" class="form-control" th:field="*{port}" autocomplete="off" />
+	                                    <input type="number" class="form-control validate" th:field="*{port}" autocomplete="off" />
 	                                </div>
 	                            </div>
-	
+
 	                            <div class="form-group">
 	                                <label class="col-lg-2 control-label">Username</label>
 	                                <div class="col-lg-10">
-	                                    <input type="text" class="form-control" th:field="*{username}" autocomplete="off" />
+	                                    <input type="text" class="form-control validate" th:field="*{username}" autocomplete="off" />
 	                                </div>
 	                            </div>
-	
+
 	                            <div class="form-group">
 	                                <label class="col-lg-2 control-label">Password</label>
 	                                <div class="col-lg-10">
-	                                    <input type="password" class="form-control" th:value="*{password}" name="password" id="password" autocomplete="off" />
+	                                    <input type="password" class="form-control validate" th:value="*{password}" name="password" id="password" autocomplete="off" />
 	                                </div>
 	                            </div>
-	
+
 	                            <div class="form-group">
 	                                <label class="col-lg-2 control-label"></label>
 	                                <div class="col-lg-10">
 	                                    <button type="button" class="btn btn-sm btn-primary" id="testConnection">Test Connection</button>
 	                                </div>
 	                            </div>
-	
+
 	                        </div>
 	                    </div>
-	
-	
+
+
 	                    <div class="row">
-	
+
 	                        <div class="col-md-12">
-	
+
 	                            <div class="form-group last">
 	                                <div class="col-lg-6">
 	                                    <div th:if="${host.id}">
@@ -114,11 +116,11 @@
 	                                    <button type="button" class="btn btn-primary" id="saveHost">Save</button>
 	                                </div>
 	                            </div>
-	
+
 	                        </div>
-	
+
 	                    </div>
-	
+
 	                </fieldset>
 	            </form>
 			</div>
