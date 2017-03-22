@@ -39,6 +39,9 @@ Finally, schedules can be started or stopped at any point, using the schedules l
 
 # Changelog
 
+- **2.1.1**
+  - Fixed primitive issue on Schedule model for new fields
+
 - **2.1.0**
   - Mandatory filtering allows schedules to only download files when at least one filter has been set.
   - Form validation on Hosts and Schedule pages
