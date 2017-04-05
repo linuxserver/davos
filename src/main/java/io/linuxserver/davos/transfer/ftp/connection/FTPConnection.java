@@ -184,9 +184,9 @@ public class FTPConnection implements Connection {
     @Override
     public void deleteRemoteFile(FTPFile file) throws FTPException {
 
-        LOGGER.debug("Deleting remote file...");
         String cleanRemotePath = FileUtils.ensureTrailingSlash(file.getPath()) + file.getName();
-
+        LOGGER.debug("Deleting remote file {}", cleanRemotePath);
+        
         try {
 
             if (file.isDirectory()) {
