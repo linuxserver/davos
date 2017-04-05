@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import io.linuxserver.davos.transfer.ftp.FTPFile;
 import io.linuxserver.davos.transfer.ftp.connection.progress.ProgressListener;
+import io.linuxserver.davos.transfer.ftp.exception.DeleteFileException;
 import io.linuxserver.davos.transfer.ftp.exception.DownloadFailedException;
 import io.linuxserver.davos.transfer.ftp.exception.FTPException;
 import io.linuxserver.davos.transfer.ftp.exception.FileListingException;
@@ -99,7 +100,7 @@ public class FTPConnection implements Connection {
     private CountingOutputStream listenOn(OutputStream outputStream) {
 
         LOGGER.debug("Creating wrapping output stream for progress listener");
-        
+
         CountingOutputStream countingStream = new CountingOutputStream(outputStream) {
 
             @Override
@@ -124,16 +125,15 @@ public class FTPConnection implements Connection {
         boolean hasDownloaded;
 
         if (null != progressListener) {
-         
+
             LOGGER.debug("ProgressListener has been set. Initialising...");
             LOGGER.debug("Total file size is {}", file.getSize());
             progressListener.reset();
             progressListener.setTotalBytes(file.getSize());
             progressListener.start();
-            
+
             hasDownloaded = client.retrieveFile(cleanRemotePath, listenOn(outputStream));
-        }
-        else
+        } else
             hasDownloaded = client.retrieveFile(cleanRemotePath, outputStream);
 
         outputStream.close();
@@ -183,23 +183,50 @@ public class FTPConnection implements Connection {
 
     @Override
     public void deleteRemoteFile(FTPFile file) throws FTPException {
-        
+
         String cleanRemotePath = FileUtils.ensureTrailingSlash(file.getPath()) + file.getName();
+        LOGGER.debug("Deleting remote file {}", cleanRemotePath);
         
         try {
-            
-            LOGGER.debug("About to delete file on remote path: {}", cleanRemotePath);
-            boolean deleted = client.deleteFile(cleanRemotePath);
 
-            if (!deleted) {
-                LOGGER.debug("client#deleteFile() returned 'false'. Assuming file not deleted");
-                throw new DownloadFailedException("Unable to delete file on remote server");
-            }
-            
+            if (file.isDirectory()) {
+                deleteDirectoryAndContents(file, cleanRemotePath);
+            } else
+                doDelete(cleanRemotePath);
+
         } catch (IOException e) {
-            
+
             LOGGER.debug("client#deleteFile() threw exception. Assuming file not deleted");
-            throw new DownloadFailedException("Unable to delete file on remote server");
+            throw new DeleteFileException("Unable to delete file on remote server", e);
         }
+    }
+
+    private void deleteDirectoryAndContents(FTPFile file, String remoteDirectoryPath) throws IOException {
+
+        LOGGER.info("Item {} is a directory. Will now check sub-items", file.getName());
+        List<FTPFile> subItems = listFiles(remoteDirectoryPath).stream().filter(removeCurrentAndParentDirs())
+                .collect(Collectors.toList());
+        
+        for (FTPFile subItem : subItems) {
+            
+            String subItemPath = FileUtils.ensureTrailingSlash(subItem.getPath()) + subItem.getName();
+            
+            if (subItem.isDirectory())
+                deleteDirectoryAndContents(subItem, subItemPath);
+            else
+                doDelete(subItemPath);
+        }
+        
+        LOGGER.debug("Removing empty directory {}", remoteDirectoryPath);
+        client.removeDirectory(remoteDirectoryPath);
+    }
+
+    private void doDelete(String subItemPath) throws IOException {
+        
+        LOGGER.debug("Deleting file: {}", subItemPath);
+        boolean deleted = client.deleteFile(subItemPath);
+        
+        if (!deleted)
+            throw new DeleteFileException("Unable to delete file on remote server. Unknown reason");
     }
 }

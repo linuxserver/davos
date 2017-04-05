@@ -27,8 +27,6 @@ public class ScheduleStepDefs {
     @Given("^a schedule exists for that server, with filters$")
     public void a_schedule_exists_for_that_server_with_filters() throws Throwable {
 
-        System.out.println(TMP);
-        
         createBasicSchedule();
 
         FilterModel filter1 = new FilterModel();

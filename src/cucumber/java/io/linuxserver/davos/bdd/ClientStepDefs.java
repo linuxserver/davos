@@ -11,9 +11,11 @@ import cucumber.api.java.After;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.linuxserver.davos.bdd.helpers.FakeFTPServerFactory;
+import io.linuxserver.davos.bdd.helpers.FakeSFTPServerFactory;
 import io.linuxserver.davos.transfer.ftp.FTPFile;
 import io.linuxserver.davos.transfer.ftp.client.Client;
 import io.linuxserver.davos.transfer.ftp.client.FTPClient;
+import io.linuxserver.davos.transfer.ftp.client.SFTPClient;
 import io.linuxserver.davos.transfer.ftp.client.UserCredentials;
 import io.linuxserver.davos.transfer.ftp.connection.Connection;
 import io.linuxserver.davos.transfer.ftp.connection.progress.ProgressListener;
@@ -40,6 +42,27 @@ public class ClientStepDefs {
         client.setPort(FakeFTPServerFactory.getPort());
 
         connection = client.connect();
+    }
+    
+    @When("^davos connects to the SFTP server$")
+    public void davos_connects_to_the_SFTP_server() throws Throwable {
+
+        client = new SFTPClient();
+        client.setCredentials(new UserCredentials("user", "password"));
+        client.setHost("localhost");
+        client.setPort(FakeSFTPServerFactory.getPort());
+
+        connection = client.connect();
+    }
+
+    @When("^deletes an SFTP directory$")
+    public void deletes_an_SFTP_directory() throws Throwable {
+        connection.deleteRemoteFile(new FTPFile("toDelete", 0, "/", 0, true));
+    }
+
+    @Then("^the SFTP directory is deleted on the server$")
+    public void the_SFTP_directory_is_deleted_on_the_server() throws Throwable {
+        assertThat(new File(TMP + "/toDelete").exists()).isFalse();
     }
 
     @Then("^listing the files will show the correct files$")
@@ -78,6 +101,16 @@ public class ClientStepDefs {
         
         assertThat(progressListener.getProgress()).isEqualTo(100);
         assertThat(((CountingFTPProgressListener) progressListener).getTimesCalled()).isEqualTo(11);
+    }
+    
+    @When("^deletes a directory$")
+    public void deletes_a_directory() throws Throwable {
+        connection.deleteRemoteFile(new FTPFile("toDelete", 0, "/tmp", 0, true));
+    }
+
+    @Then("^the directory is deleted on the server$")
+    public void the_directory_is_deleted_on_the_server() throws Throwable {
+        assertThat(FakeFTPServerFactory.checkFileExists("/tmp/toDelete")).isFalse();
     }
     
     class CountingFTPProgressListener extends ProgressListener {

@@ -10,13 +10,13 @@ import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 public class FakeFTPServerFactory {
 
     private static FakeFtpServer server;
-    
+
     public static int getPort() {
         return server.getServerControlPort();
     }
-    
+
     public static FakeFtpServer setup() {
-        
+
         server = new FakeFtpServer();
         server.addUserAccount(new UserAccount("user", "password", "/tmp"));
         server.setServerControlPort(0);
@@ -29,14 +29,23 @@ public class FakeFTPServerFactory {
 
         server.setFileSystem(fileSystem);
         server.start();
-        
+
         return server;
     }
-    
+
     public static boolean checkFileExists(String filePath) {
         return server.getFileSystem().exists(filePath);
     }
-    
+
+    public static void addDirectoryWithNameAndNumberOfFiles(String name, int numberOfFiles) {
+
+        server.getFileSystem().add(new DirectoryEntry("/tmp/" + name));
+
+        int i;
+        for (i = 0; i < numberOfFiles; i++)
+            server.getFileSystem().add(new FileEntry("/tmp/" + name + "/file" + i));
+    }
+
     public static void stop() {
         server.stop();
     }

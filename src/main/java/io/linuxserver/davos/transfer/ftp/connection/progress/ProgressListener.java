@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 public class ProgressListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProgressListener.class);
-    
+
     private long lastWriteTime;
     private long totalBytesWritten;
     private long bytesInWrite;
@@ -14,9 +14,16 @@ public class ProgressListener {
     private double currentTransferSpeed;
 
     public double getProgress() {
-        double progress = ((double) totalBytesWritten / (double) totalBytes) * 100;
-        LOGGER.debug("Progress downloaded: {}%", progress);
-        return progress;
+        
+        if (totalBytes > 0) {
+            
+            double progress = ((double) totalBytesWritten / (double) totalBytes) * 100;
+            LOGGER.debug("Progress downloaded: {}%", progress);
+
+            return progress;
+        }
+
+        return 100;
     }
 
     public double getTransferSpeed() {
@@ -26,18 +33,18 @@ public class ProgressListener {
     public void reset() {
         totalBytes = 0;
     }
-    
+
     public void updateBytesWritten(long bytes) {
         setBytesWritten(totalBytesWritten + bytes);
     }
 
     public void setBytesWritten(long bytesWritten) {
-        
+
         long currentTimeMillis = System.currentTimeMillis();
         long timeSinceLastWrite = currentTimeMillis - this.lastWriteTime;
-        
-        this.lastWriteTime = currentTimeMillis;      
-        this.bytesInWrite = bytesWritten - this.totalBytesWritten; 
+
+        this.lastWriteTime = currentTimeMillis;
+        this.bytesInWrite = bytesWritten - this.totalBytesWritten;
         this.totalBytesWritten = bytesWritten;
 
         this.currentTransferSpeed = (double) this.bytesInWrite / (double) timeSinceLastWrite / 1000;
@@ -48,7 +55,7 @@ public class ProgressListener {
     }
 
     public void start() {
-        
+
         lastWriteTime = System.currentTimeMillis();
         totalBytesWritten = 0;
     }

@@ -210,6 +210,29 @@ public class SFTPConnectionTest {
     }
 
     @Test
+    public void shouldRecursivelyDeleteRemoteFileIfItIsADirectoryAndHasContents() throws SftpException {
+
+        initRecursiveListings();
+
+        sftpConnection.deleteRemoteFile(new FTPFile("folder", 0, "path/to", 0, true));
+
+        InOrder inOrder = Mockito.inOrder(mockChannel);
+
+        inOrder.verify(mockChannel).ls("path/to/folder/");
+        inOrder.verify(mockChannel).rm("path/to/folder/file1.txt");
+        inOrder.verify(mockChannel).rm("path/to/folder/file2.txt");
+        inOrder.verify(mockChannel).ls("path/to/folder/directory1/");
+        inOrder.verify(mockChannel).rm("path/to/folder/directory1/file3.txt");
+        inOrder.verify(mockChannel).ls("path/to/folder/directory1/directory2/");
+        inOrder.verify(mockChannel).rm("path/to/folder/directory1/directory2/file5.txt");
+        inOrder.verify(mockChannel).rm("path/to/folder/directory1/directory2/file6.txt");
+        inOrder.verify(mockChannel).rmdir("path/to/folder/directory1/directory2");
+        inOrder.verify(mockChannel).rm("path/to/folder/directory1/file4.txt");
+        inOrder.verify(mockChannel).rmdir("path/to/folder/directory1");
+        inOrder.verify(mockChannel).rmdir("path/to/folder");
+    }
+
+    @Test
     public void shouldDeleteRemoteFile() throws SftpException {
 
         FTPFile file = new FTPFile("file.name", 0, "/some/directory", 0, false);
@@ -222,6 +245,8 @@ public class SFTPConnectionTest {
     @Test
     public void shouldDeleteRemoteDirectory() throws SftpException {
 
+        when(mockChannel.ls("/some/directory/file.name/")).thenReturn(new Vector<LsEntry>());
+        
         FTPFile file = new FTPFile("file.name", 0, "/some/directory", 0, true);
 
         sftpConnection.deleteRemoteFile(file);
@@ -234,6 +259,8 @@ public class SFTPConnectionTest {
 
         expectedException.expect(FTPException.class);
         expectedException.expectMessage(equalTo("Unable to delete file on remote server"));
+
+        when(mockChannel.ls("/some/directory/file.name/")).thenReturn(new Vector<LsEntry>());
         
         FTPFile file = new FTPFile("file.name", 0, "/some/directory", 0, true);
 
