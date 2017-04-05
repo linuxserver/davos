@@ -243,7 +243,7 @@ public class FTPConnectionTest {
     public void ifDeleteFailsThenExceptionShouldBeThrown() throws IOException {
 
         expectedException.expect(FTPException.class);
-        expectedException.expectMessage(equalTo("Unable to delete file on remote server"));
+        expectedException.expectMessage(equalTo("Unable to delete file on remote server. Unknown reason"));
         
         FTPFile file = new FTPFile("file.name", 0, "/some/directory", 0, false);
 
@@ -261,6 +261,29 @@ public class FTPConnectionTest {
 
         when(mockFtpClient.deleteFile(anyString())).thenThrow(new IOException());
         ftpConnection.deleteRemoteFile(file);
+    }
+    
+    @Test
+    public void shouldRecursivelyDeleteRemoteFileIfItIsADirectoryWithContents() throws IOException {
+        
+        initRecursiveListings();
+        
+        ftpConnection.deleteRemoteFile(new FTPFile("folder", 0, "path/to", 0, true));
+        
+        InOrder inOrder = Mockito.inOrder(mockFtpClient);
+        
+        inOrder.verify(mockFtpClient).listFiles("path/to/folder/");
+        inOrder.verify(mockFtpClient).deleteFile("path/to/folder/file1.txt");
+        inOrder.verify(mockFtpClient).deleteFile("path/to/folder/file2.txt");
+        inOrder.verify(mockFtpClient).listFiles("path/to/folder/directory1/");
+        inOrder.verify(mockFtpClient).deleteFile("path/to/folder/directory1/file3.txt");
+        inOrder.verify(mockFtpClient).listFiles("path/to/folder/directory1/directory2/");
+        inOrder.verify(mockFtpClient).deleteFile("path/to/folder/directory1/directory2/file5.txt");
+        inOrder.verify(mockFtpClient).deleteFile("path/to/folder/directory1/directory2/file6.txt");
+        inOrder.verify(mockFtpClient).removeDirectory("path/to/folder/directory1/directory2");
+        inOrder.verify(mockFtpClient).deleteFile("path/to/folder/directory1/file4.txt");
+        inOrder.verify(mockFtpClient).removeDirectory("path/to/folder/directory1");
+        inOrder.verify(mockFtpClient).removeDirectory("path/to/folder");
     }
 
     @Test

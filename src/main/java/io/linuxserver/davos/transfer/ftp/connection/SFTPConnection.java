@@ -16,6 +16,7 @@ import com.jcraft.jsch.SftpException;
 import io.linuxserver.davos.transfer.ftp.FTPFile;
 import io.linuxserver.davos.transfer.ftp.connection.progress.ProgressListener;
 import io.linuxserver.davos.transfer.ftp.connection.progress.SFTPProgressListener;
+import io.linuxserver.davos.transfer.ftp.exception.DeleteFileException;
 import io.linuxserver.davos.transfer.ftp.exception.DownloadFailedException;
 import io.linuxserver.davos.transfer.ftp.exception.FTPException;
 import io.linuxserver.davos.transfer.ftp.exception.FileListingException;
@@ -153,25 +154,46 @@ public class SFTPConnection implements Connection {
     @Override
     public void deleteRemoteFile(FTPFile file) throws FTPException {
 
-        String path = FileUtils.ensureTrailingSlash(file.getPath()) + file.getName();
-        LOGGER.info("Deleting remote file at path: {}", path);
+        LOGGER.debug("Deleting remote file...");
+        String cleanRemotePath = FileUtils.ensureTrailingSlash(file.getPath()) + file.getName();
 
         try {
 
             if (file.isDirectory()) {
-                
-                LOGGER.debug("Path is for a directory, so calling channel#rmdir()");
-                channel.rmdir(path);
-            } else {
-                
-                LOGGER.debug("Path is for a file, so calling channel#rm()");
-                channel.rm(path);
-            }
-            
+                deleteDirectoryAndContents(file, cleanRemotePath);
+            } else
+                doDelete(cleanRemotePath);
+
         } catch (SftpException e) {
 
             LOGGER.debug("channel threw exception. Assuming file not deleted");
-            throw new DownloadFailedException("Unable to delete file on remote server", e);
+            throw new DeleteFileException("Unable to delete file on remote server", e);
         }
+    }
+    
+    private void deleteDirectoryAndContents(FTPFile file, String remoteDirectoryPath) throws SftpException {
+
+        LOGGER.info("Item {} is a directory. Will now check sub-items", file.getName());
+        List<FTPFile> subItems = listFiles(remoteDirectoryPath).stream().filter(removeCurrentAndParentDirs())
+                .collect(Collectors.toList());
+        
+        for (FTPFile subItem : subItems) {
+            
+            String subItemPath = FileUtils.ensureTrailingSlash(subItem.getPath()) + subItem.getName();
+            
+            if (subItem.isDirectory())
+                deleteDirectoryAndContents(subItem, subItemPath);
+            else
+                doDelete(subItemPath);
+        }
+        
+        LOGGER.debug("Removing empty directory {}", remoteDirectoryPath);
+        channel.rmdir(remoteDirectoryPath);
+    }
+
+    private void doDelete(String subItemPath) throws SftpException {
+        
+        LOGGER.debug("Deleting file: {}", subItemPath);
+        channel.rm(subItemPath);
     }
 }

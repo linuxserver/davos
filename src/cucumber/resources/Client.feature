@@ -23,4 +23,20 @@ Feature: General client tests
 		And downloads a file
 		Then the Progress Listener will have its values updated
 		
+	Scenario: Deleting directories on the remote FTP server
+	
+		Given there is an FTP server running
+		And the FTP server has a directory with contents
+		When davos connects to the server
+		And deletes a directory
+		Then the directory is deleted on the server
+		
+	Scenario: Deleting directories on the remote FTP server (empty)
+	
+		Given there is an FTP server running
+		And the FTP server has a directory without contents
+		When davos connects to the server
+		And deletes a directory
+		Then the directory is deleted on the server
+		
 		

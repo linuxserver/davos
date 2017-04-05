@@ -80,6 +80,16 @@ public class ClientStepDefs {
         assertThat(((CountingFTPProgressListener) progressListener).getTimesCalled()).isEqualTo(11);
     }
     
+    @When("^deletes a directory$")
+    public void deletes_a_directory() throws Throwable {
+        connection.deleteRemoteFile(new FTPFile("toDelete", 0, "/tmp", 0, true));
+    }
+
+    @Then("^the directory is deleted on the server$")
+    public void the_directory_is_deleted_on_the_server() throws Throwable {
+        assertThat(FakeFTPServerFactory.checkFileExists("/tmp/toDelete")).isFalse();
+    }
+    
     class CountingFTPProgressListener extends ProgressListener {
         
         int timesCalled;

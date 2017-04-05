@@ -11,6 +11,16 @@ public class ServerStepDefs {
         FakeFTPServerFactory.setup();
     }
     
+    @Given("^the FTP server has a directory with contents$")
+    public void the_FTP_server_has_a_directory_with_contents() throws Throwable {
+        FakeFTPServerFactory.addDirectoryWithNameAndNumberOfFiles("toDelete", 3);
+    }
+    
+    @Given("^the FTP server has a directory without contents$")
+    public void the_FTP_server_has_a_directory_without_contents() throws Throwable {
+        FakeFTPServerFactory.addDirectoryWithNameAndNumberOfFiles("toDelete", 0);
+    }
+    
     @After("@Server")
     public void after() {
         FakeFTPServerFactory.stop();
