@@ -325,6 +325,20 @@ var host = (function($, settings) {
 
     initialise = function() {
 
+		if ($('input[name="identityFileEnabled"]').prop('checked')) {
+			
+			$('#password-group').hide();
+			$('#identityFile-group').show();
+			$('#identityFile').addClass('validate');
+		}
+		
+		$('input[name="identityFileEnabled"]').on('change', function() {
+		
+			$('#password-group').toggle();
+			$('#identityFile-group').toggle();
+			$('#identityFile').toggleClass('validate');
+		});
+    	
         $('#testConnection').on('click', function() {
 
             settings.notify('info', 'Testing connection...', 'glyphicon-info-sign');
@@ -334,7 +348,9 @@ var host = (function($, settings) {
                 port: parseInt($('#port').val(), 10),
                 protocol: $('input[name="protocol"]:checked').val(),
                 username: $('#username').val(),
-                password: $('#password').val()
+                password: $('#password').val(),
+                identityFileEnabled: $('input[name="identityFileEnabled"]').prop('checked'),
+                identityFile: $('#identityFile').val()
             };
 
             var url = "/api/v2/testConnection";
@@ -359,7 +375,9 @@ var host = (function($, settings) {
                     port: parseInt($('#port').val(), 10),
                     protocol: $('input[name="protocol"]:checked').val(),
                     username: $('#username').val(),
-                    password: $('#password').val()
+                    password: $('#password').val(),
+                    identityFileEnabled: $('input[name="identityFileEnabled"]').prop('checked'),
+                    identityFile: $('#identityFile').val()
                 };
 
                 var url = "/api/v2/host";

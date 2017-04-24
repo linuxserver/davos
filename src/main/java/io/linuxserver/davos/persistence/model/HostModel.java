@@ -39,13 +39,33 @@ public class HostModel {
     @Column
     public String password;
 
+    @Column
+    public String identityFile;
+
+    @Column
+    private Boolean identityFileEnabled;
+
+    public boolean isIdentityFileEnabled() {
+
+        if (null == identityFileEnabled)
+            return false;
+
+        return identityFileEnabled;
+    }
+
+    public void setIdentityFileEnabled(boolean identityFileEnabled) {
+        this.identityFileEnabled = identityFileEnabled;
+    }
+
     @OneToMany(mappedBy = "host", orphanRemoval = false)
     @LazyCollection(LazyCollectionOption.TRUE)
     public List<ScheduleModel> schedules = new ArrayList<ScheduleModel>();
 
     @Override
     public String toString() {
-        return "HostModel [id=" + id + ", name=" + name + ", address=" + address + ", port=" + port + ", protocol=" + protocol
-                + ", username=" + username + ", password=" + password + "]";
+        return "HostModel [id=" + id + ", name=" + name + ", address=" + address + ", port=" + port + ", protocol="
+                + protocol + ", username=" + username + ", password=" + password + ", identityFile=" + identityFile
+                + ", identityFileEnabled=" + identityFileEnabled + ", schedules=" + schedules + "]";
     }
+
 }

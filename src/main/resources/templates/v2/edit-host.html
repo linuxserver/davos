@@ -82,9 +82,26 @@
 	                            </div>
 
 	                            <div class="form-group">
+	                                <label class="col-lg-2 control-label">Use Identity File <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Use a local private identity file instead of a password" class="help glyphicon glyphicon-question-sign"></span></label>
+	                                <div class="col-lg-10">
+	                                    <div class="checkbox">
+	                                      <label></label>
+	                                      <input type="checkbox" th:field="*{identityFileEnabled}" />
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            
+	                            <div class="form-group" id="password-group">
 	                                <label class="col-lg-2 control-label">Password</label>
 	                                <div class="col-lg-10">
-	                                    <input type="password" class="form-control validate" th:value="*{password}" name="password" id="password" autocomplete="off" />
+	                                    <input type="password" class="form-control" th:value="*{password}" name="password" id="password" autocomplete="off" />
+	                                </div>
+	                            </div>
+	                            
+	                            <div class="form-group" id="identityFile-group" style="display: none">
+	                                <label class="col-lg-2 control-label">Identity File</label>
+	                                <div class="col-lg-10">
+	                                    <input type="text" class="form-control" th:value="*{identityFile}" name="identityFile" id="identityFile" autocomplete="off" placeholder="e.g. /config/.ssh/id_rsa" />
 	                                </div>
 	                            </div>
 

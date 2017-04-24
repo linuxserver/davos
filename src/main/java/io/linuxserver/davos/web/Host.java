@@ -14,6 +14,8 @@ public class Host {
     private ProtocolSelector protocol = ProtocolSelector.SFTP;
     private String username;
     private String password;
+    private String identityFile;
+    private boolean identityFileEnabled;
 
     public Long getId() {
         return id;
@@ -70,9 +72,25 @@ public class Host {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
+
+    public String getIdentityFile() {
+        return identityFile;
+    }
+
+    public void setIdentityFile(String identityFile) {
+        this.identityFile = identityFile;
+    }
+
+    public boolean isIdentityFileEnabled() {
+        return identityFileEnabled;
+    }
+
+    public void setIdentityFileEnabled(boolean identityFileEnabled) {
+        this.identityFileEnabled = identityFileEnabled;
     }
 }
