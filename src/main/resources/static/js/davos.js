@@ -339,26 +339,43 @@ var host = (function($, settings) {
 			$('#identityFile').toggleClass('validate');
 		});
     	
+		$('input[name="protocol"]').on('change', function() {
+			
+			if ($('input[name="protocol"]:checked').val() !== 'SFTP') {
+				
+				$('input[name="identityFileEnabled"]').prop('checked', false);				
+				$('#identityFile-group').hide();
+				$('#toggleIdentity-group').hide();
+				$('#password-group').show();
+				
+			} else {
+				$('#toggleIdentity-group').show();
+			}
+		});
+		
         $('#testConnection').on('click', function() {
 
-            settings.notify('info', 'Testing connection...', 'glyphicon-info-sign');
-
-            var postData = {
-                address: $('#address').val(),
-                port: parseInt($('#port').val(), 10),
-                protocol: $('input[name="protocol"]:checked').val(),
-                username: $('#username').val(),
-                password: $('#password').val(),
-                identityFileEnabled: $('input[name="identityFileEnabled"]').prop('checked'),
-                identityFile: $('#identityFile').val()
-            };
-
-            var url = "/api/v2/testConnection";
-            var method = "POST";
-
-            makeRequest(url, method, postData, function(msg) {
-                settings.notify('success', 'Connection successful!', 'glyphicon-ok-sign');
-            }, error);
+        	if (settings.validate()) {
+        		
+	            settings.notify('info', 'Testing connection...', 'glyphicon-info-sign');
+	
+	            var postData = {
+	                address: $('#address').val(),
+	                port: parseInt($('#port').val(), 10),
+	                protocol: $('input[name="protocol"]:checked').val(),
+	                username: $('#username').val(),
+	                password: $('#password').val(),
+	                identityFileEnabled: $('input[name="identityFileEnabled"]').prop('checked'),
+	                identityFile: $('#identityFile').val()
+	            };
+	
+	            var url = "/api/v2/testConnection";
+	            var method = "POST";
+	
+	            makeRequest(url, method, postData, function(msg) {
+	                settings.notify('success', 'Connection successful!', 'glyphicon-ok-sign');
+	            }, error);
+        	}
 
         });
 
