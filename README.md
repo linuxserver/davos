@@ -38,6 +38,10 @@ Finally, schedules can be started or stopped at any point, using the schedules l
 ![https://raw.githubusercontent.com/linuxserver/davos/master/docs/list.PNG](https://raw.githubusercontent.com/linuxserver/davos/master/docs/list.PNG)
 
 # Changelog
+- **2.2.0**
+  - Added identity file authentication for SFTP connections
+  - Included a version checker to help prompt users when a new version is available
+    - **Full disclosure**: This makes a GET request to GitHub to ascertain the latest release version.
 
 - **2.1.2**
   - Fixed NaN bug caused by empty files (Div/0)
