@@ -43,6 +43,42 @@ public class ScheduleConfigurationFactoryTest {
         assertThat(config.getLocalFilePath()).isEqualTo(model.localFilePath);
         assertThat(config.getScheduleName()).isEqualTo(model.name);
         assertThat(config.getCredentials().getPassword()).isEqualTo(model.host.password);
+        assertThat(config.getCredentials().getIdentity()).isNull();
+        assertThat(config.getPort()).isEqualTo(model.host.port);
+        assertThat(config.getRemoteFilePath()).isEqualTo(model.remoteFilePath);
+        assertThat(config.getTransferType()).isEqualTo(model.transferType);
+        assertThat(config.getCredentials().getUsername()).isEqualTo(model.host.username);
+        assertThat(config.isFiltersMandatory()).isTrue();
+    }
+    
+    @Test
+    public void shouldUseCorrectCredentialsIfIdentityPresent() {
+
+        ScheduleModel model = new ScheduleModel();
+
+        model.host = new HostModel();
+        model.host.protocol = TransferProtocol.FTP;
+        model.host.address = "hostname";
+        model.host.password = "password";
+        model.host.port = 8;
+        model.host.username = "username";
+        model.host.setIdentityFileEnabled(true);
+        model.host.identityFile = "blah";
+        model.setFiltersMandatory(true);
+        model.localFilePath = "local/";
+        model.name = "schedulename";
+        model.remoteFilePath = "thing/";
+        model.setStartAutomatically(true);
+        model.transferType = FileTransferType.FILE;
+
+        ScheduleConfiguration config = ScheduleConfigurationFactory.createConfig(model);
+
+        assertThat(config.getConnectionType()).isEqualTo(model.host.protocol);
+        assertThat(config.getHostName()).isEqualTo(model.host.address);
+        assertThat(config.getLocalFilePath()).isEqualTo(model.localFilePath);
+        assertThat(config.getScheduleName()).isEqualTo(model.name);
+        assertThat(config.getCredentials().getPassword()).isNull();
+        assertThat(config.getCredentials().getIdentity().getIdentityFile()).isEqualTo("blah");
         assertThat(config.getPort()).isEqualTo(model.host.port);
         assertThat(config.getRemoteFilePath()).isEqualTo(model.remoteFilePath);
         assertThat(config.getTransferType()).isEqualTo(model.transferType);

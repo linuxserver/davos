@@ -16,7 +16,7 @@ import io.linuxserver.davos.transfer.ftp.exception.ClientDisconnectException;
 public class SFTPClient extends Client {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SFTPClient.class);
-    
+
     private JSch jsch;
     private ConnectionFactory connectionFactory;
 
@@ -62,23 +62,33 @@ public class SFTPClient extends Client {
     private void configureSessionAndConnect() throws JSchException {
 
         LOGGER.debug("Configuring connection credentials and options on session");
+
+        if (null != userCredentials.getIdentity()) {
+            
+            String identityFile = userCredentials.getIdentity().getIdentityFile();
+            LOGGER.debug("SSH identity found ({}). Setting against session", identityFile);
+            jsch.addIdentity(identityFile);
+        }
         
         session = jsch.getSession(userCredentials.getUsername(), host, port);
         session.setConfig("StrictHostKeyChecking", "no");
-        session.setPassword(userCredentials.getPassword());
+
+        // I'm going to have to think of a nicer way of doing this...
+        if (null == userCredentials.getIdentity())
+            session.setPassword(userCredentials.getPassword());
 
         session.connect();
-        
+
         LOGGER.debug("Connected to session");
     }
 
     private void openChannelFromSession() throws JSchException {
 
         LOGGER.debug("Opening SFTP channel from session");
-        
+
         channel = session.openChannel("sftp");
         channel.connect();
-        
+
         LOGGER.debug("Connected to channel");
     }
 }
