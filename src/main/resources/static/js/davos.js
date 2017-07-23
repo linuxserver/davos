@@ -465,7 +465,31 @@ var host = (function($, settings) {
 
 }(jQuery, settings))
 
+var interval = (function($) {
+	
+	var init;
+	
+	init = function() {
+		
+		setInterval(function() {
+
+			$(".downloads").each(function() {
+								
+				var $this = $(this);
+				var scheduleId = $this.attr('data-schedule-id');
+				$this.load('/fragments/schedule/' + scheduleId + '/transfers')
+			});
+		}, 2000);
+	};
+	
+	return {
+		init: init
+	};
+
+}(jQuery));
+
 jQuery(document).ready(host.init);
 jQuery(document).ready(schedule.init);
 jQuery(document).ready(fragments.init);
 jQuery(document).ready(settings.init);
+jQuery(document).ready(interval.init);
