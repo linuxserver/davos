@@ -16,16 +16,20 @@
             <td>
                 <span th:text="${transfer.status}"></span>
             </td>
+            <td th:if="${transfer.progress}" class="transfer-progress">
                 <div class="progress">
                     <div class="progress-bar" th:style="'width:' + ${transfer.progress.percentageComplete} + '%'"></div>
                 </div>
             </td>
+            <td th:unless="${transfer.progress}" class="transfer-progress">
                 <div class="progress" th:if="${transfer.status == 'PENDING'}">
+                    <div class="progress-bar" style="width: 0%;"></div>
                 </div>
                 <div class="progress" th:if="${transfer.status == 'SKIPPED'}">
                     <div class="progress-bar progress-bar-warning" style="width: 100%;"></div>
                 </div>
             </td>
+            <td th:if="${transfer.progress}" class="transfer-speed">
                 <span th:if="${transfer.progress.percentageComplete &lt; 100}" th:text="${#numbers.formatDecimal(transfer.progress.transferSpeed, 0, 2, 'POINT') + 'MB/s'}"></span>
             </td>
             <td th:unless="${transfer.progress}"></td>
