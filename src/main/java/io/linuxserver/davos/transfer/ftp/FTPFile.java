@@ -1,5 +1,7 @@
 package io.linuxserver.davos.transfer.ftp;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
 
 public class FTPFile {
@@ -37,5 +39,10 @@ public class FTPFile {
 
     public boolean isDirectory() {
         return directory;
+    }
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }

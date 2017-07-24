@@ -146,7 +146,9 @@ public class FTPConnection implements Connection {
 
         LOGGER.info("Item {} is a directory. Will now check sub-items", file.getName());
         List<FTPFile> subItems = listFiles(path).stream().filter(removeCurrentAndParentDirs()).collect(Collectors.toList());
-
+        LOGGER.debug("Counted {} sub items.", subItems.size());
+        LOGGER.debug("{}", subItems);
+            
         String fullLocalDownloadPath = FileUtils.ensureTrailingSlash(localDownloadFolder + file.getName());
 
         LOGGER.debug("Creating new local directory {}", fullLocalDownloadPath);

@@ -50,7 +50,7 @@ public class FilterFilesWorkflowStep extends WorkflowStep {
             } else {
 
                 LOGGER.debug("Filters used {}", filters);
-                LOGGER.debug("Files to filter against {}", filteredFiles.stream().map(f -> f.getName()).collect(toList()));
+                LOGGER.debug("Files to filter against {}", filesToFilter.stream().map(f -> f.getName()).collect(toList()));
 
                 boolean invertFilters = schedule.getConfig().isInvertFilters();
 
