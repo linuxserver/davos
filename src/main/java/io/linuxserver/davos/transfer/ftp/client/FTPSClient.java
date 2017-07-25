@@ -10,6 +10,6 @@ public class FTPSClient extends FTPClient {
     public FTPSClient() {
         
         LOGGER.debug("Initialising FTPS Client");
-        ftpClient = new org.apache.commons.net.ftp.FTPSClient("SSL", true);
+        ftpClient = new org.apache.commons.net.ftp.FTPSClient();
     }
 }
