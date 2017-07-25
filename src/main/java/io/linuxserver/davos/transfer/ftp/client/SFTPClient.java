@@ -8,6 +8,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+import io.linuxserver.davos.transfer.ftp.client.UserCredentials.Identity;
 import io.linuxserver.davos.transfer.ftp.connection.Connection;
 import io.linuxserver.davos.transfer.ftp.connection.ConnectionFactory;
 import io.linuxserver.davos.transfer.ftp.exception.ClientConnectionException;
@@ -63,19 +64,24 @@ public class SFTPClient extends Client {
 
         LOGGER.debug("Configuring connection credentials and options on session");
 
-        if (null != userCredentials.getIdentity()) {
+        Identity identity = userCredentials.getIdentity();
+        if (null != identity) {
             
-            String identityFile = userCredentials.getIdentity().getIdentityFile();
+            String identityFile = identity.getIdentityFile();
             LOGGER.debug("SSH identity found ({}). Setting against session", identityFile);
             jsch.addIdentity(identityFile);
         }
         
-        session = jsch.getSession(userCredentials.getUsername(), host, port);
+        String username = userCredentials.getUsername();
+        String password = userCredentials.getPassword();
+        
+        LOGGER.debug("Username: {}", username);
+        session = jsch.getSession(username, host, port);
         session.setConfig("StrictHostKeyChecking", "no");
 
         // I'm going to have to think of a nicer way of doing this...
         if (null == userCredentials.getIdentity())
-            session.setPassword(userCredentials.getPassword());
+            session.setPassword(password);
 
         session.connect();
 

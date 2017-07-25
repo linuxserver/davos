@@ -38,7 +38,9 @@ public class FTPConnection implements Connection {
     public String currentDirectory() {
 
         try {
-            return client.printWorkingDirectory();
+            String workingDirectory = client.printWorkingDirectory();
+            LOGGER.debug("{}", workingDirectory);
+            return workingDirectory;
         } catch (IOException e) {
             throw new FileListingException("Unable to print the working directory", e);
         }
@@ -50,6 +52,9 @@ public class FTPConnection implements Connection {
         String cleanRemotePath = FileUtils.ensureTrailingSlash(file.getPath()) + file.getName();
         String cleanLocalPath = FileUtils.ensureTrailingSlash(localFilePath);
 
+        LOGGER.debug("Remote path: {}", cleanRemotePath);
+        LOGGER.debug("Local path: {}", cleanLocalPath);
+        
         try {
 
             if (file.isDirectory())
@@ -84,6 +89,8 @@ public class FTPConnection implements Connection {
 
             for (org.apache.commons.net.ftp.FTPFile file : ftpFiles)
                 files.add(toFtpFile(file, cleanRemoteDirectory));
+            
+            LOGGER.debug("{}", files);
 
         } catch (IOException e) {
             throw new FileListingException(String.format("Unable to list files in directory %s", remoteDirectory), e);
@@ -147,7 +154,6 @@ public class FTPConnection implements Connection {
         LOGGER.info("Item {} is a directory. Will now check sub-items", file.getName());
         List<FTPFile> subItems = listFiles(path).stream().filter(removeCurrentAndParentDirs()).collect(Collectors.toList());
         LOGGER.debug("Counted {} sub items.", subItems.size());
-        LOGGER.debug("{}", subItems);
             
         String fullLocalDownloadPath = FileUtils.ensureTrailingSlash(localDownloadFolder + file.getName());
 
@@ -157,6 +163,8 @@ public class FTPConnection implements Connection {
         for (FTPFile subItem : subItems) {
 
             String subItemPath = FileUtils.ensureTrailingSlash(subItem.getPath()) + subItem.getName();
+
+            LOGGER.debug("Download. Sub item path: {}", subItemPath);
 
             if (subItem.isDirectory()) {
 
@@ -213,6 +221,8 @@ public class FTPConnection implements Connection {
             
             String subItemPath = FileUtils.ensureTrailingSlash(subItem.getPath()) + subItem.getName();
             
+            LOGGER.debug("Delete. Sub item path: {}", subItemPath);
+            
             if (subItem.isDirectory())
                 deleteDirectoryAndContents(subItem, subItemPath);
             else
@@ -227,7 +237,8 @@ public class FTPConnection implements Connection {
         
         LOGGER.debug("Deleting file: {}", subItemPath);
         boolean deleted = client.deleteFile(subItemPath);
-        
+        LOGGER.debug("File deleted");
+
         if (!deleted)
             throw new DeleteFileException("Unable to delete file on remote server. Unknown reason");
     }

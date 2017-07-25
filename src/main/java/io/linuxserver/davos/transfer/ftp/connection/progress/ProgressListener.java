@@ -1,11 +1,6 @@
 package io.linuxserver.davos.transfer.ftp.connection.progress;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class ProgressListener {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProgressListener.class);
 
     private long lastWriteTime;
     private long totalBytesWritten;
@@ -15,13 +10,8 @@ public class ProgressListener {
 
     public double getProgress() {
         
-        if (totalBytes > 0) {
-            
-            double progress = ((double) totalBytesWritten / (double) totalBytes) * 100;
-            LOGGER.debug("Progress downloaded: {}%", progress);
-
-            return progress;
-        }
+        if (totalBytes > 0)
+            return ((double) totalBytesWritten / (double) totalBytes) * 100;
 
         return 100;
     }
