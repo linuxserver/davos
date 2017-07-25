@@ -16,6 +16,7 @@ import io.linuxserver.davos.persistence.model.HostModel;
 import io.linuxserver.davos.transfer.ftp.client.Client;
 import io.linuxserver.davos.transfer.ftp.client.ClientFactory;
 import io.linuxserver.davos.transfer.ftp.client.UserCredentials;
+import io.linuxserver.davos.transfer.ftp.client.UserCredentials.Identity;
 import io.linuxserver.davos.web.Host;
 
 @Component
@@ -73,7 +74,15 @@ public class HostServiceImpl implements HostService {
         Client client = new ClientFactory().getClient(model.protocol);
 
         LOGGER.debug("Credentials: {} : {}", model.username, model.password);
-        client.setCredentials(new UserCredentials(model.username, model.password));
+        
+        UserCredentials userCredentials;
+        
+        if (model.isIdentityFileEnabled())
+            userCredentials = new UserCredentials(model.username, new Identity(model.identityFile));
+        else
+            userCredentials = new UserCredentials(model.username, model.password);
+        
+        client.setCredentials(userCredentials);
         client.setHost(model.address);
         client.setPort(model.port);
 
