@@ -35,9 +35,14 @@ public class FragmentController {
         return "fragments/filter";
     }
     
-    @RequestMapping("/notification")
-    public String notification() {
-        return "fragments/notification";
+    @RequestMapping("/notification/pushbullet")
+    public String notificationPushbullet() {
+        return "fragments/pushbullet";
+    }
+    
+    @RequestMapping("/notification/sns")
+    public String notificationSns() {
+        return "fragments/sns";
     }
     
     @RequestMapping("/api")

@@ -35,6 +35,7 @@ public class PushbulletNotifyAction implements PostDownloadAction {
         try {
 
             LOGGER.info("Sending notification to Pushbullet for {}", execution.fileName);
+            LOGGER.debug("API Key: {}", apiKey);
             HttpEntity<PushbulletRequest> httpEntity = new HttpEntity<PushbulletRequest>(body, headers);
             LOGGER.debug("Sending message to Pushbullet: {}", httpEntity);
             restTemplate.exchange("https://api.pushbullet.com/v2/pushes", HttpMethod.POST, httpEntity, Object.class);

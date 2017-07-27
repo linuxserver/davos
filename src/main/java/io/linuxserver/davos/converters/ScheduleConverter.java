@@ -3,6 +3,8 @@ package io.linuxserver.davos.converters;
 import static java.util.stream.Collectors.toList;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import io.linuxserver.davos.persistence.model.ActionModel;
@@ -11,7 +13,8 @@ import io.linuxserver.davos.persistence.model.ScheduleModel;
 import io.linuxserver.davos.transfer.ftp.FileTransferType;
 import io.linuxserver.davos.web.API;
 import io.linuxserver.davos.web.Filter;
-import io.linuxserver.davos.web.Notification;
+import io.linuxserver.davos.web.Pushbullet;
+import io.linuxserver.davos.web.SNS;
 import io.linuxserver.davos.web.Schedule;
 import io.linuxserver.davos.web.selectors.MethodSelector;
 import io.linuxserver.davos.web.selectors.TransferSelector;
@@ -19,6 +22,8 @@ import io.linuxserver.davos.web.selectors.TransferSelector;
 @Component
 public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleConverter.class);
+    
     @Override
     public Schedule convertTo(ScheduleModel source) {
 
@@ -53,11 +58,22 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
 
             } else if ("pushbullet".equals(action.actionType)) {
 
-                Notification notification = new Notification();
+                Pushbullet notification = new Pushbullet();
                 notification.setId(action.id);
                 notification.setApiKey(action.f1);
 
-                schedule.getNotifications().add(notification);
+                schedule.getNotifications().getPushbullet().add(notification);
+                
+            } else if ("sns".equals(action.actionType)) {
+                
+                SNS sns = new SNS();
+                sns.setId(action.id);
+                sns.setTopicArn(action.f1);
+                sns.setRegion(action.f2);
+                sns.setAccessKey(action.f3);
+                sns.setSecretAccessKey(action.f4);
+                
+                schedule.getNotifications().getSns().add(sns);
             }
         }
 
@@ -93,6 +109,8 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
         
         if (StringUtils.isNotBlank(source.getMoveFileTo())) {
 
+            LOGGER.debug("Converting MoveTo to internal action: {}", source.getMoveFileTo());
+            
             ActionModel moveTo = new ActionModel();
             moveTo.actionType = "move";
             moveTo.f1 = source.getMoveFileTo();
@@ -101,8 +119,10 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
             model.actions.add(moveTo);
         }
 
-        for (Notification action : source.getNotifications()) {
+        for (Pushbullet action : source.getNotifications().getPushbullet()) {
 
+            LOGGER.debug("Converting Pushbullet to internal action: {}", action.getApiKey());
+            
             ActionModel actionModel = new ActionModel();
             actionModel.id = action.getId();
             actionModel.actionType = "pushbullet";
@@ -111,9 +131,27 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
 
             model.actions.add(actionModel);
         }
+        
+        for (SNS action : source.getNotifications().getSns()) {
+
+            LOGGER.debug("Converting SNS to internal action: {}", action.getTopicArn());
+                
+            ActionModel actionModel = new ActionModel();
+            actionModel.id = action.getId();
+            actionModel.actionType = "sns";
+            actionModel.f1 = action.getTopicArn();
+            actionModel.f2 = action.getRegion();
+            actionModel.f3 = action.getAccessKey();
+            actionModel.f4 = action.getSecretAccessKey();
+            actionModel.schedule = model;
+
+            model.actions.add(actionModel);
+        }
 
         for (API action : source.getApis()) {
 
+            LOGGER.debug("Converting API to internal action: {}", action.getUrl());
+            
             ActionModel actionModel = new ActionModel();
             actionModel.id = action.getId();
             actionModel.actionType = "api";

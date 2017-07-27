@@ -24,9 +24,9 @@ public class Schedule {
     private boolean invertFilters;
     private boolean deleteHostFile;
 
+    private Notifications notifications = new Notifications();
     private List<String> lastScannedFiles = new ArrayList<>();
     private List<Filter> filters = new ArrayList<>();
-    private List<Notification> notifications = new ArrayList<>();
     private List<Transfer> transfers = new ArrayList<>();
     private List<API> apis = new ArrayList<>();
 
@@ -106,10 +106,6 @@ public class Schedule {
         this.moveFileTo = moveFileTo;
     }
 
-    public List<Notification> getNotifications() {
-        return notifications;
-    }
-
     public List<API> getApis() {
         return apis;
     }
@@ -157,5 +153,13 @@ public class Schedule {
 
     public void setDeleteHostFile(boolean deleteHostFile) {
         this.deleteHostFile = deleteHostFile;
+    }
+
+    public Notifications getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Notifications notifications) {
+        this.notifications = notifications;
     }
 }

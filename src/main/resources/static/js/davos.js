@@ -85,7 +85,11 @@ var fragments = (function($) {
         });
 
         $('#newPushbullet').on('click', function() {
-            $('#notifications').append($("<div />").load("/fragments/notification"));
+            $('#notifications').append($("<div />").load("/fragments/notification/pushbullet"));
+        });
+        
+        $('#newSns').on('click', function() {
+            $('#notifications').append($("<div />").load("/fragments/notification/sns"));
         });
 
         $('#addFilter').on('click', function() {
@@ -166,7 +170,10 @@ var schedule = (function($, settings) {
                     deleteHostFile: $('input[name="deleteHostFile"]').prop('checked'),
                     moveFileTo: $('#moveFileTo').val(),
                     filters: [],
-                    notifications: [],
+                    notifications: {
+                    	pushbullet: [],
+                    	sns: []
+                    },
                     apis: []
                 };
 
@@ -178,11 +185,22 @@ var schedule = (function($, settings) {
                     });
                 });
 
-                $('#notifications .notification').each(function() {
+                $('#notifications .notification.pushbullet').each(function() {
 
-                    postData.notifications.push({
+                    postData.notifications.pushbullet.push({
                         "id": cleanId($(this).attr('data-notification-id')),
                         "apiKey": $(this).find('.apiKey').val()
+                    });
+                });
+                
+                $('#notifications .notification.sns').each(function() {
+                	
+                    postData.notifications.sns.push({
+                        "id": cleanId($(this).attr('data-notification-id')),
+                        "topicArn": $(this).find('.topicArn').val(),
+                        "region": $(this).find('.region').val(),
+                        "accessKey": $(this).find('.accessKey').val(),
+                        "secretAccessKey": $(this).find('.secretAccessKey').val()
                     });
                 });
 

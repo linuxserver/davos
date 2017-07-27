@@ -9,6 +9,7 @@ import io.linuxserver.davos.persistence.model.ScheduleModel;
 import io.linuxserver.davos.schedule.workflow.actions.HttpAPICallAction;
 import io.linuxserver.davos.schedule.workflow.actions.MoveFileAction;
 import io.linuxserver.davos.schedule.workflow.actions.PushbulletNotifyAction;
+import io.linuxserver.davos.schedule.workflow.actions.SNSNotifyAction;
 import io.linuxserver.davos.transfer.ftp.client.UserCredentials;
 import io.linuxserver.davos.transfer.ftp.client.UserCredentials.Identity;
 
@@ -46,6 +47,9 @@ public class ScheduleConfigurationFactory {
 
             if ("pushbullet".equals(action.actionType))
                 config.getActions().add(new PushbulletNotifyAction(action.f1));
+            
+            if ("sns".equals(action.actionType))
+                config.getActions().add(new SNSNotifyAction(action.f2, action.f1, action.f3, action.f4));
 
             if ("api".equals(action.actionType))
                 config.getActions().add(new HttpAPICallAction(action.f1, action.f2, action.f3, action.f4));

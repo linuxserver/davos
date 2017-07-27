@@ -59,4 +59,9 @@ public class SNSNotifyAction implements PostDownloadAction {
     private String formatJsonMessage(String message) {
         return String.format("{\"default\": \"%s\"}", message);
     }
+    
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
 }

@@ -13,6 +13,7 @@ import io.linuxserver.davos.persistence.model.ScheduleModel;
 import io.linuxserver.davos.schedule.workflow.actions.HttpAPICallAction;
 import io.linuxserver.davos.schedule.workflow.actions.MoveFileAction;
 import io.linuxserver.davos.schedule.workflow.actions.PushbulletNotifyAction;
+import io.linuxserver.davos.schedule.workflow.actions.SNSNotifyAction;
 import io.linuxserver.davos.transfer.ftp.FileTransferType;
 import io.linuxserver.davos.transfer.ftp.TransferProtocol;
 
@@ -141,14 +142,23 @@ public class ScheduleConfigurationFactoryTest {
         action3.f2 = "POST";
         action3.f3 = "application/json";
         action3.f4 = "some body";
+        
+        ActionModel action4 = new ActionModel();
+        action4.actionType = "sns";
+        action4.f1 = "topic";
+        action4.f2 = "region";
+        action4.f3 = "Access";
+        action4.f4 = "secret";
 
         model.actions.add(action2);
         model.actions.add(action3);
+        model.actions.add(action4);
 
         ScheduleConfiguration config = ScheduleConfigurationFactory.createConfig(model);
 
         assertThat(config.getActions().get(0)).isInstanceOf(MoveFileAction.class);
         assertThat(config.getActions().get(1)).isInstanceOf(PushbulletNotifyAction.class);
         assertThat(config.getActions().get(2)).isInstanceOf(HttpAPICallAction.class);
+        assertThat(config.getActions().get(3)).isInstanceOf(SNSNotifyAction.class);
     }
 }
