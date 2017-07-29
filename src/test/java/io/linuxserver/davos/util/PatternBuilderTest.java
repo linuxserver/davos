@@ -19,7 +19,7 @@ public class PatternBuilderTest {
     public void builderShouldTurnAsterixesIntoManyCharacterRegexMatcher() {
 
         String filter = "This*is*a filter";
-        String expected = "This.+is.+a filter";
+        String expected = "This.*is.*a filter";
 
         assertThat(PatternBuilder.buildFromFilterString(filter)).isEqualTo(expected);
     }
@@ -46,7 +46,7 @@ public class PatternBuilderTest {
     public void dotsShouldBeTreatedVerbatim() {
         
         String normalValue = "Clean Code.pdf";
-        String filteredValue = "Clean Code.pdf";
+        String filteredValue = "Clean?Code.pdf";
         
         assertThat(normalValue.matches(PatternBuilder.buildFromFilterString(filteredValue))).isTrue();
         assertThat("Clean Code_pdf".matches(PatternBuilder.buildFromFilterString(filteredValue))).isFalse();

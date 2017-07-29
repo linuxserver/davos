@@ -40,6 +40,7 @@ Finally, schedules can be started or stopped at any point, using the schedules l
 # Changelog
 
 - **2.2.0**
+  - The filter pattern matcher now resolves '*' to zero or more characters, rather than one or more.
   - The scanned items list can now be cleared.
   - Added a Last Run field to the scanned items modal.
   - Included [readthedocs](https://davos.readthedocs.io) documentation!

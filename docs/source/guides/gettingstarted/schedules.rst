@@ -77,6 +77,16 @@ are used by multiple processes or contain large numbers of files.
         this list - if it matches at least one filter, it will be downloaded. Filters can also be wildcarded
         using ``?`` (single character) and ``*`` (multiple characters).
 
+        For example, for a file called "my_file_name.txt":
+
+        .. code-block:: text
+
+            my?file?name.txt = MATCH
+            my*name.txt      = MATCH
+            my_file.name.txt = NO MATCH
+            *file_name*      = MATCH
+            *file_name       = NO MATCH
+
 ***************
 File Management
 ***************
