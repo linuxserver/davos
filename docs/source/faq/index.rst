@@ -54,7 +54,7 @@ of the application. Modern browsers like Chrome tend to cache these types of sou
 the sake of performance. It is likely your browser has not re-cached the latest version of
 the JavaScript code.
 
-To remedy this, hard-refresh the app: ``CRTL``+``F5``.
+To remedy this, hard-refresh the app: ``CRTL`` + ``F5``.
 
 ****************************************
 How can I use SNS to notify me by email?
