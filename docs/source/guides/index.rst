@@ -10,3 +10,4 @@ first time use, and the concept of schedules (what they consist of), hosts, and 
 
    installation
    gettingstarted/index
+   appsettings
