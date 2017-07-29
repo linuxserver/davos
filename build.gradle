@@ -71,6 +71,8 @@ dependencies {
 	compile 'commons-io:commons-io:2.4'
 	compile 'org.apache.commons:commons-lang3:3.4'
 	
+	compile 'com.amazonaws:aws-java-sdk-sns:1.11.167'
+	
     runtime 'com.h2database:h2'
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'

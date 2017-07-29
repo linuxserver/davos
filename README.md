@@ -1,6 +1,8 @@
 # davos
 
-[![Build Status](http://jenkins.linuxserver.io:8080/buildStatus/icon?job=Software/Davos/davos_10_Unit_Tests)](http://jenkins.linuxserver.io:8080/job/Software/job/Davos/job/davos_10_Unit_Tests/)
+[![Build Status](http://ci.linuxserver.io/buildStatus/icon?job=Software/Davos/davos_10_Unit_Tests)](http://ci.linuxserver.io/job/Software/job/Davos/job/davos_10_Unit_Tests/)
+
+[![Documentation Status](https://readthedocs.org/projects/davos/badge/?version=latest)](http://davos.readthedocs.io/en/latest)
 
 davos is an FTP download automation tool that allows you to scan various FTP servers for files you are interested in. This can be used to configure file feeds as part of a wider workflow.
 
@@ -38,6 +40,20 @@ Finally, schedules can be started or stopped at any point, using the schedules l
 ![https://raw.githubusercontent.com/linuxserver/davos/master/docs/list.PNG](https://raw.githubusercontent.com/linuxserver/davos/master/docs/list.PNG)
 
 # Changelog
+
+- **2.2.0**
+  - The filter pattern matcher now resolves '*' to zero or more characters, rather than one or more.
+  - The scanned items list can now be cleared.
+  - Added a Last Run field to the scanned items modal.
+  - Included [readthedocs](https://davos.readthedocs.io) documentation!
+  - Added SNS capability to notifications area
+  - Updated FTPS connections to run over Explicit TLS, rather than Implicit SSL
+    - This may or may not break existing schedules that use FTPS prior to 2.2.0.
+  - Improved some areas of DEBUG logging
+  - Schedules page now automatically updates when files are downloading
+  - Added identity file authentication for SFTP connections
+  - Included a version checker to help prompt users when a new version is available
+    - **Full disclosure**: This makes a GET request to GitHub to ascertain the latest release version.
 
 - **2.1.2**
   - Fixed NaN bug caused by empty files (Div/0)

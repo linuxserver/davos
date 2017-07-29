@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -25,6 +26,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+import io.linuxserver.davos.transfer.ftp.client.UserCredentials.Identity;
 import io.linuxserver.davos.transfer.ftp.connection.Connection;
 import io.linuxserver.davos.transfer.ftp.connection.ConnectionFactory;
 import io.linuxserver.davos.transfer.ftp.connection.SFTPConnection;
@@ -72,6 +74,25 @@ public class SFTPClientTest {
     }
 
     @Test
+    public void sessionFromInitialConnectionNeedsConfigAndIdentitySettingBeforeConnecting() throws JSchException {
+
+        Session mockSession = mockJsch.getSession("user", "host", 999);
+
+        InOrder inOrder = Mockito.inOrder(mockJsch, mockSession);
+
+        userCredentials = new UserCredentials("user", new Identity(".ssh/id_rsa"));
+        
+        SFTPClient.setCredentials(userCredentials);
+        SFTPClient.connect();
+
+        inOrder.verify(mockJsch).addIdentity(".ssh/id_rsa");
+        inOrder.verify(mockSession).setConfig("StrictHostKeyChecking", "no");
+        inOrder.verify(mockSession, never()).setPassword("password");
+    
+        inOrder.verify(mockSession).connect();
+    }
+
+    @Test
     public void sessionFromInitialConnectionNeedsConfigAndPasswordSettingBeforeConnecting() throws JSchException {
 
         Session mockSession = mockJsch.getSession("user", "host", 999);
@@ -84,7 +105,7 @@ public class SFTPClientTest {
         inOrder.verify(mockSession).setPassword("password");
         inOrder.verify(mockSession).connect();
     }
-
+    
     @Test
     public void returnedSessionObjectShouldSetChannelToSftpAndOpen() throws JSchException {
 

@@ -74,3 +74,11 @@ a.link {
     color: #cdcdcd;
     font-size: 14px;
 }
+
+#announcement {
+	margin-top: 25px;
+}
+
+.transfer-speed {
+	width: 80px;
+}

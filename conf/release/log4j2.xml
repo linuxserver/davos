@@ -22,6 +22,10 @@
 			<AppenderRef ref="File" />
 		</Logger>
 		
+		<Logger name="org.springframework" level="error" additivity="false">
+			<AppenderRef ref="File" />
+		</Logger>
+		
 		<Root level="warn">
 			<AppenderRef ref="File" />
 		</Root>

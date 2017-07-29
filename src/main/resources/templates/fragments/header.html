@@ -36,5 +36,17 @@
 	            </div>
 	        </div>
 	    </div>
+	    
+	    <div class="container" id="announcement" th:fragment="announcement" th:if="${versionChecker.newVersionAvailable}">
+			<div class="row">
+                <div class="col-md-12">   
+				    <div class="alert alert-dismissible alert-info">
+						<button type="button" class="close" data-dismiss="alert">&times;</button>
+						 <span class="glyphicon glyphicon-gift"></span>&nbsp;
+						<strong>New version available!</strong> Version <span th:text="${versionChecker.newVersion}"></span> of davos has been released. You can get it in the usual way. 
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>

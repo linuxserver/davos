@@ -22,6 +22,8 @@ public class HostConverter implements Converter<HostModel, Host> {
         host.setUsername(source.username);
         host.setPassword(source.password);
         host.setProtocol(ProtocolSelector.valueOf(source.protocol.toString()));
+        host.setIdentityFileEnabled(source.isIdentityFileEnabled());
+        host.setIdentityFile(source.identityFile);
         
         return host;
     }
@@ -38,6 +40,8 @@ public class HostConverter implements Converter<HostModel, Host> {
         model.username = source.getUsername();
         model.password = source.getPassword();
         model.protocol = TransferProtocol.valueOf(source.getProtocol().toString());
+        model.setIdentityFileEnabled(source.isIdentityFileEnabled());
+        model.identityFile = source.getIdentityFile();
         
         return model;
     }

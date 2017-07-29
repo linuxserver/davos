@@ -38,7 +38,9 @@ public class SFTPConnection implements Connection {
     public String currentDirectory() {
 
         try {
-            return channel.pwd();
+            String pwd = channel.pwd();
+            LOGGER.debug("{}", pwd);
+            return pwd;
         } catch (SftpException e) {
             throw new FileListingException("Unable to print the working directory", e);
         }
@@ -49,6 +51,9 @@ public class SFTPConnection implements Connection {
 
         String path = FileUtils.ensureTrailingSlash(file.getPath()) + file.getName();
         String cleanLocalPath = FileUtils.ensureTrailingSlash(localFilePath);
+        
+        LOGGER.debug("Download. Remote path: {}", path);
+        LOGGER.debug("Download. Local path: {}", cleanLocalPath);
 
         try {
 
@@ -84,6 +89,7 @@ public class SFTPConnection implements Connection {
             for (LsEntry entry : lsEntries)
                 files.add(toFtpFile(entry, cleanRemoteDirectory));
 
+            LOGGER.debug("{}", files);
             LOGGER.debug("Listed {} items from remote directory {}", files.size(), cleanRemoteDirectory);
 
             return files;
@@ -99,6 +105,8 @@ public class SFTPConnection implements Connection {
     }
 
     private void doGet(String fullRemotePath, String fullLocalDownloadPath) throws SftpException {
+
+        LOGGER.debug("Performing channel.get from {} to {}", fullRemotePath, fullLocalDownloadPath);
 
         if (null != progressListener) {
 
@@ -121,8 +129,10 @@ public class SFTPConnection implements Connection {
 
         for (FTPFile subItem : subItems) {
 
+            LOGGER.debug("{}", subItem);
+            
             String subItemPath = FileUtils.ensureTrailingSlash(subItem.getPath()) + subItem.getName();
-
+            
             if (subItem.isDirectory()) {
 
                 String subLocalFilePath = FileUtils.ensureTrailingSlash(fullLocalDownloadPath);
@@ -178,6 +188,8 @@ public class SFTPConnection implements Connection {
                 .collect(Collectors.toList());
         
         for (FTPFile subItem : subItems) {
+            
+            LOGGER.debug("{}", subItem);
             
             String subItemPath = FileUtils.ensureTrailingSlash(subItem.getPath()) + subItem.getName();
             

@@ -3,7 +3,7 @@ package io.linuxserver.davos.web;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class Notification {
+public class Pushbullet {
 
     private Long id;
     private String apiKey;

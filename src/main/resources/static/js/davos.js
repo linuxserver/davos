@@ -85,7 +85,11 @@ var fragments = (function($) {
         });
 
         $('#newPushbullet').on('click', function() {
-            $('#notifications').append($("<div />").load("/fragments/notification"));
+            $('#notifications').append($("<div />").load("/fragments/notification/pushbullet"));
+        });
+        
+        $('#newSns').on('click', function() {
+            $('#notifications').append($("<div />").load("/fragments/notification/sns"));
         });
 
         $('#addFilter').on('click', function() {
@@ -166,7 +170,10 @@ var schedule = (function($, settings) {
                     deleteHostFile: $('input[name="deleteHostFile"]').prop('checked'),
                     moveFileTo: $('#moveFileTo').val(),
                     filters: [],
-                    notifications: [],
+                    notifications: {
+                    	pushbullet: [],
+                    	sns: []
+                    },
                     apis: []
                 };
 
@@ -178,11 +185,22 @@ var schedule = (function($, settings) {
                     });
                 });
 
-                $('#notifications .notification').each(function() {
+                $('#notifications .notification.pushbullet').each(function() {
 
-                    postData.notifications.push({
+                    postData.notifications.pushbullet.push({
                         "id": cleanId($(this).attr('data-notification-id')),
                         "apiKey": $(this).find('.apiKey').val()
+                    });
+                });
+                
+                $('#notifications .notification.sns').each(function() {
+                	
+                    postData.notifications.sns.push({
+                        "id": cleanId($(this).attr('data-notification-id')),
+                        "topicArn": $(this).find('.topicArn').val(),
+                        "region": $(this).find('.region').val(),
+                        "accessKey": $(this).find('.accessKey').val(),
+                        "secretAccessKey": $(this).find('.secretAccessKey').val()
                     });
                 });
 
@@ -286,6 +304,21 @@ var schedule = (function($, settings) {
             }).fail(error);
 
         });
+        
+        $('.clearLastScanned').on('click', function() {
+        	
+        	var id = $(this).attr('data-schedule-id');
+        	
+        	$.ajax({
+
+                method: 'DELETE',
+                url: '/api/v2/schedule/' + id + '/scannedFiles',
+                dataType: "json"
+                
+            }).done(function(msg) {
+                $('#lastScanned' + id + ' table tbody').empty();
+            }).fail(error);
+        });
 
     };
 
@@ -308,7 +341,7 @@ var schedule = (function($, settings) {
     };
 
     error = function(msg) {
-        settings.notify('danger', 'There was an error: ' + msg.responseJSON.status, 'glyphicon-warning-sign');
+        settings.notify('danger', 'There was an error: ' + msg.responseJSON.body, 'glyphicon-warning-sign');
     };
 
     return {
@@ -325,24 +358,57 @@ var host = (function($, settings) {
 
     initialise = function() {
 
+		if ($('input[name="identityFileEnabled"]').prop('checked')) {
+			
+			$('#password-group').hide();
+			$('#identityFile-group').show();
+			$('#identityFile').addClass('validate');
+		}
+		
+		$('input[name="identityFileEnabled"]').on('change', function() {
+		
+			$('#password-group').toggle();
+			$('#identityFile-group').toggle();
+			$('#identityFile').toggleClass('validate');
+		});
+    	
+		$('input[name="protocol"]').on('change', function() {
+			
+			if ($('input[name="protocol"]:checked').val() !== 'SFTP') {
+				
+				$('input[name="identityFileEnabled"]').prop('checked', false);				
+				$('#identityFile-group').hide();
+				$('#toggleIdentity-group').hide();
+				$('#password-group').show();
+				
+			} else {
+				$('#toggleIdentity-group').show();
+			}
+		});
+		
         $('#testConnection').on('click', function() {
 
-            settings.notify('info', 'Testing connection...', 'glyphicon-info-sign');
-
-            var postData = {
-                address: $('#address').val(),
-                port: parseInt($('#port').val(), 10),
-                protocol: $('input[name="protocol"]:checked').val(),
-                username: $('#username').val(),
-                password: $('#password').val()
-            };
-
-            var url = "/api/v2/testConnection";
-            var method = "POST";
-
-            makeRequest(url, method, postData, function(msg) {
-                settings.notify('success', 'Connection successful!', 'glyphicon-ok-sign');
-            }, error);
+        	if (settings.validate()) {
+        		
+	            settings.notify('info', 'Testing connection...', 'glyphicon-info-sign');
+	
+	            var postData = {
+	                address: $('#address').val(),
+	                port: parseInt($('#port').val(), 10),
+	                protocol: $('input[name="protocol"]:checked').val(),
+	                username: $('#username').val(),
+	                password: $('#password').val(),
+	                identityFileEnabled: $('input[name="identityFileEnabled"]').prop('checked'),
+	                identityFile: $('#identityFile').val()
+	            };
+	
+	            var url = "/api/v2/testConnection";
+	            var method = "POST";
+	
+	            makeRequest(url, method, postData, function(msg) {
+	                settings.notify('success', 'Connection successful!', 'glyphicon-ok-sign');
+	            }, error);
+        	}
 
         });
 
@@ -359,7 +425,9 @@ var host = (function($, settings) {
                     port: parseInt($('#port').val(), 10),
                     protocol: $('input[name="protocol"]:checked').val(),
                     username: $('#username').val(),
-                    password: $('#password').val()
+                    password: $('#password').val(),
+                    identityFileEnabled: $('input[name="identityFileEnabled"]').prop('checked'),
+                    identityFile: $('#identityFile').val()
                 };
 
                 var url = "/api/v2/host";
@@ -430,7 +498,31 @@ var host = (function($, settings) {
 
 }(jQuery, settings))
 
+var interval = (function($) {
+	
+	var init;
+	
+	init = function() {
+		
+		setInterval(function() {
+
+			$(".downloads").each(function() {
+								
+				var $this = $(this);
+				var scheduleId = $this.attr('data-schedule-id');
+				$this.load('/fragments/schedule/' + scheduleId + '/transfers')
+			});
+		}, 2000);
+	};
+	
+	return {
+		init: init
+	};
+
+}(jQuery));
+
 jQuery(document).ready(host.init);
 jQuery(document).ready(schedule.init);
 jQuery(document).ready(fragments.init);
 jQuery(document).ready(settings.init);
+jQuery(document).ready(interval.init);

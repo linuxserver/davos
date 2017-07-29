@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.linuxserver.davos.delegation.services.HostService;
 import io.linuxserver.davos.delegation.services.ScheduleService;
 import io.linuxserver.davos.delegation.services.SettingsService;
+import io.linuxserver.davos.exception.HostInUseException;
 import io.linuxserver.davos.transfer.ftp.exception.FTPException;
 import io.linuxserver.davos.web.Host;
 import io.linuxserver.davos.web.Schedule;
@@ -45,10 +46,40 @@ public class APIController {
 
         LOGGER.info("Creating new schedule");
         LOGGER.debug("Schedule values are {}", schedule);
-        Schedule createdSchedule = scheduleService.saveSchedule(schedule);
-        LOGGER.info("New schedule has been created");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(APIResponseBuilder.create().withBody(createdSchedule));
+        if (!isSchedulePostPayloadValid(schedule)) {
+
+            LOGGER.error("Unable to create schedule: An id was supplied in the payload");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(APIResponseBuilder.create().withBody("Payload contains ids"));
+        }
+
+        try {
+
+            Schedule createdSchedule = scheduleService.saveSchedule(schedule);
+            LOGGER.info("New schedule has been created");
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(APIResponseBuilder.create().withStatus("Failure").withBody(createdSchedule));
+
+        } catch (IllegalArgumentException e) {
+
+            LOGGER.error("Unable to create schedule: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(APIResponseBuilder.create().withBody(e.getMessage()));
+        }
+    }
+
+    private boolean isSchedulePostPayloadValid(Schedule schedule) {
+
+        boolean hasPushbulletIds = schedule.getNotifications().getPushbullet().stream().anyMatch(pb -> pb.getId() != null);
+        boolean hasSnsIds = schedule.getNotifications().getSns().stream().anyMatch(pb -> pb.getId() != null);
+        boolean hasFilterIds = schedule.getFilters().stream().anyMatch(f -> f.getId() != null);
+        boolean hasApiIds = schedule.getApis().stream().anyMatch(a -> a.getId() != null);
+
+        if (null != schedule.getId() || hasPushbulletIds || hasSnsIds || hasFilterIds || hasApiIds)
+            return false;
+
+        return true;
     }
 
     @RequestMapping(value = "/schedule/{id}", method = RequestMethod.GET)
@@ -82,6 +113,15 @@ public class APIController {
 
         return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create());
     }
+    
+    @RequestMapping(value = "/schedule/{id}/scannedFiles", method = RequestMethod.DELETE)
+    public ResponseEntity<APIResponse> deleteScheduleScannedFiles(@PathVariable("id") Long id) {
+        
+        LOGGER.info("Clearing last scanned file list for schedule {}", id);
+        scheduleService.clearScannedFilesFromSchedule(id);        
+        
+        return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create());
+    }
 
     @RequestMapping(value = "/schedule/{id}/execute", method = RequestMethod.POST)
     public ResponseEntity<APIResponse> executeSchedule(@PathVariable("id") Long id, @RequestBody ScheduleCommand command) {
@@ -93,6 +133,15 @@ public class APIController {
             scheduleService.stopSchedule(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create());
+    }
+
+    @RequestMapping(value = "/host/{id}", method = RequestMethod.GET)
+    public ResponseEntity<APIResponse> getHost(@PathVariable("id") Long id) {
+
+        LOGGER.info("Getting host with id: {}", id);
+        Host host = hostService.fetchHost(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create().withBody(host));
     }
 
     @RequestMapping(value = "/host", method = RequestMethod.POST)
@@ -124,7 +173,12 @@ public class APIController {
     public ResponseEntity<APIResponse> deleteHost(@PathVariable("id") Long id) {
 
         LOGGER.info("Deleting host with id {}", id);
-        hostService.deleteHost(id);
+        try {
+            hostService.deleteHost(id);
+        } catch (HostInUseException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(APIResponseBuilder.create().withStatus("Failed").withBody(e.getMessage()));
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create());
     }
@@ -134,7 +188,7 @@ public class APIController {
 
         APIResponse response = APIResponseBuilder.create();
         HttpStatus status = HttpStatus.OK;
-        
+
         try {
             hostService.testConnection(host);
         } catch (FTPException e) {
@@ -145,7 +199,7 @@ public class APIController {
             response.withBody(e.getCause().getMessage()).withStatus("Failed");
             status = HttpStatus.BAD_REQUEST;
         }
-        
+
         return ResponseEntity.status(status).body(response);
     }
 
@@ -159,7 +213,8 @@ public class APIController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<APIResponse> handleException(Exception e) {
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(APIResponseBuilder.create().withBody(e.getMessage()).withStatus(e.getMessage()));
+                .body(APIResponseBuilder.create().withBody(e.getMessage()).withStatus("Failed"));
     }
 }

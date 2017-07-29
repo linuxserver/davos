@@ -5,18 +5,21 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import io.linuxserver.davos.Version;
 import io.linuxserver.davos.delegation.services.HostService;
 import io.linuxserver.davos.delegation.services.ScheduleService;
 import io.linuxserver.davos.delegation.services.SettingsService;
 import io.linuxserver.davos.web.Host;
 import io.linuxserver.davos.web.Schedule;
 import io.linuxserver.davos.web.Settings;
+import io.linuxserver.davos.web.VersionChecker;
 import io.linuxserver.davos.web.selectors.IntervalSelector;
 import io.linuxserver.davos.web.selectors.LogLevelSelector;
 import io.linuxserver.davos.web.selectors.MethodSelector;
@@ -34,10 +37,23 @@ public class ViewController {
     
     @Resource
     private SettingsService settingsService;
+    
+    @Value("${davos.version}")
+    private String currentVersion;
 
+    @ModelAttribute("currentVersion")
+    public String currentVersion() {
+        return currentVersion;
+    }
+    
     @ModelAttribute("allIntervals")
     public List<IntervalSelector> populateIntervals() {
         return Arrays.asList(IntervalSelector.ALL);
+    }
+    
+    @ModelAttribute("versionChecker")
+    public VersionChecker versionChecker() {
+        return new VersionChecker(new Version(currentVersion()), settingsService.retrieveRemoteVersion());
     }
 
     @ModelAttribute("allProtocols")

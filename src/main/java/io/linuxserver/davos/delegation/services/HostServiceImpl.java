@@ -10,12 +10,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import io.linuxserver.davos.converters.HostConverter;
+import io.linuxserver.davos.exception.HostInUseException;
 import io.linuxserver.davos.persistence.dao.HostDAO;
 import io.linuxserver.davos.persistence.dao.ScheduleDAO;
 import io.linuxserver.davos.persistence.model.HostModel;
 import io.linuxserver.davos.transfer.ftp.client.Client;
 import io.linuxserver.davos.transfer.ftp.client.ClientFactory;
 import io.linuxserver.davos.transfer.ftp.client.UserCredentials;
+import io.linuxserver.davos.transfer.ftp.client.UserCredentials.Identity;
 import io.linuxserver.davos.web.Host;
 
 @Component
@@ -46,7 +48,14 @@ public class HostServiceImpl implements HostService {
 
     @Override
     public void deleteHost(Long id) {
-        hostDAO.deleteHost(id);
+        
+        List<Long> schedulesUsingHost = fetchSchedulesUsingHost(id);
+        
+        if (schedulesUsingHost.isEmpty()) {
+            hostDAO.deleteHost(id);
+        } else {
+            throw new HostInUseException("Host is being used by Schedules: " + schedulesUsingHost);
+        }
     }
 
     @Override
@@ -73,7 +82,15 @@ public class HostServiceImpl implements HostService {
         Client client = new ClientFactory().getClient(model.protocol);
 
         LOGGER.debug("Credentials: {} : {}", model.username, model.password);
-        client.setCredentials(new UserCredentials(model.username, model.password));
+        
+        UserCredentials userCredentials;
+        
+        if (model.isIdentityFileEnabled())
+            userCredentials = new UserCredentials(model.username, new Identity(model.identityFile));
+        else
+            userCredentials = new UserCredentials(model.username, model.password);
+        
+        client.setCredentials(userCredentials);
         client.setHost(model.address);
         client.setPort(model.port);
 

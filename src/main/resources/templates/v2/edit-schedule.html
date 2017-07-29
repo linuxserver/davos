@@ -9,7 +9,12 @@
 
     <title>Edit Schedule</title>
 
-    <link rel="icon" th:href="@{/favicon.ico}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+	<link rel="manifest" href="/manifest.json" />
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+	<meta name="theme-color" content="#ffffff" />
 
     <link type="text/css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}" media="screen,projection" />
     <link type="text/css" rel="stylesheet" th:href="@{/css/davos.css}" media="screen" />
@@ -213,7 +218,7 @@
                             </div>
                         </div>
                         <div class="col-md-12">
-                            These provide a way for <em>davos</em> to inform other applications, such as file managers or 3rd party notifers that the schedule has completed downloading a file. This is useful when part of a wider workflow. Each downstream
+                            These provide a way for <em>davos</em> to inform other applications, such as file managers or 3rd party notifiers that the schedule has completed downloading a file. This is useful when part of a wider workflow. Each downstream
                             action will be triggered after <em>each file has been downloaded</em>, in order for a more granular workflow.
                         </div>
                     </div>
@@ -228,10 +233,12 @@
 
                         <div class="col-md-12" id="notifications">
 
-                            <div class="well notification" th:each="notification : *{notifications}" th:attr="data-notification-id=${notification.id}">
+                            <div class="well notification pushbullet" th:each="notification : *{notifications.pushbullet}" th:attr="data-notification-id=${notification.id}">
+
+								<h4>Pushbullet</h4>
 
                                 <div class="form-group">
-                                    <label for="sch-pushbullet" class="col-lg-2 control-label">Pushbullet</label>
+                                    <label for="sch-pushbullet" class="col-lg-2 control-label">Access Token</label>
                                     <div class="col-lg-10">
                                         <input type="text" class="form-control apiKey" th:value="${notification.apiKey}" placeholder="API Key" autocomplete="off" />
                                     </div>
@@ -245,6 +252,46 @@
 
                             </div>
 
+							<div class="well notification sns" th:each="sns : *{notifications.sns}" th:attr="data-notification-id=${sns.id}">
+
+								<h4>Amazon SNS</h4>
+							
+							    <div class="form-group">
+							        <label class="col-lg-2 control-label">Topic Arn</label>
+							        <div class="col-lg-10">
+							            <input type="text" class="form-control topicArn" th:value="${sns.topicArn}" placeholder="e.g. arn:aws:sns:*:123456789012:my_notification_topic" autocomplete="off" />
+							        </div>
+							    </div>
+							
+							    <div class="form-group">
+							        <label class="col-lg-2 control-label">Region</label>
+							        <div class="col-lg-10">
+										<input type="text" class="form-control region" th:value="${sns.region}" placeholder="e.g. eu-west-1" autocomplete="off" />
+							        </div>
+							    </div>
+							
+							    <div class="form-group">
+							        <label class="col-lg-2 control-label">Access Key <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Your specified IAM User's access key" class="help glyphicon glyphicon-question-sign"></span></label>
+							        <div class="col-lg-10">
+							            <input type="text" class="form-control accessKey" th:value="${sns.accessKey}" autocomplete="off" />
+							        </div>
+							    </div>
+							
+							    <div class="form-group">
+							        <label class="col-lg-2 control-label">Secret Access Key <span data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Your specified IAM User's secret access key" class="help glyphicon glyphicon-question-sign"></span></label>
+							        <div class="col-lg-10">
+							            <input type="text" class="form-control secretAccessKey" th:value="${sns.secretAccessKey}" autocomplete="off" />
+							        </div>
+							    </div>
+							
+							    <div class="form-group">
+							        <div class="col-lg-12 align-right">
+							            <button type="button" class="btn btn-danger btn-sm remove-notification">Remove</button>
+							        </div>
+							    </div>
+							
+							</div>
+
                         </div>
 
                         <div class="col-md-12 align-right">
@@ -256,7 +303,7 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a id="newPushbullet">Pushbullet</a></li>
-                                    <li class="disabled"><a href="#">Pushover</a></li>
+                                    <li><a id="newSns">Amazon SNS</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -273,6 +320,9 @@
                         <div class="col-md-12" id="apis">
 
                             <div class="well api" th:each="api : *{apis}" th:attr="data-api-id=${api.id}">
+
+								<h4>API Call</h4>
+	
                                 <div class="form-group">
                                     <label for="sch-api-url" class="col-lg-2 control-label">URL</label>
                                     <div class="col-lg-10">
