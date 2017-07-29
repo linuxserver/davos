@@ -31,6 +31,20 @@ No, all host usernames and passwords are stored in plain text in the H2 database
 is because the application needs to query the hosts table every time a schedule runs,
 and would have no way to compare a hash with a valid password.
 
+***************************************************
+How do I use an identity file for SFTP connections?
+***************************************************
+
+On the Host configuration page for your Host, make sure **Use Identity File** is checked. Then
+enter the absolute path of the identity file. If you're running davos in a Docker container (recommended),
+the value of this should be some thing like "/config/id_rsa", assuming you are using an SSH private key called
+"id_rsa" and have placed it in your mapped host directory on your machine.
+
+Any form of private identity is applicable, for example if your host server uses .pem files
+for authentication, use "/config/my_identity.pem".
+
+.. note:: Remember, davos can't see files outside of its ``/download`` and ``/config`` directories when running in a Docker container. So remember to place your identity file(s) in the mapped directory on the host (e.g. ``/home/user/davos``).
+
 ****************************************
 How can I use SNS to notify me by email?
 ****************************************
