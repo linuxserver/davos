@@ -1,8 +1,6 @@
 # davos
 
-[![Build Status](http://ci.linuxserver.io/buildStatus/icon?job=Software/Davos/davos_10_Unit_Tests)](http://ci.linuxserver.io/job/Software/job/Davos/job/davos_10_Unit_Tests/)
-
-[![Documentation Status](https://readthedocs.org/projects/davos/badge/?version=latest)](http://davos.readthedocs.io/en/latest)
+[![Build Status](http://ci.linuxserver.io/buildStatus/icon?job=Software/Davos/davos_10_Unit_Tests)](http://ci.linuxserver.io/job/Software/job/Davos/job/davos_10_Unit_Tests/) [![Documentation Status](https://readthedocs.org/projects/davos/badge/?version=latest)](http://davos.readthedocs.io/en/latest)
 
 davos is an FTP download automation tool that allows you to scan various FTP servers for files you are interested in. This can be used to configure file feeds as part of a wider workflow.
 
