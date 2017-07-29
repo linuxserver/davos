@@ -233,7 +233,7 @@
 								<h4>Pushbullet</h4>
 
                                 <div class="form-group">
-                                    <label for="sch-pushbullet" class="col-lg-2 control-label">API Key</label>
+                                    <label for="sch-pushbullet" class="col-lg-2 control-label">Access Token</label>
                                     <div class="col-lg-10">
                                         <input type="text" class="form-control apiKey" th:value="${notification.apiKey}" placeholder="API Key" autocomplete="off" />
                                     </div>
@@ -249,7 +249,7 @@
 
 							<div class="well notification sns" th:each="sns : *{notifications.sns}" th:attr="data-notification-id=${sns.id}">
 
-								<h4>AWS SNS</h4>
+								<h4>Amazon SNS</h4>
 							
 							    <div class="form-group">
 							        <label class="col-lg-2 control-label">Topic Arn</label>
