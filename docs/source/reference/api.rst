@@ -369,6 +369,7 @@ Schedule Response Syntax
             "running": Boolean,
             "filtersMandatory": Boolean,
             "invertFilters": Boolean,
+            "lastRunTime": String,
             "deleteHostFile": Boolean,
             "lastScannedFiles": [
                 String
@@ -419,7 +420,7 @@ Schedule Response Syntax
         }
     }
 
-.. note:: ``running``, ``lastScannedFiles`` and ``transfers`` are immutable metadata fields and can't be used in PUT or POST requests. If supplied, they will be ignored.
+.. note:: ``running``, ``lastScannedFiles``, ``lastRunTime`` and ``transfers`` are immutable metadata fields and can't be used in PUT or POST requests. If supplied, they will be ignored.
 ..
 
     host
@@ -427,6 +428,9 @@ Schedule Response Syntax
 
     running
         Descibes whether or not the Schedule is running.
+
+    lastRunTime
+        The time recorded when the Schedule last *finished* running.
 
     lastScannedFiles
         A list of Strings that represent the files/folders found in the last run of the

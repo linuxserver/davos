@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -64,6 +65,7 @@ public class DefaultScheduleDAO implements ScheduleDAO {
 
         model.scannedFiles.clear();
         model.scannedFiles.addAll(newlyScannedFiles.stream().map(f -> toScannedFileModel(f, model)).collect(toList()));
+        model.setLastRunTime(DateTime.now().getMillis());
 
         configRepository.save(model);
     }

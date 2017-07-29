@@ -3,6 +3,7 @@ package io.linuxserver.davos.converters;
 import static java.util.stream.Collectors.toList;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ import io.linuxserver.davos.web.selectors.TransferSelector;
 public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleConverter.class);
-    
+
     @Override
     public Schedule convertTo(ScheduleModel source) {
 
@@ -42,7 +43,10 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
         schedule.setFiltersMandatory(source.getFiltersMandatory());
         schedule.setDeleteHostFile(source.getDeleteHostFile());
         schedule.setInvertFilters(source.getInvertFilters());
-        
+
+        if (source.getLastRunTime() > 0)
+            schedule.setLastRunTime(new DateTime(source.getLastRunTime()).toString("yyyy-MM-dd HH:mm:ss"));
+
         for (ActionModel action : source.actions) {
 
             if ("api".equals(action.actionType)) {
@@ -63,16 +67,16 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
                 notification.setApiKey(action.f1);
 
                 schedule.getNotifications().getPushbullet().add(notification);
-                
+
             } else if ("sns".equals(action.actionType)) {
-                
+
                 SNS sns = new SNS();
                 sns.setId(action.id);
                 sns.setTopicArn(action.f1);
                 sns.setRegion(action.f2);
                 sns.setAccessKey(action.f3);
                 sns.setSecretAccessKey(action.f4);
-                
+
                 schedule.getNotifications().getSns().add(sns);
             }
         }
@@ -106,11 +110,11 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
         model.setFiltersMandatory(source.isFiltersMandatory());
         model.setInvertFilters(source.isInvertFilters());
         model.setDeleteHostFile(source.isDeleteHostFile());
-        
+
         if (StringUtils.isNotBlank(source.getMoveFileTo())) {
 
             LOGGER.debug("Converting MoveTo to internal action: {}", source.getMoveFileTo());
-            
+
             ActionModel moveTo = new ActionModel();
             moveTo.actionType = "move";
             moveTo.f1 = source.getMoveFileTo();
@@ -122,7 +126,7 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
         for (Pushbullet action : source.getNotifications().getPushbullet()) {
 
             LOGGER.debug("Converting Pushbullet to internal action: {}", action.getApiKey());
-            
+
             ActionModel actionModel = new ActionModel();
             actionModel.id = action.getId();
             actionModel.actionType = "pushbullet";
@@ -131,11 +135,11 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
 
             model.actions.add(actionModel);
         }
-        
+
         for (SNS action : source.getNotifications().getSns()) {
 
             LOGGER.debug("Converting SNS to internal action: {}", action.getTopicArn());
-                
+
             ActionModel actionModel = new ActionModel();
             actionModel.id = action.getId();
             actionModel.actionType = "sns";
@@ -151,7 +155,7 @@ public class ScheduleConverter implements Converter<ScheduleModel, Schedule> {
         for (API action : source.getApis()) {
 
             LOGGER.debug("Converting API to internal action: {}", action.getUrl());
-            
+
             ActionModel actionModel = new ActionModel();
             actionModel.id = action.getId();
             actionModel.actionType = "api";

@@ -23,6 +23,7 @@ public class Schedule {
     private boolean filtersMandatory;
     private boolean invertFilters;
     private boolean deleteHostFile;
+    private String lastRunTime;
 
     private Notifications notifications = new Notifications();
     private List<String> lastScannedFiles = new ArrayList<>();
@@ -161,5 +162,13 @@ public class Schedule {
 
     public void setNotifications(Notifications notifications) {
         this.notifications = notifications;
+    }
+
+    public void setLastRunTime(String lastRunTime) {
+        this.lastRunTime = lastRunTime;        
+    }
+    
+    public String getLastRunTime() {
+        return lastRunTime;
     }
 }

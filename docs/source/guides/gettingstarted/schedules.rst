@@ -27,6 +27,9 @@ should be managed.
         with an interval of "Every 30 minutes", it will run again at 14:35, then 15:05, and
         so on.
 
+.. note:: If you change the interval for an already running Schedule, you'll need to restart it before the change takes effect.
+..
+
     Host
         The Host configuration to use for this Schedule. It will default to the first
         Host in the list. You cannot create a Schedule if no Hosts have been created.

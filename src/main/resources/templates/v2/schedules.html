@@ -56,7 +56,48 @@
                             &nbsp;&nbsp;<span class="glyphicon glyphicon-time" data-toggle="modal" th:attr="data-target='#lastScanned' + ${schedule.id}"></span>
                         </div>
                         <div class="panel-body">
-                            <div class="downloads" th:attr="data-schedule-id=${schedule.id}"></div>
+                            <div class="downloads" th:attr="data-schedule-id=${schedule.id}">
+                            
+                            	<table class="table" th:if="${not #lists.isEmpty(schedule.transfers)}">
+								    <thead>
+								        <tr>
+								            <th>File</th>
+								            <th>Size</th>
+								            <th>Status</th>
+								            <th>Progress</th>
+								            <th>Speed</th>
+								        </tr>
+								    </thead>
+								    <tbody>
+								        <tr th:each="transfer : ${schedule.transfers}">
+								            <td th:text="${transfer.fileName}"></td>
+								            <td th:unless="${transfer.directory}" th:text="${(transfer.fileSize / 1000000) + 'MB'}"></td>
+								            <td th:if="${transfer.directory}"></td>
+								            <td>
+								                <span th:text="${transfer.status}"></span>
+								            </td>
+								            <td th:if="${transfer.progress}" class="transfer-progress">
+								                <div class="progress">
+								                    <div class="progress-bar" th:style="'width:' + ${transfer.progress.percentageComplete} + '%'"></div>
+								                </div>
+								            </td>
+								            <td th:unless="${transfer.progress}" class="transfer-progress">
+								                <div class="progress" th:if="${transfer.status == 'PENDING'}">
+								                    <div class="progress-bar" style="width: 0%;"></div>
+								                </div>
+								                <div class="progress" th:if="${transfer.status == 'SKIPPED'}">
+								                    <div class="progress-bar progress-bar-warning" style="width: 100%;"></div>
+								                </div>
+								            </td>
+								            <td th:if="${transfer.progress}" class="transfer-speed">
+								                <span th:if="${transfer.progress.percentageComplete &lt; 100}" th:text="${#numbers.formatDecimal(transfer.progress.transferSpeed, 0, 2, 'POINT') + 'MB/s'}"></span>
+								            </td>
+								            <td th:unless="${transfer.progress}"></td>
+								        </tr>
+								    </tbody>
+								</table>
+                            
+                            </div>
                         </div>
                     </div>
 
@@ -70,6 +111,9 @@
                                 <h4 class="modal-title">Files on the host during the last scan</h4>
                             </div>
                             <div class="modal-body">
+                            	<span th:if="${schedule.lastRunTime}" th:inline="text">Last Run: <strong>[[${schedule.lastRunTime}]]</strong></span>
+                            	<span th:unless="${schedule.lastRunTime}">Last Run: <strong>Never</strong></span>
+                            	
                             	<button type="button" style="float:right" th:attr="data-schedule-id=${schedule.id}" class="clearLastScanned btn btn-sm" aria-hidden="true">Clear</button>
                                 <table class="table table-striped">
                                     <thead>

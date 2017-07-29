@@ -51,13 +51,28 @@ public class ScheduleModel {
 
     @Column
     private Boolean invertFilters;
+    
+    @Column
+    private Long lastRunTime;
 
+    public long getLastRunTime() {
+        
+        if (null != lastRunTime)
+            return lastRunTime;
+        
+        return 0;
+    }
+    
     public Boolean getFiltersMandatory() {
 
         if (null != filtersMandatory)
             return filtersMandatory;
 
         return false;
+    }
+    
+    public void setLastRunTime(long millis) {
+        lastRunTime = millis;
     }
 
     public void setFiltersMandatory(boolean filtersMandatory) {
