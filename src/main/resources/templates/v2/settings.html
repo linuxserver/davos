@@ -19,65 +19,65 @@
 
 <body>
 
-     <div class="navbar navbar-default navbar-fixed-top" th:replace="fragments/header :: header"></div>
+    <div class="navbar navbar-default navbar-fixed-top" th:replace="fragments/header :: header"></div>
 
     <div class="container">
 
-        <div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="page-header">
-                        <h2>App Settings</h2>
-                    </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h2>App Settings</h2>
                 </div>
             </div>
+        </div>
 
+        <div class="row">
             <form class="form-horizontal" onsubmit="return false;" th:object="${settings}">
                 <fieldset>
 
-                    <div class="row">
+					<div class="col-md-12">
 
-                        <div class="form-group">
-                            <label for="logging-level" class="col-lg-2 col-sm-12 control-label">Logging Level</label>
-                            <div class="col-lg-4 col-sm-12">
-                                <select class="form-control" th:field="*{logLevel}">
-                                    <option th:each="level : ${allLogLevels}" th:value="${level}" th:text="${level}">DEBUG</option>
-                                </select>
-                            </div>
-                        </div>
-
+	                    <div class="form-group">
+	                        <label for="logging-level" class="col-md-2 control-label">Logging Level</label>
+	                        <div class="col-md-10">
+	                            <select class="form-control" th:field="*{logLevel}">
+	                                <option th:each="level : ${allLogLevels}" th:value="${level}" th:text="${level}">DEBUG</option>
+	                            </select>
+	                        </div>
+	                    </div>
+                    
                     </div>
 
                 </fieldset>
             </form>
+        </div>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="page-header">
-                        <h2>About</h2>
-                    </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h2>About</h2>
                 </div>
             </div>
+        </div>
 
+        <div class="row">
             <form class="form-horizontal" onsubmit="return false;">
                 <fieldset>
 
-                    <div class="row">
+					<div class="col-md-12">
 
-                        <div class="form-group">
-                            <label for="logging-level" class="col-lg-2 col-sm-12 align-right">Version</label>
-                            <div class="col-lg-4 col-sm-12">
-                                <span th:text="${currentVersion}"></span>
-                            </div>
-                        </div>
-
+	                    <div class="form-group">
+	                        <label class="col-md-2 control-label" style="padding-top: 0px">Version</label>
+	                        <div class="col-md-10">
+	                            <span th:text="${currentVersion}"></span>
+	                        </div>
+	                    </div>
+                    
                     </div>
 
                 </fieldset>
             </form>
-
-
         </div>
 
     </div>
