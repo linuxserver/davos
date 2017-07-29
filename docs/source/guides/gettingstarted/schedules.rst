@@ -115,6 +115,12 @@ There are two types of Downstream Action: *Notifications* and *API Calls*.
 Notifications
 =============
 
+Notifications are useful if you'd like to know whenever davos has successfully downloaded
+a file. Generally speaking, no further action is taken after a notification is sent,
+but SNS may be configured to include a subscriber to a topic that performs a further action.
+
+.. note:: There is no limit to the number of notifications you can have.
+
 Pushbullet
 ----------
 

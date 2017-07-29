@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import io.linuxserver.davos.converters.HostConverter;
+import io.linuxserver.davos.exception.HostInUseException;
 import io.linuxserver.davos.persistence.dao.HostDAO;
 import io.linuxserver.davos.persistence.dao.ScheduleDAO;
 import io.linuxserver.davos.persistence.model.HostModel;
@@ -47,7 +48,14 @@ public class HostServiceImpl implements HostService {
 
     @Override
     public void deleteHost(Long id) {
-        hostDAO.deleteHost(id);
+        
+        List<Long> schedulesUsingHost = fetchSchedulesUsingHost(id);
+        
+        if (schedulesUsingHost.isEmpty()) {
+            hostDAO.deleteHost(id);
+        } else {
+            throw new HostInUseException("Host is being used by Schedules: " + schedulesUsingHost);
+        }
     }
 
     @Override
