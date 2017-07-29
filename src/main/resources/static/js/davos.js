@@ -304,6 +304,21 @@ var schedule = (function($, settings) {
             }).fail(error);
 
         });
+        
+        $('.clearLastScanned').on('click', function() {
+        	
+        	var id = $(this).attr('data-schedule-id');
+        	
+        	$.ajax({
+
+                method: 'DELETE',
+                url: '/api/v2/schedule/' + id + '/scannedFiles',
+                dataType: "json"
+                
+            }).done(function(msg) {
+                $('#lastScanned' + id + ' table tbody').empty();
+            }).fail(error);
+        });
 
     };
 
@@ -326,7 +341,7 @@ var schedule = (function($, settings) {
     };
 
     error = function(msg) {
-        settings.notify('danger', 'There was an error: ' + msg.responseJSON.status, 'glyphicon-warning-sign');
+        settings.notify('danger', 'There was an error: ' + msg.responseJSON.body, 'glyphicon-warning-sign');
     };
 
     return {

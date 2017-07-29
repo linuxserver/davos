@@ -70,6 +70,7 @@
                                 <h4 class="modal-title">Files on the host during the last scan</h4>
                             </div>
                             <div class="modal-body">
+                            	<button type="button" style="float:right" th:attr="data-schedule-id=${schedule.id}" class="clearLastScanned btn btn-sm" aria-hidden="true">Clear</button>
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>

@@ -41,49 +41,45 @@ Creates a single Schedule.
     Accept: application/json
 
     {
-        "status": "OK",
-        "body": {
-            "id": Integer,
-            "name": String,
-            "interval": Integer,
-            "host": Integer,
-            "hostDirectory": String,
-            "localDirectory": String,
-            "transferType": String [ FILE | RECURSIVE ],
-            "automatic": Boolean,
-            "moveFileTo": String,
-            "filtersMandatory": Boolean,
-            "invertFilters": Boolean,
-            "deleteHostFile": Boolean,
-            "filters": [
+        "name": String,
+        "interval": Integer,
+        "host": Integer,
+        "hostDirectory": String,
+        "localDirectory": String,
+        "transferType": String [ FILE | RECURSIVE ],
+        "automatic": Boolean,
+        "moveFileTo": String,
+        "filtersMandatory": Boolean,
+        "invertFilters": Boolean,
+        "deleteHostFile": Boolean,
+        "filters": [
+            {
+                "value": String
+            }
+        ],
+        "notifications": {
+            "pushbullet": [
                 {
-                    "value": String
+                    "apiKey": String
                 }
             ],
-            "notifications": {
-                "pushbullet": [
-                    {
-                        "apiKey": String
-                    }
-                ],
-                "sns": [
-                    {
-                        "topicArn": String,
-                        "region": String,
-                        "accessKey": String,
-                        "secretAccessKey": String
-                    }
-                ]
-            },
-            "apis": [
+            "sns": [
                 {
-                    "url": String,
-                    "method": String [ POST | GET | PUT | DELETE ],
-                    "contentType": String,
-                    "body": String
+                    "topicArn": String,
+                    "region": String,
+                    "accessKey": String,
+                    "secretAccessKey": String
                 }
             ]
-        }
+        },
+        "apis": [
+            {
+                "url": String,
+                "method": String [ POST | GET | PUT | DELETE ],
+                "contentType": String,
+                "body": String
+            }
+        ]
     }
 
 Response
@@ -106,52 +102,48 @@ a PUT.
     Accept: application/json
 
     {
-        "status": "OK",
-        "body": {
-            "id": Integer,
-            "name": String,
-            "interval": Integer,
-            "host": Integer,
-            "hostDirectory": String,
-            "localDirectory": String,
-            "transferType": String [ FILE | RECURSIVE ],
-            "automatic": Boolean,
-            "moveFileTo": String,
-            "filtersMandatory": Boolean,
-            "invertFilters": Boolean,
-            "deleteHostFile": Boolean,
-            "filters": [
+        "name": String,
+        "interval": Integer,
+        "host": Integer,
+        "hostDirectory": String,
+        "localDirectory": String,
+        "transferType": String [ FILE | RECURSIVE ],
+        "automatic": Boolean,
+        "moveFileTo": String,
+        "filtersMandatory": Boolean,
+        "invertFilters": Boolean,
+        "deleteHostFile": Boolean,
+        "filters": [
+            {
+                "id": Integer,
+                "value": String
+            }
+        ],
+        "notifications": {
+            "pushbullet": [
                 {
                     "id": Integer,
-                    "value": String
+                    "apiKey": String
                 }
             ],
-            "notifications": {
-                "pushbullet": [
-                    {
-                        "id": Integer,
-                        "apiKey": String
-                    }
-                ],
-                "sns": [
-                    {
-                        "id": Integer,
-                        "topicArn": String,
-                        "region": String,
-                        "accessKey": String,
-                        "secretAccessKey": String
-                    }
-                ]
-            },
-            "apis": [
+            "sns": [
                 {
-                    "url": String,
-                    "method": String [ POST | GET | PUT | DELETE ],
-                    "contentType": String,
-                    "body": String
+                    "id": Integer,
+                    "topicArn": String,
+                    "region": String,
+                    "accessKey": String,
+                    "secretAccessKey": String
                 }
             ]
-        }
+        },
+        "apis": [
+            {
+                "url": String,
+                "method": String [ POST | GET | PUT | DELETE ],
+                "contentType": String,
+                "body": String
+            }
+        ]
     }
 
 .. note:: If you are updating a listed object, you must provide the object's ``id``. If you do not, the API will remove the old reference and create a new one. To add a new item to the list, provide the new item (without an ``id``) alongside the existing one.

@@ -46,10 +46,40 @@ public class APIController {
 
         LOGGER.info("Creating new schedule");
         LOGGER.debug("Schedule values are {}", schedule);
-        Schedule createdSchedule = scheduleService.saveSchedule(schedule);
-        LOGGER.info("New schedule has been created");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(APIResponseBuilder.create().withBody(createdSchedule));
+        if (!isSchedulePostPayloadValid(schedule)) {
+
+            LOGGER.error("Unable to create schedule: An id was supplied in the payload");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(APIResponseBuilder.create().withBody("Payload contains ids"));
+        }
+
+        try {
+
+            Schedule createdSchedule = scheduleService.saveSchedule(schedule);
+            LOGGER.info("New schedule has been created");
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(APIResponseBuilder.create().withStatus("Failure").withBody(createdSchedule));
+
+        } catch (IllegalArgumentException e) {
+
+            LOGGER.error("Unable to create schedule: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(APIResponseBuilder.create().withBody(e.getMessage()));
+        }
+    }
+
+    private boolean isSchedulePostPayloadValid(Schedule schedule) {
+
+        boolean hasPushbulletIds = schedule.getNotifications().getPushbullet().stream().anyMatch(pb -> pb.getId() != null);
+        boolean hasSnsIds = schedule.getNotifications().getSns().stream().anyMatch(pb -> pb.getId() != null);
+        boolean hasFilterIds = schedule.getFilters().stream().anyMatch(f -> f.getId() != null);
+        boolean hasApiIds = schedule.getApis().stream().anyMatch(a -> a.getId() != null);
+
+        if (null != schedule.getId() || hasPushbulletIds || hasSnsIds || hasFilterIds || hasApiIds)
+            return false;
+
+        return true;
     }
 
     @RequestMapping(value = "/schedule/{id}", method = RequestMethod.GET)
@@ -81,6 +111,15 @@ public class APIController {
         LOGGER.info("Deleting schedule with id {}", id);
         scheduleService.deleteSchedule(id);
 
+        return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create());
+    }
+    
+    @RequestMapping(value = "/schedule/{id}/scannedFiles", method = RequestMethod.DELETE)
+    public ResponseEntity<APIResponse> deleteScheduleScannedFiles(@PathVariable("id") Long id) {
+        
+        LOGGER.info("Clearing last scanned file list for schedule {}", id);
+        scheduleService.clearScannedFilesFromSchedule(id);        
+        
         return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create());
     }
 
@@ -174,7 +213,8 @@ public class APIController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<APIResponse> handleException(Exception e) {
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(APIResponseBuilder.create().withBody(e.getMessage()).withStatus(e.getMessage()));
+                .body(APIResponseBuilder.create().withBody(e.getMessage()).withStatus("Failed"));
     }
 }

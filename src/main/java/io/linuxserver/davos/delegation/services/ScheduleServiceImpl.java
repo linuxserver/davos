@@ -84,6 +84,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     public Schedule saveSchedule(Schedule schedule) {
 
         HostModel hostModel = hostDAO.fetchHost(schedule.getHost());
+        
+        if (null == hostModel) {
+
+            LOGGER.info("Schedule is referencing a host that does not exist");
+            throw new IllegalArgumentException("Host with id " + schedule.getHost() + " does not exist.");
+        }
+        
         ScheduleModel model = scheduleConverter.convertFrom(schedule);
         model.host = hostModel;
 
@@ -125,5 +132,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         
         return transfer;
+    }
+
+    @Override
+    public void clearScannedFilesFromSchedule(Long id) {
+
+        ScheduleModel model = scheduleDAO.fetchSchedule(id);
+        model.scannedFiles.clear();
+        scheduleDAO.updateConfig(model);        
     }
 }

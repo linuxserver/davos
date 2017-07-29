@@ -17,4 +17,6 @@ public interface ScheduleService {
     Schedule fetchSchedule(Long id);
     
     Schedule saveSchedule(Schedule schedule);
+
+    void clearScannedFilesFromSchedule(Long id);
 }
