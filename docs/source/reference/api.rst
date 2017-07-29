@@ -12,21 +12,6 @@ AJAX calls.
 /schedule
 *********
 
-GET
----
-
-Retrieves a single Schedule based on the supplied ``{id}``.
-
-.. code-block:: text
-
-    GET /api/v2/schedule/{id} HTTP 1.0
-    Host: localhost
-    Accept: application/json
-
-Response
-========
-
-See: :ref:`Schedule Response Syntax <schedule-response>`.
 
 POST
 ----
@@ -81,6 +66,26 @@ Creates a single Schedule.
             }
         ]
     }
+
+Response
+========
+
+See: :ref:`Schedule Response Syntax <schedule-response>`.
+
+**************
+/schedule/{id}
+**************
+
+GET
+---
+
+Retrieves a single Schedule based on the supplied ``{id}``.
+
+.. code-block:: text
+
+    GET /api/v2/schedule/{id} HTTP 1.0
+    Host: localhost
+    Accept: application/json
 
 Response
 ========
@@ -170,29 +175,38 @@ Response
 .. code-block:: javascript
 
     {
-        "status":  String [ OK ],
-        "body": null
+        "status":  String [ OK | Failed ],
+        "body": String
     }
 
-*****
-/host
-*****
+***************************
+/schedule/{id}/scannedFiles
+***************************
 
-GET
----
+DELETE
+------
 
-Retrieves a single Host based on the given ``{id}``.
+Clears all items in the given Schedule's ``lastScannedFiles``.
 
 .. code-block:: text
 
-    GET /api/v2/host/{id}
+    DELETE /api/v2/schedule/{id}/scannedFiles HTTP 1.0
     Host: localhost
     Accept: application/json
 
 Response
 ========
 
-See: :ref:`Host Response Syntax <host-response>`.
+.. code-block:: javascript
+
+    {
+        "status":  String [ OK | Failed ],
+        "body": String
+    }
+
+*****
+/host
+*****
 
 POST
 ----
@@ -218,6 +232,26 @@ Creates a new Host.
     }
 
 .. note:: If ``identityFileEnabled`` is set to TRUE, you must also provide ``identityFile``, otherwise provide ``password``.
+
+**********
+/host/{id}
+**********
+
+GET
+---
+
+Retrieves a single Host based on the given ``{id}``.
+
+.. code-block:: text
+
+    GET /api/v2/host/{id}
+    Host: localhost
+    Accept: application/json
+
+Response
+========
+
+See: :ref:`Host Response Syntax <host-response>`.
 
 PUT
 ---
@@ -266,11 +300,48 @@ Response
 .. code-block:: javascript
 
     {
-        "status":  String [ OK ],
-        "body": null
+        "status":  String [ OK | Failure ],
+        "body": String
     }
 
 .. warning:: If the Host you are attempting to delete is being used by an active Schedule, the DELETE call will fail.
+
+***************
+/testConnection
+***************
+
+POST
+----
+
+Allows you to assert whether or not the provided payload contains valid Host information.
+
+.. code-block:: text
+
+    POST /api/v2/testConnection
+    Host: localhost
+    Content-Type: application/json
+
+    {
+        "id": Integer,
+        "name": String,
+        "address": String,
+        "port": Integer,
+        "protocol": String [ FTP | FTPS | SFTP ],
+        "username": String,
+        "password": String,
+        "identityFile": String,
+        "identityFileEnabled": Boolean
+    }
+
+Response
+========
+
+.. code-block:: javascript
+
+    {
+        "status":  String [ OK | Failed ],
+        "body": String
+    }
 
 *********
 Responses
