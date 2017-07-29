@@ -39,13 +39,13 @@
 
 	                    <div class="form-group">
 	                        <label for="logging-level" class="col-md-2 control-label">Logging Level</label>
-	                        <div class="col-md-10">
+	                        <div class="col-md-2">
 	                            <select class="form-control" th:field="*{logLevel}">
 	                                <option th:each="level : ${allLogLevels}" th:value="${level}" th:text="${level}">DEBUG</option>
 	                            </select>
 	                        </div>
 	                    </div>
-                    
+
                     </div>
 
                 </fieldset>
@@ -73,7 +73,7 @@
 	                            <span th:text="${currentVersion}"></span>
 	                        </div>
 	                    </div>
-                    
+
                     </div>
 
                 </fieldset>
