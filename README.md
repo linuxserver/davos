@@ -38,7 +38,16 @@ Finally, schedules can be started or stopped at any point, using the schedules l
 ![https://raw.githubusercontent.com/linuxserver/davos/master/docs/list.PNG](https://raw.githubusercontent.com/linuxserver/davos/master/docs/list.PNG)
 
 # Changelog
+
 - **2.2.0**
+  - The scanned items list can now be cleared.
+  - Added a Last Run field to the scanned items modal.
+  - Included [readthedocs](https://davos.readthedocs.io) documentation!
+  - Added SNS capability to notifications area
+  - Updated FTPS connections to run over Explicit TLS, rather than Implicit SSL
+    - This may or may not break existing schedules that use FTPS prior to 2.2.0.
+  - Improved some areas of DEBUG logging
+  - Schedules page now automatically updates when files are downloading
   - Added identity file authentication for SFTP connections
   - Included a version checker to help prompt users when a new version is available
     - **Full disclosure**: This makes a GET request to GitHub to ascertain the latest release version.
