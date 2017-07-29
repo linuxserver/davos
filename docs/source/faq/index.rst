@@ -14,7 +14,7 @@ How many schedules can I have?
 ******************************
 
 There is no theoretical limit to the number of schedules you can have. davos creates
-and initial thread pool of 10 worker threads, but this gets extended if more than 10
+an initial thread pool of 10 worker threads, but this gets extended if more than 10
 schedules are created.
 
 **************************
