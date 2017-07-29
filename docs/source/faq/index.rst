@@ -45,6 +45,17 @@ for authentication, use "/config/my_identity.pem".
 
 .. note:: Remember, davos can't see files outside of its ``/download`` and ``/config`` directories when running in a Docker container. So remember to place your identity file(s) in the mapped directory on the host (e.g. ``/home/user/davos``).
 
+***************************************************************
+I've just updated davos. The application is behaving strangely.
+***************************************************************
+
+Some version updates include changes to the JavaScript sources for the website side
+of the application. Modern browsers like Chrome tend to cache these types of sources for
+the sake of performance. It is likely your browser has not re-cached the latest version of
+the JavaScript code.
+
+To remedy this, hard-refresh the app: ``CRTL``+``F5``.
+
 ****************************************
 How can I use SNS to notify me by email?
 ****************************************
