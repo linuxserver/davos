@@ -21,7 +21,7 @@ Creates a single Schedule.
 .. code-block:: text
 
     POST /api/v2/schedule HTTP 1.0
-    Host: localhost
+    Host: localhost:8080
     Content-Type: application/json
     Accept: application/json
 
@@ -67,6 +67,9 @@ Creates a single Schedule.
         ]
     }
 
+For more information regarding what each field represents, see the :doc:`../guides/gettingstarted/schedules` documentation
+in :doc:`../guides/gettingstarted/index`.
+
 Response
 ========
 
@@ -84,7 +87,7 @@ Retrieves a single Schedule based on the supplied ``{id}``.
 .. code-block:: text
 
     GET /api/v2/schedule/{id} HTTP 1.0
-    Host: localhost
+    Host: localhost:8080
     Accept: application/json
 
 Response
@@ -102,7 +105,7 @@ a PUT.
 .. code-block:: text
 
     PUT /api/v2/schedule/{id} HTTP 1.0
-    Host: localhost
+    Host: localhost:8080
     Content-Type: application/json
     Accept: application/json
 
@@ -166,7 +169,7 @@ Deletes a single Schedule with the given ``{id}``.
 .. code-block:: text
 
     DELETE /api/v2/schedule/{id} HTTP 1.0
-    Host: localhost
+    Host: localhost:8080
     Accept: application/json
 
 Response
@@ -191,8 +194,38 @@ Clears all items in the given Schedule's ``lastScannedFiles``.
 .. code-block:: text
 
     DELETE /api/v2/schedule/{id}/scannedFiles HTTP 1.0
-    Host: localhost
+    Host: localhost:8080
     Accept: application/json
+
+Response
+========
+
+.. code-block:: javascript
+
+    {
+        "status":  String [ OK | Failed ],
+        "body": String
+    }
+
+**********************
+/schedule/{id}/execute
+**********************
+
+POST
+----
+
+Starts/Stops an existing Schedule.
+
+.. code-block:: text
+
+    POST /api/v2/schedule/{id}/execute
+    Host: localhost:8080
+    Content-Type: application/json
+    Accept: application/json
+
+    {
+        "command": String [ START | STOP ]
+    }
 
 Response
 ========
@@ -216,7 +249,7 @@ Creates a new Host.
 .. code-block:: text
 
     POST /api/v2/host
-    Host: localhost
+    Host: localhost:8080
     Content-Type: application/json
     Accept: application/json
 
@@ -245,7 +278,7 @@ Retrieves a single Host based on the given ``{id}``.
 .. code-block:: text
 
     GET /api/v2/host/{id}
-    Host: localhost
+    Host: localhost:8080
     Accept: application/json
 
 Response
@@ -261,7 +294,7 @@ Updates a Host with the given ``{id}``.
 .. code-block:: text
 
     POST /api/v2/host/{id}
-    Host: localhost
+    Host: localhost:8080
     Content-Type: application/json
     Accept: application/json
 
@@ -291,7 +324,7 @@ Deletes a single Host with the given ``{id}``.
 .. code-block:: text
 
     DELETE /api/v2/host/{id} HTTP 1.0
-    Host: localhost
+    Host: localhost:8080
     Accept: application/json
 
 Response
@@ -318,7 +351,7 @@ Allows you to assert whether or not the provided payload contains valid Host inf
 .. code-block:: text
 
     POST /api/v2/testConnection
-    Host: localhost
+    Host: localhost:8080
     Content-Type: application/json
 
     {
@@ -342,6 +375,36 @@ Response
         "status":  String [ OK | Failed ],
         "body": String
     }
+
+*************
+/settings/log
+*************
+
+POST
+----
+
+Changes the logging level of the application's core code. Unlike other POST calls,
+there is no payload body. The level is passed in as a request parameter.
+
+    level
+        The level to change the logging to. Available options are DEBUG, INFO, WARN, ERROR, FATAL
+
+.. code-block:: text
+
+    POST /api/v2/settings/log?level={LEVEL}
+    Host: localhost:8080
+    Accept: application/json
+
+Response
+========
+
+.. code-block:: javascript
+
+    {
+        "status":  String [ OK | Failed ],
+        "body": String
+    }
+
 
 *********
 Responses
@@ -389,6 +452,7 @@ Schedule Response Syntax
                 ],
                 "sns": [
                     {
+                        "id": Integer,
                         "topicArn": String,
                         "region": String,
                         "accessKey": String,
