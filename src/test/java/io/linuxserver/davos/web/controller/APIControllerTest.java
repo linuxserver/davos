@@ -41,7 +41,7 @@ public class APIControllerTest {
 
         controller.createSchedule(schedule);
 
-        verify(mockScheduleFacade).saveSchedule(schedule);
+        verify(mockScheduleFacade).createSchedule(schedule);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class APIControllerTest {
         Schedule newSchedule = new Schedule();
         Schedule schedule = new Schedule();
 
-        when(mockScheduleFacade.saveSchedule(schedule)).thenReturn(newSchedule);
+        when(mockScheduleFacade.createSchedule(schedule)).thenReturn(newSchedule);
 
         ResponseEntity<APIResponse> response = controller.createSchedule(schedule);
 
@@ -65,7 +65,7 @@ public class APIControllerTest {
 
         controller.updateSchedule(1L, schedule);
 
-        verify(mockScheduleFacade).saveSchedule(schedule);
+        verify(mockScheduleFacade).updateSchedule(schedule);
 
         assertThat(schedule.getId()).isEqualTo(1L);
     }
@@ -75,7 +75,7 @@ public class APIControllerTest {
 
         Schedule schedule = new Schedule();
 
-        when(mockScheduleFacade.saveSchedule(schedule)).thenReturn(schedule);
+        when(mockScheduleFacade.updateSchedule(schedule)).thenReturn(schedule);
 
         ResponseEntity<APIResponse> response = controller.updateSchedule(1L, schedule);
 

@@ -39,6 +39,10 @@ Finally, schedules can be started or stopped at any point, using the schedules l
 
 # Changelog
 
+- **2.2.1**
+  - Fixed bug where lastRunTime got reset whenever a change was made to a schedule.
+  - General refactoring of code, plus added unit tests.
+
 - **2.2.0**
   - The filter pattern matcher now resolves '*' to zero or more characters, rather than one or more.
   - The scanned items list can now be cleared.

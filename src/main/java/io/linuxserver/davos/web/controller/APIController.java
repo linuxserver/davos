@@ -56,7 +56,7 @@ public class APIController {
 
         try {
 
-            Schedule createdSchedule = scheduleService.saveSchedule(schedule);
+            Schedule createdSchedule = scheduleService.createSchedule(schedule);
             LOGGER.info("New schedule has been created");
 
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -99,7 +99,7 @@ public class APIController {
         LOGGER.debug("Imposing id from URL into body");
         schedule.setId(id);
 
-        Schedule updatedSchedule = scheduleService.saveSchedule(schedule);
+        Schedule updatedSchedule = scheduleService.updateSchedule(schedule);
         LOGGER.debug("Schedule has been updated");
 
         return ResponseEntity.status(HttpStatus.OK).body(APIResponseBuilder.create().withBody(updatedSchedule));
