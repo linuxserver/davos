@@ -170,8 +170,7 @@ You will need an `Amazon AWS <https://aws.amazon.com/>`_ account to use this fea
 API Calls
 =========
 
-For actions that are more than just notifications, you can provide a web hook to another
-application with a basic HTTP request.
+API Calls are a great way to create hooks in to other applications via their own HTTP API.
 
     URL
         The URL of the API you wish to call
@@ -180,9 +179,9 @@ application with a basic HTTP request.
         Available options are *GET*, *POST*, *PUT* and *DELETE*
 
     Content-Type
-        A header value in the request that informs the target API what type of body you're sending (if any)
+        Informs the target API what type of body you're sending (if any), e.g. "application/json"
 
     Message Body
         The request payload being sent to the target API
 
-.. note:: If you need to reference the downloaded file in an HTTP request, use **$fileame**.
+.. note:: If you need to reference the downloaded file in an HTTP request, use **$filename**. This will resolve to the file or folder that was matched and subsequently downloaded.
