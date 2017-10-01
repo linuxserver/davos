@@ -37,9 +37,9 @@ public class HttpAPICallAction implements PostDownloadAction {
             headers.add("Content-Type", contentType);
 
             LOGGER.info("Sending message to generic API for {}", execution.fileName);
-            HttpEntity<String> httpEntity = new HttpEntity<String>(body.replaceAll("\\$filename", execution.fileName), headers);
+            HttpEntity<String> httpEntity = new HttpEntity<String>(resolveFilename(body, execution.fileName), headers);
             LOGGER.debug("Sending {} message {} to generic API: {}", method, httpEntity, url);
-            restTemplate.exchange(url, method, httpEntity, Object.class);
+            restTemplate.exchange(resolveFilename(url, execution.fileName), method, httpEntity, Object.class);
             
         } catch (RestClientException | HttpMessageConversionException e) {
 
@@ -51,5 +51,9 @@ public class HttpAPICallAction implements PostDownloadAction {
     @Override
     public String toString() {
         return getClass().getSimpleName();
+    }
+    
+    private String resolveFilename(String value, String filename) {
+        return value.replace("$filename", filename);
     }
 }

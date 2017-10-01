@@ -54,6 +54,24 @@ public class HttpAPICallActionTest {
 
         assertThat(body).isEqualTo("{\"hello\":\"file.txt\"}");
     }
+    
+    @Test
+    public void shouldResolveFilenameInUrlAsWell() {
+
+        PostDownloadExecution execution = new PostDownloadExecution();
+        execution.fileName = "file.txt";
+
+        httpAPICallAction = new HttpAPICallAction("http://url?file=$filename", "POST", "application/json", "{\"hello\":\"$filename\"}");
+        initMocks(this);
+        
+        httpAPICallAction.execute(execution);
+
+        verify(mockRestTemplate).exchange(eq("http://url?file=file.txt"), eq(HttpMethod.POST), entityCaptor.capture(), eq(Object.class));
+
+        String body = entityCaptor.getValue().getBody();
+
+        assertThat(body).isEqualTo("{\"hello\":\"file.txt\"}");
+    }
 
     @Test
     public void postDataShouldHaveCorrectHeaderValue() {

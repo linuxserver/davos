@@ -81,22 +81,47 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Schedule saveSchedule(Schedule schedule) {
+    public Schedule createSchedule(Schedule schedule) {
 
-        HostModel hostModel = hostDAO.fetchHost(schedule.getHost());
+        ScheduleModel model = scheduleConverter.convertFrom(schedule);
+        model.host = getHostForSchedule(schedule.getHost());
+        return scheduleConverter.convertTo(scheduleDAO.updateConfig(model));
+    }
+
+    @Override
+    public Schedule updateSchedule(Schedule schedule) {
+
+        if (null == schedule.getId())
+            throw new IllegalArgumentException("Schdule has no ID");
         
+        ScheduleModel existingModel = scheduleDAO.fetchSchedule(schedule.getId());
+        ScheduleModel model = scheduleConverter.convertFrom(schedule);
+        
+        model.host = getHostForSchedule(schedule.getHost());
+        model.setLastRunTime(existingModel.getLastRunTime());
+        
+        return scheduleConverter.convertTo(scheduleDAO.updateConfig(model));
+    }
+
+    @Override
+    public void clearScannedFilesFromSchedule(Long id) {
+
+        ScheduleModel model = scheduleDAO.fetchSchedule(id);
+        model.scannedFiles.clear();
+        scheduleDAO.updateConfig(model);
+    }
+
+    private HostModel getHostForSchedule(Long id) {
+
+        HostModel hostModel = hostDAO.fetchHost(id);
+
         if (null == hostModel) {
 
             LOGGER.info("Schedule is referencing a host that does not exist");
-            throw new IllegalArgumentException("Host with id " + schedule.getHost() + " does not exist.");
+            throw new IllegalArgumentException("Host with id " + id + " does not exist.");
         }
         
-        ScheduleModel model = scheduleConverter.convertFrom(schedule);
-        model.host = hostModel;
-
-        ScheduleModel updatedModel = scheduleDAO.updateConfig(model);
-
-        return scheduleConverter.convertTo(updatedModel);
+        return hostModel;
     }
 
     private Schedule toSchedule(ScheduleModel model) {
@@ -104,7 +129,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule convertTo = scheduleConverter.convertTo(model);
 
         if (scheduleExecutor.isScheduleRunning(convertTo.getId())) {
-            
+
             convertTo.setRunning(true);
 
             List<FTPTransfer> transfers = scheduleExecutor.getRunningSchedule(convertTo.getId()).getSchedule().getTransfers();
@@ -113,32 +138,24 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         return convertTo;
     }
-    
+
     private Transfer toTransfer(FTPTransfer ftpTransfer) {
-        
+
         Transfer transfer = new Transfer();
-        
+
         transfer.setFileName(ftpTransfer.getFile().getName());
         transfer.setFileSize(ftpTransfer.getFile().getSize());
         transfer.setDirectory(ftpTransfer.getFile().isDirectory());
         transfer.setStatus(ftpTransfer.getState().toString());
-        
+
         if (null != ftpTransfer.getListener()) {
-            
+
             Progress progress = new Progress();
             progress.setPercentageComplete(ftpTransfer.getListener().getProgress());
             progress.setTransferSpeed(ftpTransfer.getListener().getTransferSpeed());
             transfer.setProgress(progress);
         }
-        
+
         return transfer;
-    }
-
-    @Override
-    public void clearScannedFilesFromSchedule(Long id) {
-
-        ScheduleModel model = scheduleDAO.fetchSchedule(id);
-        model.scannedFiles.clear();
-        scheduleDAO.updateConfig(model);        
     }
 }
