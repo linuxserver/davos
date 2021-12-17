@@ -38,6 +38,8 @@ Finally, schedules can be started or stopped at any point, using the schedules l
 ![https://raw.githubusercontent.com/linuxserver/davos/master/docs/list.PNG](https://raw.githubusercontent.com/linuxserver/davos/master/docs/list.PNG)
 
 # Changelog
+- **2.2.2**
+  - Updated log4j dependency to 2.16.0, accounting for CVE-2021-44228
 
 - **2.2.1**
   - Fixed bug where lastRunTime got reset whenever a change was made to a schedule.
